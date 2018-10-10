@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebAggregator.External.API.Models;
 
 namespace WebAggregator.External.API.Controllers
 {
@@ -6,9 +7,9 @@ namespace WebAggregator.External.API.Controllers
 	public class VersionController : Controller
 	{
 		[HttpGet]
-		public string Get()
+		public Version Get()
 		{
-			return "1.0.0.0";
+			return new Version("WebAggregator.External.API", "1.0.0.0");
 		}
 	}
 }
