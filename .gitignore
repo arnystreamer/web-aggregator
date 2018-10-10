@@ -1,0 +1,6 @@
+*.suo
+*.user
+/Solution/.vs
+/Solution/WebAggregator.External.API/bin
+/Solution/WebAggregator.External.API/obj
+
