@@ -1,0 +1,6 @@
+@Jimx.WebAggregator.API_HostAddress = http://localhost:5013
+
+GET {{Jimx.WebAggregator.API_HostAddress}}/health/
+Accept: application/json
+
+###
