@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35431.28
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.API", "Jimx.WebAggregator.API\Jimx.WebAggregator.API.csproj", "{FE9C2B16-ECD3-4ECB-B98D-F85385520A7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.API", "Jimx.WebAggregator.API\Jimx.WebAggregator.API.csproj", "{FE9C2B16-ECD3-4ECB-B98D-F85385520A7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Parser", "Jimx.WebAggregator.Parser\Jimx.WebAggregator.Parser.csproj", "{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.Common", "Jimx.Common\Jimx.Common.csproj", "{377B0236-AB01-4187-8B50-98E79F076B0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{FE9C2B16-ECD3-4ECB-B98D-F85385520A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE9C2B16-ECD3-4ECB-B98D-F85385520A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE9C2B16-ECD3-4ECB-B98D-F85385520A7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{377B0236-AB01-4187-8B50-98E79F076B0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{377B0236-AB01-4187-8B50-98E79F076B0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{377B0236-AB01-4187-8B50-98E79F076B0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{377B0236-AB01-4187-8B50-98E79F076B0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
