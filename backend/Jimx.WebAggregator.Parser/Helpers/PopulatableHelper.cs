@@ -11,7 +11,7 @@ namespace Jimx.WebAggregator.Parser.Helpers
 
 			return new SimpleBuilder<TOutput>(
 				populatable.Requestor,
-				new Lazy<TOutput>(() => populationRequest.Request(populatable.ExecutingFactory.Value)));
+				new Lazy<TOutput>(() => populationRequest.Request(populatable.ExecutingFactory.Value).Result));
 		}
 
 		public static IBuilder<IEnumerable<TOutput>> PopulateByRequest<TPopulationRequest, TInput, TOutput>(this IBuilder<IEnumerable<TInput>> populatable, TPopulationRequest populationRequest)
@@ -21,7 +21,7 @@ namespace Jimx.WebAggregator.Parser.Helpers
 
 			return new SimpleBuilder<IEnumerable<TOutput>>(
 				populatable.Requestor,
-				new Lazy<IEnumerable<TOutput>>(() => populatable.ExecutingFactory.Value.Select(v => populationRequest.Request(v))));
+				new Lazy<IEnumerable<TOutput>>(() => populatable.ExecutingFactory.Value.Select(v => populationRequest.Request(v).Result)));
 		}
 	}
 }
