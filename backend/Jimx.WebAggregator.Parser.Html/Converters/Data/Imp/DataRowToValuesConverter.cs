@@ -8,11 +8,11 @@ public class DataRowToValuesConverter : IDataRowToValuesConverter
 {
 	private readonly IRowToElementsConverter _rowConverter;
 	private readonly IRowSubsectionChecker? _subsectionChecker;
-	private readonly IDataElementToValueConverterProvider _elementConverterProvider;
+	private readonly IDataElementToValueConvertersProvider _elementConverterProvider;
 
 	public bool HasSubsectionChecker => _subsectionChecker != null;
 
-	public DataRowToValuesConverter(IRowToElementsConverter rowConverter, IRowSubsectionChecker? subsectionChecker, IDataElementToValueConverterProvider elementConverterProvider)
+	public DataRowToValuesConverter(IRowToElementsConverter rowConverter, IRowSubsectionChecker? subsectionChecker, IDataElementToValueConvertersProvider elementConverterProvider)
 	{
 		_rowConverter = rowConverter;
 		_subsectionChecker = subsectionChecker;

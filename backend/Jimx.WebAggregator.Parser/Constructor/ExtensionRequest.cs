@@ -2,7 +2,7 @@
 
 namespace Jimx.WebAggregator.Parser.Constructor
 {
-	public abstract class PopulationRequest<TInput, TOutput> : IPopulationRequest<TInput, TOutput>
+	public abstract class ExtensionRequest<TInput, TOutput> : IExtensionRequest<TInput, TOutput>
 	{
 		private Requestor? _requestor = null;
 

@@ -1,7 +1,7 @@
 ﻿using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
+using Jimx.WebAggregator.Parser.Html.Converters.Data.Def;
 using Jimx.WebAggregator.Parser.Html.Models;
-using static Jimx.WebAggregator.Parser.Html.Models.DataSet;
 
 namespace Jimx.WebAggregator.Parser.Html;
 
@@ -14,7 +14,7 @@ public class ParsingProcessor
 
 		var document = htmlDoc.DocumentNode;
 
-		var tables = document.QuerySelectorAll(sourceOptions.Selector) 
+		var tables = document.QuerySelectorAll(sourceOptions.TableFilter.Selector) 
 			?? throw new ArgumentException("No table found for the given selector.");
 		
 		HtmlNode table = tables.FirstOrDefault(t => t != null && sourceOptions.TableFilter.Filter(t)) 
@@ -26,7 +26,7 @@ public class ParsingProcessor
 		var firstRow = rows.First();
 		var fields = sourceOptions.RowToFieldsConverter.GetFieldsToSerialize(firstRow);
 
-		var dataSet = fields.CreateDataSet();
+		DataSet dataSet = fields.CreateDataSet();
 
 		var objectsRows = new List<DataSetRow>();
 
@@ -77,22 +77,33 @@ public class ParsingProcessor
 
 		dataSet.PopulateData(objectsRows.ToArray());
 
+		PopulateAuxiliaryData(ref dataSet, sourceOptions.AuxDataSelectorsProvider, document);
+
+		return dataSet;
+	}
+
+	private void PopulateAuxiliaryData(ref DataSet dataSet, IAuxDataSelectorsProvider? auxDataProvider, HtmlNode documentNode)
+	{
+		if (auxDataProvider == null)
+		{
+			return;
+		}
+
 		IList<AuxiliaryDataItem> auxiliaryData = new List<AuxiliaryDataItem>();
-		foreach (var auxDataProvider in sourceOptions.AuxDataSelectorsProvider.Providers)
+		foreach (var provider in auxDataProvider.Providers)
 		{
 			try
 			{
-				var auxDataValue = auxDataProvider.Value.GetAuxDataValueFromDocument(document);
-				auxiliaryData.Add(new AuxiliaryDataItem(auxDataProvider.Key, auxDataValue));
+				var auxDataValue = provider.Value.GetAuxDataValueFromDocument(documentNode);
+				auxiliaryData.Add(new AuxiliaryDataItem(provider.Key, auxDataValue));
 			}
 			catch
 			{
 				continue;
 			}
 		}
-		
-		dataSet.PopulateAuxiliaryData(auxiliaryData.ToArray());
 
-		return dataSet;
+		dataSet.PopulateAuxiliaryData(auxiliaryData.ToArray());
+		
 	}
 }

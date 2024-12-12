@@ -2,10 +2,11 @@
 
 namespace Jimx.WebAggregator.Parser.Helpers
 {
-    public static class PopulatableHelper
+    public static class ExtendableHelper
 	{
-		public static IBuilder<TOutput> PopulateByRequest<TPopulationRequest, TInput, TOutput>(this IBuilder<TInput> populatable, TPopulationRequest populationRequest)
-			where TPopulationRequest : PopulationRequest<TInput, TOutput>
+		public static IBuilder<TOutput> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
+			this IBuilder<TInput> populatable, TExtensionRequest populationRequest)
+				where TExtensionRequest : ExtensionRequest<TInput, TOutput>
 		{
 			populationRequest.SetRequestor(populatable.Requestor);
 
@@ -14,8 +15,9 @@ namespace Jimx.WebAggregator.Parser.Helpers
 				new Lazy<TOutput>(() => populationRequest.Request(populatable.ExecutingFactory.Value).Result));
 		}
 
-		public static IBuilder<IEnumerable<TOutput>> PopulateByRequest<TPopulationRequest, TInput, TOutput>(this IBuilder<IEnumerable<TInput>> populatable, TPopulationRequest populationRequest)
-			where TPopulationRequest : PopulationRequest<TInput, TOutput>
+		public static IBuilder<IEnumerable<TOutput>> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
+			this IBuilder<IEnumerable<TInput>> populatable, TExtensionRequest populationRequest)
+				where TExtensionRequest : ExtensionRequest<TInput, TOutput>
 		{
 			populationRequest.SetRequestor(populatable.Requestor);
 

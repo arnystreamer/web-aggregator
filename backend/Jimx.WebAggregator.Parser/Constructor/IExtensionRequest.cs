@@ -1,6 +1,6 @@
 ﻿namespace Jimx.WebAggregator.Parser.Constructor
 {
-	public interface IPopulationRequest<TInput, TOutput>
+	public interface IExtensionRequest<TInput, TOutput>
 	{
 		Task<TOutput> Request(TInput input);
 	}
