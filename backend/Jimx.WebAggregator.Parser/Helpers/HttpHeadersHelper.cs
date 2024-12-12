@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Jimx.WebAggregator.Parser.Helpers;
+using Jimx.WebAggregator.Parser.Http;
 
-namespace Jimx.WebAggregator.Parser.Http
+namespace Jimx.WebAggregator.Parser.Helpers
 {
 	public static class HttpHeadersHelper
 	{
@@ -20,7 +22,7 @@ namespace Jimx.WebAggregator.Parser.Http
 		}
 
 		private class HeaderItemByHeaderEqualityComparer : IEqualityComparer<HttpHeaderItem>
-		{		
+		{
 			public bool Equals(HttpHeaderItem? x, HttpHeaderItem? y)
 			{
 				if (x == null || y == null)

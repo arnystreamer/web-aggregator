@@ -2,10 +2,10 @@
 
 namespace Jimx.WebAggregator.Parser.Constructor
 {
-    public interface IBuilder<TOutput>
-    {
-        Requestor Requestor { get; }
-        Lazy<TOutput> ExecutingFactory { get; }
-        TOutput Execute();
-    }
+	public interface IBuilder<TOutput>
+	{
+		Requestor Requestor { get; }
+		Lazy<TOutput> ExecutingFactory { get; }
+		TOutput Execute();
+	}
 }

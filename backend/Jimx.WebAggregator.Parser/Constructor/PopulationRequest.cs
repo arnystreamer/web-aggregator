@@ -22,9 +22,9 @@ namespace Jimx.WebAggregator.Parser.Constructor
 
 			var uri = GetUri(input);
 			var message = await _requestor.RequestAsMessage(uri, HttpMethod.Get, new HttpHeaders());
-			return await GetInformationFromResponse(message);
+			return await GetInformationFromResponse(input, message);
 		}
 
-		public abstract Task<TOutput> GetInformationFromResponse(HttpResponseMessage message);
+		public abstract Task<TOutput> GetInformationFromResponse(TInput input, HttpResponseMessage message);
 	}
 }

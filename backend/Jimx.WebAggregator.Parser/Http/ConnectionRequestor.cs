@@ -1,4 +1,5 @@
 ﻿using Jimx.Common;
+using Jimx.WebAggregator.Parser.Helpers;
 
 namespace Jimx.WebAggregator.Parser.Http
 {
@@ -25,7 +26,7 @@ namespace Jimx.WebAggregator.Parser.Http
 		}
 
 		public ConnectionRequestor(Connection connection)
-			: this(connection.BaseUri, connection.DefaultHeaders, 1000 / (connection.RequestsCountPerMinute ?? 1000))
+			: this(connection.BaseUri, connection.DefaultHeaders, 60000 / (connection.RequestsCountPerMinute ?? 60000))
 		{
 
 		}
@@ -83,7 +84,6 @@ namespace Jimx.WebAggregator.Parser.Http
 				{
 					var response = await _httpClient.SendAsync(item.Message, _cts.Token);
 					item.TaskCompletionSource.SetResult(response);
-
 				}
 				catch (Exception ex)
 				{

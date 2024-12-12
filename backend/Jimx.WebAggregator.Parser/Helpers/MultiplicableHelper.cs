@@ -3,7 +3,7 @@ using Jimx.WebAggregator.Parser.Http;
 
 namespace Jimx.WebAggregator.Parser.Helpers
 {
-    public static class MultiplicableHelper
+	public static class MultiplicableHelper
 	{
 		public static IBuilder<IEnumerable<TOutputItem>> MultiplyByRequest<TInput, TOutputItem>(this IBuilder<TInput> multiplicable, Func<Requestor, IEnumerable<TOutputItem>> itemsFunc)
 		{
