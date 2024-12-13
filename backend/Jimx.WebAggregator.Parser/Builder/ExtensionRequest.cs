@@ -1,6 +1,6 @@
 ﻿using Jimx.WebAggregator.Parser.Http;
 
-namespace Jimx.WebAggregator.Parser.Constructor
+namespace Jimx.WebAggregator.Parser.Builder
 {
 	public abstract class ExtensionRequest<TInput, TOutput> : IExtensionRequest<TInput, TOutput>
 	{
@@ -12,6 +12,7 @@ namespace Jimx.WebAggregator.Parser.Constructor
 		}
 
 		public abstract Uri GetUri(TInput input);
+		public abstract HttpHeaders ProvideHeaders(TInput input);
 
 		public virtual async Task<TOutput> Request(TInput input)
 		{

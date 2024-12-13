@@ -7,12 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Jimx.Common\Jimx.Common.csproj" />
-    <ProjectReference Include="..\Jimx.WebAggregator.Builder\Jimx.WebAggregator.Builder.csproj" />
+    <PackageReference Include="MongoDB.Driver" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Parsing\" />
+    <ProjectReference Include="..\Jimx.Common\Jimx.Common.csproj" />
   </ItemGroup>
 
 </Project>

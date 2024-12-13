@@ -7,12 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Jimx.Common\Jimx.Common.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Builder\Jimx.WebAggregator.Builder.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Parsing\" />
+    <ProjectReference Include="..\Jimx.WebAggregator.Persistent.MongoDB\Jimx.WebAggregator.Persistent.MongoDB.csproj" />
   </ItemGroup>
 
 </Project>
