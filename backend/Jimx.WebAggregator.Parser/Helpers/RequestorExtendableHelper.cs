@@ -1,29 +1,41 @@
-﻿using Jimx.WebAggregator.Builder.Helpers;
-using Jimx.WebAggregator.Parser.Builder;
+﻿using Jimx.WebAggregator.Parser.Builder;
 
 namespace Jimx.WebAggregator.Parser.Helpers
 {
-    public static class RequestorExtendableHelper
+	public static class RequestorExtendableHelper
 	{
-		public static IRequestorBuilder<TOutput> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
-			this IRequestorBuilder<TInput> populatable, TExtensionRequest populationRequest)
+		private static IRequestorBuilder<TOutput> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
+			IRequestorBuilder<TInput> builder, TExtensionRequest populationRequest)
 				where TExtensionRequest : ExtensionRequest<TInput, TOutput>
 		{
-			populationRequest.SetRequestor(populatable.Requestor);
+			return builder.Wrap((value) => populationRequest.Request(value).Result);
+		}
 
-			var simpleBuilder = ExtendableHelper.ExtendByRequest(populatable, (value) => populationRequest.Request(value).Result);
-			return new SimpleRequestorBuilder<TOutput>(populatable.Requestor, simpleBuilder);
+		private static IRequestorBuilder<IEnumerable<TOutput>> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
+			IRequestorBuilder<IEnumerable<TInput>> builder, TExtensionRequest populationRequest)
+				where TExtensionRequest : ExtensionRequest<TInput, TOutput>
+		{
+			return builder.Wrap((values) => values.Select(value => populationRequest.Request(value).Result));
+		}
+
+		public static IRequestorBuilder<TOutput> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
+	this IRequestorBuilder<TInput> builder)
+		where TExtensionRequest : ExtensionRequest<TInput, TOutput>, new()
+		{
+			var extensionRequest = new TExtensionRequest();
+			extensionRequest.SetRequestor(builder.Requestor);
+
+			return ExtendByRequest<TExtensionRequest, TInput, TOutput>(builder, extensionRequest);
 		}
 
 		public static IRequestorBuilder<IEnumerable<TOutput>> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
-			this IRequestorBuilder<IEnumerable<TInput>> populatable, TExtensionRequest populationRequest)
-				where TExtensionRequest : ExtensionRequest<TInput, TOutput>
+			this IRequestorBuilder<IEnumerable<TInput>> builder)
+				where TExtensionRequest : ExtensionRequest<TInput, TOutput>, new()
 		{
-			populationRequest.SetRequestor(populatable.Requestor);
+			var extensionRequest = new TExtensionRequest();
+			extensionRequest.SetRequestor(builder.Requestor);
 
-			var simpleBuilder = ExtendableHelper.ExtendByRequest(populatable, (IEnumerable<TInput> values) => values.Select(value => populationRequest.Request(value).Result));
-
-			return new SimpleRequestorBuilder<IEnumerable<TOutput>>(populatable.Requestor, simpleBuilder);
+			return ExtendByRequest<TExtensionRequest, TInput, TOutput>(builder, extensionRequest);
 		}
 	}
 }

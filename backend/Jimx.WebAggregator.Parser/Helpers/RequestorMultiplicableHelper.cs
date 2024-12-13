@@ -5,10 +5,9 @@ namespace Jimx.WebAggregator.Parser.Helpers
 {
 	public static class RequestorMultiplicableHelper
 	{
-		public static IRequestorBuilder<IEnumerable<TOutputItem>> MultiplyWithStaticList<TInput, TOutputItem>(this IRequestorBuilder<TInput> multiplicable, IEnumerable<TOutputItem> items)
+		public static IRequestorBuilder<IEnumerable<TOutputItem>> MultiplyWithStaticList<TInput, TOutputItem>(this IRequestorBuilder<TInput> builder, IEnumerable<TOutputItem> items)
 		{
-			return new SimpleRequestorBuilder<IEnumerable<TOutputItem>>(multiplicable.Requestor,
-				new Lazy<IEnumerable<TOutputItem>>(() => items));
+			return builder.Wrap(_ => items);
 		}
 
 		public static IRequestorBuilder<IEnumerable<TOutputItem>> MultiplyWithStaticList<TOutputItem>(this Connection connection, IEnumerable<TOutputItem> items)

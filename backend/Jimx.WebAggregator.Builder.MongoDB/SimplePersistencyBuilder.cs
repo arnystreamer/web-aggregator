@@ -12,7 +12,7 @@ namespace Jimx.WebAggregator.Builder.MongoDB
 
 		}
 
-		internal SimplePersistencyBuilder(MongoConnection mongoConnection, Lazy<TOutputItem> executingFactory)
+		internal protected SimplePersistencyBuilder(MongoConnection mongoConnection, Lazy<TOutputItem> executingFactory)
 			: base(executingFactory)
 		{
 			MongoConnection = mongoConnection;
@@ -21,6 +21,24 @@ namespace Jimx.WebAggregator.Builder.MongoDB
 		public override TOutputItem Execute()
 		{
 			return ExecutingFactory.Value;
+		}
+
+		public override IBuilder<TOutputOutput> Wrap<TOutputOutput>(Func<TOutputItem, TOutputOutput> newExecutingFactoryFunc)
+		{
+			return ((IPersistencyBuilder<TOutputItem>)this).Wrap(newExecutingFactoryFunc);
+		}
+
+		IPersistencyBuilder<TOutputOutput> IPersistencyBuilder<TOutputItem>.Wrap<TOutputOutput>(Func<TOutputItem, TOutputOutput> newExecutingFactoryFunc)
+		{
+			if (MongoConnection == null)
+			{
+				throw new InvalidOperationException("MongoConnection figured out to be null");
+			}
+
+			return new SimplePersistencyBuilder<TOutputOutput>(MongoConnection,
+				new Lazy<TOutputOutput>(() => {
+					return newExecutingFactoryFunc(ExecutingFactory.Value);
+				}));
 		}
 	}
 }

@@ -11,9 +11,6 @@ namespace Jimx.WebAggregator.Parser.Builder
 			_requestor = requestor;
 		}
 
-		public abstract Uri GetUri(TInput input);
-		public abstract HttpHeaders ProvideHeaders(TInput input);
-
 		public virtual async Task<TOutput> Request(TInput input)
 		{
 			if (_requestor == null)
@@ -26,6 +23,8 @@ namespace Jimx.WebAggregator.Parser.Builder
 			return await GetInformationFromResponse(input, message);
 		}
 
-		public abstract Task<TOutput> GetInformationFromResponse(TInput input, HttpResponseMessage message);
+		protected abstract Uri GetUri(TInput input);
+		protected abstract HttpHeaders ProvideHeaders(TInput input);
+		protected abstract Task<TOutput> GetInformationFromResponse(TInput input, HttpResponseMessage message);
 	}
 }

@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Jimx.WebAggregator.Persistent.MongoDB.Operations;
+using MongoDB.Driver;
 
 namespace Jimx.WebAggregator.Persistent.MongoDB
 {
@@ -11,27 +12,30 @@ namespace Jimx.WebAggregator.Persistent.MongoDB
 			_options = options;
 		}
 
-		public void DoWork<TUnitOfWork, TCollectionItem>(TUnitOfWork unit)
+		public DoWorkResult<TCollectionItem> DoWork<TUnitOfWork, TCollectionItem>(TUnitOfWork unit)
 			where TUnitOfWork : MongoUnitOfWork<TCollectionItem>
 		{
 			MongoClient client = new MongoClient(_options.ConnectionString);
 			using (var session = client.StartSession())
 			{
-				session.StartTransaction();
 				try
 				{
 					var database = client.GetDatabase(_options.DatabaseName);
 					var collection = database.GetCollection<TCollectionItem>(_options.CollectionName);
 
-					unit.Do(collection);
+					var affectedItems = unit.Do(collection);
 
-					session.CommitTransaction();
+					var allItems = collection.Find(_ => true).ToList();
+
+					return new DoWorkResult<TCollectionItem>(false, allItems, affectedItems);
 				}
 				catch
 				{
-					session.AbortTransaction();
+					return new DoWorkResult<TCollectionItem>(true, [], []);
 				}
 			}
 		}
+
+		public record DoWorkResult<TCollectionItem>(bool IsFailure, IEnumerable<TCollectionItem> AllItems, IEnumerable<TCollectionItem> AffectedItems);
 	}
 }

@@ -13,7 +13,7 @@ namespace Jimx.WebAggregator.Parser.Builder
 
 		}
 
-		internal SimpleRequestorBuilder(Requestor requestor, Lazy<TOutputItem> executingFactory)
+		internal protected SimpleRequestorBuilder(Requestor requestor, Lazy<TOutputItem> executingFactory)
 			:base(executingFactory)
 		{
 			Requestor = requestor;
@@ -22,6 +22,24 @@ namespace Jimx.WebAggregator.Parser.Builder
 		public override TOutputItem Execute()
 		{
 			return ExecutingFactory.Value;
+		}
+
+		public override IBuilder<TOutputOutput> Wrap<TOutputOutput>(Func<TOutputItem, TOutputOutput> newExecutingFactoryFunc)
+		{
+			return ((IRequestorBuilder<TOutputItem>)this).Wrap(newExecutingFactoryFunc);
+		}
+
+		IRequestorBuilder<TOutputOutput> IRequestorBuilder<TOutputItem>.Wrap<TOutputOutput>(Func<TOutputItem, TOutputOutput> newExecutingFactoryFunc)
+		{
+			if (Requestor == null)
+			{
+				throw new InvalidOperationException("Requestor figured out to be null");
+			}
+
+			return new SimpleRequestorBuilder<TOutputOutput>(Requestor,
+				new Lazy<TOutputOutput>(() => {
+					return newExecutingFactoryFunc(ExecutingFactory.Value);
+				}));
 		}
 	}
 }
