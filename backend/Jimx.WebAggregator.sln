@@ -5,9 +5,19 @@ VisualStudioVersion = 17.11.35431.28
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.API", "Jimx.WebAggregator.API\Jimx.WebAggregator.API.csproj", "{FE9C2B16-ECD3-4ECB-B98D-F85385520A7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Parser", "Jimx.WebAggregator.Parser\Jimx.WebAggregator.Parser.csproj", "{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Parser", "Jimx.WebAggregator.Parser\Jimx.WebAggregator.Parser.csproj", "{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.Common", "Jimx.Common\Jimx.Common.csproj", "{377B0236-AB01-4187-8B50-98E79F076B0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.Common", "Jimx.Common\Jimx.Common.csproj", "{377B0236-AB01-4187-8B50-98E79F076B0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.ParserTest", "Jimx.WebAggregator.ParserTest\Jimx.WebAggregator.ParserTest.csproj", "{EAE77A52-D96F-4F67-BE56-5319692B2C14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Parser.Html", "Jimx.WebAggregator.Parser.Html\Jimx.WebAggregator.Parser.Html.csproj", "{3EC0940B-6DBA-40C2-8929-8917D2C5AFA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Persistent.MongoDB", "Jimx.WebAggregator.Persistent.MongoDB\Jimx.WebAggregator.Persistent.MongoDB.csproj", "{02A7B3E2-FF47-408E-B2D0-1BC539FDC9BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Builder.MongoDB", "Jimx.WebAggregator.Builder.MongoDB\Jimx.WebAggregator.Builder.MongoDB.csproj", "{5D4AC65F-1D55-434B-8D7E-6B6D9E811C6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Builder", "Jimx.WebAggregator.Builder\Jimx.WebAggregator.Builder.csproj", "{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +37,26 @@ Global
 		{377B0236-AB01-4187-8B50-98E79F076B0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{377B0236-AB01-4187-8B50-98E79F076B0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{377B0236-AB01-4187-8B50-98E79F076B0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAE77A52-D96F-4F67-BE56-5319692B2C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAE77A52-D96F-4F67-BE56-5319692B2C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAE77A52-D96F-4F67-BE56-5319692B2C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAE77A52-D96F-4F67-BE56-5319692B2C14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EC0940B-6DBA-40C2-8929-8917D2C5AFA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EC0940B-6DBA-40C2-8929-8917D2C5AFA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EC0940B-6DBA-40C2-8929-8917D2C5AFA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EC0940B-6DBA-40C2-8929-8917D2C5AFA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02A7B3E2-FF47-408E-B2D0-1BC539FDC9BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02A7B3E2-FF47-408E-B2D0-1BC539FDC9BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02A7B3E2-FF47-408E-B2D0-1BC539FDC9BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02A7B3E2-FF47-408E-B2D0-1BC539FDC9BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D4AC65F-1D55-434B-8D7E-6B6D9E811C6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D4AC65F-1D55-434B-8D7E-6B6D9E811C6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D4AC65F-1D55-434B-8D7E-6B6D9E811C6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D4AC65F-1D55-434B-8D7E-6B6D9E811C6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

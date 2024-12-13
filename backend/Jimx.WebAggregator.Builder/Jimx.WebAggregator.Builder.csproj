@@ -8,11 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Jimx.Common\Jimx.Common.csproj" />
-    <ProjectReference Include="..\Jimx.WebAggregator.Builder\Jimx.WebAggregator.Builder.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Parsing\" />
   </ItemGroup>
 
 </Project>

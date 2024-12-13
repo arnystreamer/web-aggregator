@@ -1,6 +1,6 @@
 ﻿using Jimx.WebAggregator.Parser.Http;
 
-namespace Jimx.WebAggregator.Parser.Constructor
+namespace Jimx.WebAggregator.Parser.Builder
 {
 	public abstract class ExtensionRequest<TInput, TOutput> : IExtensionRequest<TInput, TOutput>
 	{
@@ -10,8 +10,6 @@ namespace Jimx.WebAggregator.Parser.Constructor
 		{
 			_requestor = requestor;
 		}
-
-		public abstract Uri GetUri(TInput input);
 
 		public virtual async Task<TOutput> Request(TInput input)
 		{
@@ -25,6 +23,8 @@ namespace Jimx.WebAggregator.Parser.Constructor
 			return await GetInformationFromResponse(input, message);
 		}
 
-		public abstract Task<TOutput> GetInformationFromResponse(TInput input, HttpResponseMessage message);
+		protected abstract Uri GetUri(TInput input);
+		protected abstract HttpHeaders ProvideHeaders(TInput input);
+		protected abstract Task<TOutput> GetInformationFromResponse(TInput input, HttpResponseMessage message);
 	}
 }
