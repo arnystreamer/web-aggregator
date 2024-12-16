@@ -2,7 +2,7 @@
 {
 	public interface IBuilder<TOutput>
 	{
-		Lazy<TOutput> ExecutingFactory { get; }
+		Func<TOutput> ValueFactory { get; }
 		TOutput Execute();
 		IBuilder<TOutputOutput> Wrap<TOutputOutput>(Func<TOutput, TOutputOutput> newExecutingFactoryFunc);
 	}

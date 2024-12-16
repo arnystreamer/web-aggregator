@@ -10,7 +10,9 @@ namespace Jimx.WebAggregator.Builder.MongoDB.Helpers
 		{
 			var mongoConnection = new MongoConnection(mongoOptions);
 
-			return new SimplePersistencyBuilder<IEnumerable<TItem>>(mongoConnection, collectionBuilder);
+			return new SimplePersistencyBuilder<IEnumerable<TItem>>(
+				mongoConnection,
+				collectionBuilder);
 		}
 
 		public static IPersistencyBuilder<IEnumerable<TEntity>> UpsertInMongoDb<TBase, TEntity, TEntityIdentity>(
@@ -21,8 +23,9 @@ namespace Jimx.WebAggregator.Builder.MongoDB.Helpers
 			return collectionBuilder.Wrap(value =>
 			{
 				IEnumerable<TEntity> selectedItems = value.Select(v => collectionSelector(v));
-				collectionBuilder.MongoConnection.DoWork<UpsertMongoUnitOfWork<TEntity, TEntityIdentity>, TEntity>(
+				var result = collectionBuilder.MongoConnection.DoWork<UpsertMongoUnitOfWork<TEntity, TEntityIdentity>, TEntity>(
 					new UpsertMongoUnitOfWork<TEntity, TEntityIdentity>(selectedItems.ToArray(), upsertOptions));
+
 				return selectedItems;
 			});
 		}
@@ -40,6 +43,7 @@ namespace Jimx.WebAggregator.Builder.MongoDB.Helpers
 					new InsertMongoUnitOfWork<TDictionaryEntity, TDictionaryEntityIdentity>(
 						itemsPlain,
 						insertOptions));
+
 				return new DictionaryExtractionResult<TItem, TDictionaryEntity>(value, result.AllItems);
 			});
 		}

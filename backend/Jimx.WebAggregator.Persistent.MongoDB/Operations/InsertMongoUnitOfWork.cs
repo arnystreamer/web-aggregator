@@ -17,11 +17,11 @@ namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 		public override IEnumerable<TCollectionItem> Do(IMongoCollection<TCollectionItem> mongoCollection)
 		{
 			var existingItems = mongoCollection.Find(i => true).ToList();
+			var additions = _updatedCollection.Except(existingItems, _insertOptions.IdentityComparer).ToList();
 
-			var additions = _updatedCollection.Except(existingItems, _insertOptions.IdentityComparer);
-			foreach (var addition in additions)
+			if (additions.Any())
 			{
-				mongoCollection.InsertOne(addition);
+				mongoCollection.InsertMany(additions);
 			}
 
 			return additions;

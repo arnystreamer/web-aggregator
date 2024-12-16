@@ -8,20 +8,15 @@ namespace Jimx.WebAggregator.Parser.Builder
 		public Requestor Requestor { get; }
 
 		internal protected SimpleRequestorBuilder(Requestor requestor, IBuilder<TOutputItem> simpleBuilder)
-			:this(requestor, simpleBuilder.ExecutingFactory)
+			:this(requestor, simpleBuilder.ValueFactory)
 		{
 
 		}
 
-		internal protected SimpleRequestorBuilder(Requestor requestor, Lazy<TOutputItem> executingFactory)
-			:base(executingFactory)
+		internal protected SimpleRequestorBuilder(Requestor requestor, Func<TOutputItem> valueFactory)
+			:base(valueFactory)
 		{
 			Requestor = requestor;
-		}
-
-		public override TOutputItem Execute()
-		{
-			return ExecutingFactory.Value;
 		}
 
 		public override IBuilder<TOutputOutput> Wrap<TOutputOutput>(Func<TOutputItem, TOutputOutput> newExecutingFactoryFunc)
@@ -36,10 +31,16 @@ namespace Jimx.WebAggregator.Parser.Builder
 				throw new InvalidOperationException("Requestor figured out to be null");
 			}
 
-			return new SimpleRequestorBuilder<TOutputOutput>(Requestor,
-				new Lazy<TOutputOutput>(() => {
-					return newExecutingFactoryFunc(ExecutingFactory.Value);
-				}));
+			var outputType = typeof(TOutputOutput);
+			var outputTypeName = outputType.Name;
+			if (outputType.IsGenericType)
+			{
+				outputTypeName += "<" + string.Join(", ", outputType.GenericTypeArguments.Select(t => t.Name)) + ">";
+			}
+
+			return new SimpleRequestorBuilder<TOutputOutput>(
+				Requestor,
+				() => newExecutingFactoryFunc(ValueFactory()));
 		}
 	}
 }

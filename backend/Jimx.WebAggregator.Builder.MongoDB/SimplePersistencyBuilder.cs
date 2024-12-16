@@ -7,20 +7,15 @@ namespace Jimx.WebAggregator.Builder.MongoDB
 		public MongoConnection MongoConnection { get; }
 
 		internal protected SimplePersistencyBuilder(MongoConnection mongoConnection, IBuilder<TOutputItem> simpleBuilder)
-			: this(mongoConnection, simpleBuilder.ExecutingFactory)
+			: this(mongoConnection, simpleBuilder.ValueFactory)
 		{
 
 		}
 
-		internal protected SimplePersistencyBuilder(MongoConnection mongoConnection, Lazy<TOutputItem> executingFactory)
-			: base(executingFactory)
+		internal protected SimplePersistencyBuilder(MongoConnection mongoConnection, Func<TOutputItem> valueFactory)
+			: base(valueFactory)
 		{
 			MongoConnection = mongoConnection;
-		}
-
-		public override TOutputItem Execute()
-		{
-			return ExecutingFactory.Value;
 		}
 
 		public override IBuilder<TOutputOutput> Wrap<TOutputOutput>(Func<TOutputItem, TOutputOutput> newExecutingFactoryFunc)
@@ -28,17 +23,16 @@ namespace Jimx.WebAggregator.Builder.MongoDB
 			return ((IPersistencyBuilder<TOutputItem>)this).Wrap(newExecutingFactoryFunc);
 		}
 
-		IPersistencyBuilder<TOutputOutput> IPersistencyBuilder<TOutputItem>.Wrap<TOutputOutput>(Func<TOutputItem, TOutputOutput> newExecutingFactoryFunc)
+		IPersistencyBuilder<TOutputOutput> IPersistencyBuilder<TOutputItem>.Wrap<TOutputOutput>(Func<TOutputItem, TOutputOutput> newValueFactoryFunc)
 		{
 			if (MongoConnection == null)
 			{
 				throw new InvalidOperationException("MongoConnection figured out to be null");
 			}
 
-			return new SimplePersistencyBuilder<TOutputOutput>(MongoConnection,
-				new Lazy<TOutputOutput>(() => {
-					return newExecutingFactoryFunc(ExecutingFactory.Value);
-				}));
+			return new SimplePersistencyBuilder<TOutputOutput>(
+				MongoConnection,
+				() => newValueFactoryFunc(ValueFactory()));
 		}
 	}
 }

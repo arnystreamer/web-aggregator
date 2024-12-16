@@ -1,18 +1,17 @@
-﻿
-namespace Jimx.WebAggregator.Builder
+﻿namespace Jimx.WebAggregator.Builder
 {
 	public abstract class SimpleBuilder<TOutput> : IBuilder<TOutput>
 	{
-		public Lazy<TOutput> ExecutingFactory { get; }
+		public Func<TOutput> ValueFactory { get; }
 
-		internal protected SimpleBuilder(Lazy<TOutput> executingFactory)
+		internal protected SimpleBuilder(Func<TOutput> valueFactory)
 		{
-			ExecutingFactory = executingFactory;
+			ValueFactory = valueFactory;
 		}
 
-		public virtual TOutput Execute()
+		public TOutput Execute()
 		{
-			return ExecutingFactory.Value;
+			return ValueFactory();
 		}
 
 		public abstract IBuilder<TOutputOutput> Wrap<TOutputOutput>(Func<TOutput, TOutputOutput> newExecutingFactoryFunc);

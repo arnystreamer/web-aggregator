@@ -1,4 +1,5 @@
 ﻿using Jimx.Common;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Jimx.WebAggregator.Parser.Http
@@ -6,6 +7,14 @@ namespace Jimx.WebAggregator.Parser.Http
 	public class Requestor
 	{
 		private List<ConnectionRequestor> _connectionRequestors = new List<ConnectionRequestor>();
+		private ILogger _logger;
+
+		private int _counter = 0;
+
+		public Requestor(ILogger logger)
+		{
+			_logger = logger;
+		}
 
 		public ConnectionRequestor RegisterConnection(Connection connection)
 		{
@@ -17,6 +26,7 @@ namespace Jimx.WebAggregator.Parser.Http
 				_connectionRequestors.Add(connectionRequestor);
 			}
 
+			_logger.LogInformation($"Registered connection to {connection.BaseUri}");
 			return connectionRequestor;
 		}
 
@@ -27,7 +37,10 @@ namespace Jimx.WebAggregator.Parser.Http
 			HttpResponseMessage response;
 			try
 			{
+				Interlocked.Increment(ref _counter);
+				_logger.LogInformation($"Requestor [{_counter}]: Enqueuing request to {uri.ToString()}");
 				response = await connection.EnqueueRequestAsync(uri, httpMethod, additionalHeaders);
+				_logger.LogInformation($"Requestor [{_counter}]: Request received from {uri.ToString()}");
 			}
 			catch (Exception ex)
 			{

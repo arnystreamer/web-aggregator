@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 
 namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 {
@@ -41,10 +40,10 @@ namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 				mongoCollection.DeleteOne(selectorExpression);
 			}
 
-			var additions = _updatedCollection.Except(existingItems, _upsertOptions.IdentityComparer);
-			foreach (var addition in additions)
+			var additions = _updatedCollection.Except(existingItems, _upsertOptions.IdentityComparer).ToList();
+			if (additions.Any())
 			{
-				mongoCollection.InsertOne(addition);
+				mongoCollection.InsertMany(additions);
 			}
 
 			return additions.Union(replacements);
