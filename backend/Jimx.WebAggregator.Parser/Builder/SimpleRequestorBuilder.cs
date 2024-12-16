@@ -31,13 +31,6 @@ namespace Jimx.WebAggregator.Parser.Builder
 				throw new InvalidOperationException("Requestor figured out to be null");
 			}
 
-			var outputType = typeof(TOutputOutput);
-			var outputTypeName = outputType.Name;
-			if (outputType.IsGenericType)
-			{
-				outputTypeName += "<" + string.Join(", ", outputType.GenericTypeArguments.Select(t => t.Name)) + ">";
-			}
-
 			return new SimpleRequestorBuilder<TOutputOutput>(
 				Requestor,
 				() => newExecutingFactoryFunc(ValueFactory()));

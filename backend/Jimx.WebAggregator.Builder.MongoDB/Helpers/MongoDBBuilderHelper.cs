@@ -25,7 +25,6 @@ namespace Jimx.WebAggregator.Builder.MongoDB.Helpers
 				IEnumerable<TEntity> selectedItems = value.Select(v => collectionSelector(v));
 				var result = collectionBuilder.MongoConnection.DoWork<UpsertMongoUnitOfWork<TEntity, TEntityIdentity>, TEntity>(
 					new UpsertMongoUnitOfWork<TEntity, TEntityIdentity>(selectedItems.ToArray(), upsertOptions));
-
 				return selectedItems;
 			});
 		}

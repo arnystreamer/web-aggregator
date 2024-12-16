@@ -33,9 +33,9 @@ namespace Jimx.WebAggregator.Parser.Helpers
 					var result = extensionRequest.Request(value).Result;
 
 					return result;
-				});
+				}).ToArray();
 
-				return itemsResult;
+				return itemsResult.AsEnumerable();
 			});
 		}
 	}
