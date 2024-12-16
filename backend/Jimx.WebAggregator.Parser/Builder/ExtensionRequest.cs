@@ -1,5 +1,4 @@
-﻿using Jimx.WebAggregator.Builder;
-using Jimx.WebAggregator.Parser.Http;
+﻿using Jimx.WebAggregator.Parser.Http;
 
 namespace Jimx.WebAggregator.Parser.Builder
 {

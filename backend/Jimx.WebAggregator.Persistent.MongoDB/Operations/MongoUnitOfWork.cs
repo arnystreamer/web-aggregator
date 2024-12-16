@@ -1,10 +1,11 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 
 namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 {
 	public abstract class MongoUnitOfWork<TCollectionItem> : IDisposable
 	{
-		public abstract IEnumerable<TCollectionItem> Do(IMongoCollection<TCollectionItem> mongoCollection);
+		public abstract IEnumerable<TCollectionItem> Do(ILogger logger, IMongoCollection<TCollectionItem> mongoCollection);
 
 		public abstract void Dispose();
 	}

@@ -13,11 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.ParserTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Parser.Html", "Jimx.WebAggregator.Parser.Html\Jimx.WebAggregator.Parser.Html.csproj", "{3EC0940B-6DBA-40C2-8929-8917D2C5AFA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Persistent.MongoDB", "Jimx.WebAggregator.Persistent.MongoDB\Jimx.WebAggregator.Persistent.MongoDB.csproj", "{02A7B3E2-FF47-408E-B2D0-1BC539FDC9BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Persistent.MongoDB", "Jimx.WebAggregator.Persistent.MongoDB\Jimx.WebAggregator.Persistent.MongoDB.csproj", "{02A7B3E2-FF47-408E-B2D0-1BC539FDC9BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Builder.MongoDB", "Jimx.WebAggregator.Builder.MongoDB\Jimx.WebAggregator.Builder.MongoDB.csproj", "{5D4AC65F-1D55-434B-8D7E-6B6D9E811C6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Builder.MongoDB", "Jimx.WebAggregator.Builder.MongoDB\Jimx.WebAggregator.Builder.MongoDB.csproj", "{5D4AC65F-1D55-434B-8D7E-6B6D9E811C6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Builder", "Jimx.WebAggregator.Builder\Jimx.WebAggregator.Builder.csproj", "{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Builder", "Jimx.WebAggregator.Builder\Jimx.WebAggregator.Builder.csproj", "{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Domain.CityCosts", "Jimx.WebAggregator.Domain.CityCosts\Jimx.WebAggregator.Domain.CityCosts.csproj", "{61A1B512-000E-4C24-BCAD-669AA58D043A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Domain.MongoDB", "Jimx.WebAggregator.Domain.MongoDB\Jimx.WebAggregator.Domain.MongoDB.csproj", "{16AC31C8-F286-441F-8FB7-CFD4FBB7B64D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +61,14 @@ Global
 		{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79CE5E70-5FF2-474D-94AA-EFCEBEF89C39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61A1B512-000E-4C24-BCAD-669AA58D043A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61A1B512-000E-4C24-BCAD-669AA58D043A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61A1B512-000E-4C24-BCAD-669AA58D043A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61A1B512-000E-4C24-BCAD-669AA58D043A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16AC31C8-F286-441F-8FB7-CFD4FBB7B64D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16AC31C8-F286-441F-8FB7-CFD4FBB7B64D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16AC31C8-F286-441F-8FB7-CFD4FBB7B64D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16AC31C8-F286-441F-8FB7-CFD4FBB7B64D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

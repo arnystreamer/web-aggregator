@@ -4,39 +4,24 @@ namespace Jimx.WebAggregator.Parser.Helpers
 {
 	public static class RequestorExtendableHelper
 	{
-		public static IRequestorBuilder<TOutput> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
-			this IRequestorBuilder<TInput> builder)
+		public static RequestorBuilder<TOutput> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
+			this RequestorBuilder<TInput> builder)
 				where TExtensionRequest : ExtensionRequest<TInput, TOutput>, new()
 		{
 			var extensionRequest = new TExtensionRequest();
 			extensionRequest.SetRequestor(builder.Requestor);
 
-			return builder.Wrap((value) => 
-			{
-				var result = extensionRequest.Request(value).Result;
-				
-				return result;
-			});
+			return builder.Wrap(value => extensionRequest.Request(value).Result);
 		}
 
-		public static IRequestorBuilder<IEnumerable<TOutput>> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
-			this IRequestorBuilder<IEnumerable<TInput>> builder)
+		public static RequestorBuilder<IEnumerable<TOutput>> ExtendByRequest<TExtensionRequest, TInput, TOutput>(
+			this RequestorBuilder<IEnumerable<TInput>> builder)
 				where TExtensionRequest : ExtensionRequest<TInput, TOutput>, new()
 		{
 			var extensionRequest = new TExtensionRequest();
 			extensionRequest.SetRequestor(builder.Requestor);
 
-			return builder.Wrap((values) =>
-			{
-				var itemsResult = values.Select(value =>
-				{
-					var result = extensionRequest.Request(value).Result;
-
-					return result;
-				}).ToArray();
-
-				return itemsResult.AsEnumerable();
-			});
+			return builder.Wrap((values) => values.Select(value => extensionRequest.Request(value).Result));
 		}
 	}
 }

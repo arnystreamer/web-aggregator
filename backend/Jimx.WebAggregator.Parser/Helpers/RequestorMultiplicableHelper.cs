@@ -1,27 +1,16 @@
-﻿using Jimx.WebAggregator.Parser.Builder;
+﻿using Jimx.WebAggregator.Builder;
+using Jimx.WebAggregator.Parser.Builder;
 using Jimx.WebAggregator.Parser.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Jimx.WebAggregator.Parser.Helpers
 {
 	public static class RequestorMultiplicableHelper
 	{
-		public static IRequestorBuilder<IEnumerable<TOutputItem>> MultiplyWithStaticList<TInput, TOutputItem>(this IRequestorBuilder<TInput> builder, IEnumerable<TOutputItem> items)
+		public static RequestorBuilder<IEnumerable<TOutputItem>> MultiplyWithStaticList<TOutputItem>(this Connection connection, IEnumerable<TOutputItem> items)
 		{
-			return builder.Wrap(_ => 
-			{
-				return items; 
-			});
-		}
-
-		public static IRequestorBuilder<IEnumerable<TOutputItem>> MultiplyWithStaticList<TOutputItem>(this Connection connection, IEnumerable<TOutputItem> items)
-		{
-			return new SimpleRequestorBuilder<IEnumerable<TOutputItem>>(
+			return new RequestorBuilder<IEnumerable<TOutputItem>>(
 				connection.GetRequestor(),
-				() => 
-				{
-					return items; 
-				});
+				new ValueFactory<IEnumerable<TOutputItem>>(() => items));
 		}
 	}
 }

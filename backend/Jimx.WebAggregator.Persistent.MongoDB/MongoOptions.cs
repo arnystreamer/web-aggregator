@@ -1,4 +1,6 @@
-﻿namespace Jimx.WebAggregator.Persistent.MongoDB
+﻿using Microsoft.Extensions.Logging;
+
+namespace Jimx.WebAggregator.Persistent.MongoDB
 {
-	public record MongoOptions(string ConnectionString, string DatabaseName, string CollectionName);
+	public record MongoOptions(ILogger Logger, string ConnectionString, string DatabaseName, string CollectionName);
 }
