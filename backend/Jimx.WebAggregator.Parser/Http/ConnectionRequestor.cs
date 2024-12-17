@@ -1,10 +1,12 @@
 ﻿using Jimx.Common;
 using Jimx.WebAggregator.Parser.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace Jimx.WebAggregator.Parser.Http
 {
 	public class ConnectionRequestor : IDisposable
 	{
+		private readonly ILogger _logger;
 		public readonly Uri BaseUri;
 		private readonly HttpHeaders _defaultHeaders;
 		private readonly int _cooldownInMilliseconds;
@@ -16,8 +18,9 @@ namespace Jimx.WebAggregator.Parser.Http
 		private readonly Task _workerTask;
 		private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
-		public ConnectionRequestor(Uri baseUri, HttpHeaders defaultHeaders, int cooldownInMilliseconds)
+		public ConnectionRequestor(ILogger logger, Uri baseUri, HttpHeaders defaultHeaders, int cooldownInMilliseconds)
 		{
+			_logger = logger;
 			BaseUri = baseUri;
 			_defaultHeaders = defaultHeaders;
 			_cooldownInMilliseconds = cooldownInMilliseconds;
@@ -26,7 +29,7 @@ namespace Jimx.WebAggregator.Parser.Http
 		}
 
 		public ConnectionRequestor(Connection connection)
-			: this(connection.BaseUri, connection.DefaultHeaders, 60000 / (connection.RequestsCountPerMinute ?? 60000))
+			: this(connection.Logger, connection.BaseUri, connection.DefaultHeaders, 60000 / (connection.RequestsCountPerMinute ?? 60000))
 		{
 
 		}
@@ -63,6 +66,8 @@ namespace Jimx.WebAggregator.Parser.Http
 			TaskCompletionSource<HttpResponseMessage> taskCompletionSource = new TaskCompletionSource<HttpResponseMessage>();
 
 			_queueItems.Enqueue(new QueueItem(message, taskCompletionSource));
+
+			_logger.LogInformation($"ConnectionRequestor (count={_queueItems.Count}): Request enqueued {uri.ToString()}");
 
 			return await taskCompletionSource.Task;
 		}

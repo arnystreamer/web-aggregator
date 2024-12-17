@@ -1,4 +1,5 @@
 ﻿using Jimx.WebAggregator.Persistent.MongoDB.Operations;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
 namespace Jimx.WebAggregator.Persistent.MongoDB
@@ -23,11 +24,13 @@ namespace Jimx.WebAggregator.Persistent.MongoDB
 					var database = client.GetDatabase(_options.DatabaseName);
 					var collection = database.GetCollection<TCollectionItem>(_options.CollectionName);
 
-					var affectedItems = unit.Do(collection);
+					_options.Logger.LogInformation($"{typeof(TUnitOfWork)} job starting");
+					var affectedItems = unit.Do(_options.Logger, collection);
+					_options.Logger.LogInformation($"{typeof(TUnitOfWork)} job finished");
 
 					var allItems = collection.Find(_ => true).ToList();
 
-					return new DoWorkResult<TCollectionItem>(false, allItems, affectedItems);
+					return new DoWorkResult<TCollectionItem>(false, allItems, affectedItems.ToList());
 				}
 				catch
 				{

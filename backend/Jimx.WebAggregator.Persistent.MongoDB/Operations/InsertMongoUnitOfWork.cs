@@ -1,30 +1,37 @@
-﻿using MongoDB.Driver;
+﻿using Jimx.WebAggregator.Domain.MongoDB;
+using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 
 namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 {
 	public class InsertMongoUnitOfWork<TCollectionItem, TIdentity> : MongoUnitOfWork<TCollectionItem>
 		where TCollectionItem : IMongoEntity
 	{
-		private readonly TCollectionItem[] _updatedCollection;
+		private readonly IEnumerable<TCollectionItem> _updatedItems;
 		private readonly InsertOptions<TCollectionItem, TIdentity> _insertOptions;
 
-		public InsertMongoUnitOfWork(TCollectionItem[] updatedCollection, InsertOptions<TCollectionItem, TIdentity> insertOptions)
+		public InsertMongoUnitOfWork(IEnumerable<TCollectionItem> updatedItems, InsertOptions<TCollectionItem, TIdentity> insertOptions)
 		{
-			_updatedCollection = updatedCollection;
+			_updatedItems = updatedItems;
 			_insertOptions = insertOptions;
 		}
 
-		public override IEnumerable<TCollectionItem> Do(IMongoCollection<TCollectionItem> mongoCollection)
+		public override IEnumerable<TCollectionItem> Do(ILogger logger, IMongoCollection<TCollectionItem> mongoCollection)
 		{
 			var existingItems = mongoCollection.Find(i => true).ToList();
 
-			var additions = _updatedCollection.Except(existingItems, _insertOptions.IdentityComparer);
-			foreach (var addition in additions)
+			foreach (var updatedItem in _updatedItems)
 			{
-				mongoCollection.InsertOne(addition);
-			}
+				var existingItem = existingItems.SingleOrDefault(i => _insertOptions.IdentityComparer.Equals(i, updatedItem));
 
-			return additions;
+				if (existingItem == null)
+				{
+					logger.LogInformation($"{mongoCollection.CollectionNamespace.FullName} MongoDb collection: inserting new item");
+					mongoCollection.InsertOne(updatedItem);
+				}
+
+				yield return updatedItem;
+			}
 		}
 
 		public override void Dispose()

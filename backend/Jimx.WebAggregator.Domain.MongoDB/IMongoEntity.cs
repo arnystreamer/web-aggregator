@@ -1,4 +1,4 @@
-﻿namespace Jimx.WebAggregator.Persistent.MongoDB
+﻿namespace Jimx.WebAggregator.Domain.MongoDB
 {
 	public interface IMongoEntity
 	{

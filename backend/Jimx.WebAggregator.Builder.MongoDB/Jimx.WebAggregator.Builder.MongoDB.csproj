@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Jimx.WebAggregator.Builder\Jimx.WebAggregator.Builder.csproj" />
+    <ProjectReference Include="..\Jimx.WebAggregator.Domain.MongoDB\Jimx.WebAggregator.Domain.MongoDB.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Persistent.MongoDB\Jimx.WebAggregator.Persistent.MongoDB.csproj" />
   </ItemGroup>
 

@@ -21,6 +21,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 
+builder.Services.Configure<GeneralOptions>(
+	builder.Configuration.GetSection(GeneralOptions.OptionName));
+
+builder.Services.Configure<CitiesDatabaseSettings>(
+	builder.Configuration.GetSection(CitiesDatabaseSettings.OptionName));
+
+builder.Services.AddSingleton<CitiesDatabaseService>();
+
 builder.Services.AddSingleton<SettingsProvider>();
 builder.Services.AddSingleton<KeysProvider>();
 
