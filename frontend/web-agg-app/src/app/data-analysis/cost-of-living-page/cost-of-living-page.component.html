@@ -1,1 +1,63 @@
-<p>cost-of-living works!</p>
+<div>
+  <h2>Data analysis</h2>
+</div>
+
+<div class="actions-panel">
+  <button color="accent" mat-flat-button [routerLink]="['..']">
+    <mat-icon>arrow_back</mat-icon>
+    Back
+  </button>
+
+  <button color="accent" mat-flat-button [routerLink]="['../city-costs-plain']">
+    <mat-icon>info</mat-icon>
+    City data plain
+  </button>
+</div>
+
+<table>
+  <tr>
+    <th>City</th>
+    <th>Salary</th>
+    <th>Renting</th>
+    <th>Totals</th>
+    <th>Aux</th>
+  </tr>
+  @for(city of cities; track $index)
+  {
+    <tr>
+      <td>{{city.name}} {{city.country}}</td>
+      <td>
+        <ul>
+          <li><b>Net avg:</b> {{ city.averageExpatSalary | number: '1.0-0' }}</li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li><b>Personal:</b> {{ city.personalWithoutChildcare  | number: '1.0-0' }}
+            <wa-diff-span [baseValue]="city.personalWithoutChildcare" [relativeValue]="city.averageExpatSalary"></wa-diff-span></li>
+          <li><b>Personal all:</b> {{ city.personalAll | number: '1.0-0' }}
+            <wa-diff-span [baseValue]="city.personalAll" [relativeValue]="city.averageExpatSalary"></wa-diff-span></li>
+          <li><b>Personal with mortgage:</b> {{ city.personalWithMortgageAndChildcare  | number: '1.0-0' }}
+            <wa-diff-span [baseValue]="city.personalWithMortgageAndChildcare" [relativeValue]="city.averageExpatSalary"></wa-diff-span></li>
+        </ul>
+
+      </td>
+      <td>
+        <ul>
+          <li><b>Sustainable salary net:</b> {{ city.sustainableSalary | number: '1.0-0' }}
+            <wa-diff-span [baseValue]="city.sustainableSalary" [relativeValue]="city.averageExpatSalary"></wa-diff-span></li>
+          <li><b>Millionaire term:</b> {{ city.millionaireTerm | number: '1.0-0' }}</li>
+          <li><b>Apt. first payment (20%) term:</b> {{ city.apartmentFirstPaymentTerm  | number: '1.0-0' }}</li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li><b>Apt. first payment:</b> {{ city.apartmentFirstPayment  | number: '1.0-0' }}</li>
+          <li><b>Apt. monthly payment:</b> {{ city.mortgageMonthlyPayment| number: '1.0-0' }}</li>
+          <li><b>Apt. price:</b> {{ city.averageApartmentsPrice  | number: '1.0-0' }}</li>
+          <li><b>Rent price:</b> {{ city.averageRentPrice  | number: '1.0-0' }}</li>
+        </ul>
+      </td>
+    </tr>
+  }
+</table>
