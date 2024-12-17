@@ -26,7 +26,7 @@ export class CitiesPlainPageComponent  implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(({ cities, dictionary }) => {
+    this.route.data.subscribe(({ cities, dictionary, salaries }) => {
       const rawCities: City[] = cities.items;
       this.dictionaryItems.push(...dictionary.items);
 

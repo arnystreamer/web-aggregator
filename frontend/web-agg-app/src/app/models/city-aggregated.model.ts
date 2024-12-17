@@ -1,4 +1,6 @@
 import { CityDataItemPopulated } from "./city-data-item-populated.model";
+import { CitySalary } from "./city-salary.model";
+import { RegionTax } from "./region-tax.model";
 
 export interface CityAggregated {
     id: string;
@@ -8,19 +10,24 @@ export interface CityAggregated {
     country: string;
 
     dataItems: CityDataItemPopulated[];
+    salaries: CitySalary;
+    applicableTaxes: RegionTax[];
 
     personalAll: number;
     personalWithMortgageAndChildcare: number;
     personalWithoutChildcare: number;
 
-    sustainableSalary?: number; //1500 per month savings
+    sustainableSalaryNet?: number; //1500 per month savings
 
-    averageExpatSalary: number;
+    averageExpatSalaryNet: number;
     apartmentFirstPayment: number;
     mortgageMonthlyPayment: number;
     averageApartmentsPrice: number;
     averageRentPrice: number;
 
+    averageExpatSalaryGrossYearly?: number;
+    sustainableSalaryGross?: number;
+    p75SalaryNet?: number;
     millionaireTerm?: number;    //in months
     apartmentFirstPaymentTerm?: number; //save 20% of apartment
 

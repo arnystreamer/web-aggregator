@@ -7,6 +7,8 @@ import { CostOfLivingPageComponent } from './data-analysis/cost-of-living-page/c
 import { citiesResolver } from './services/cities.resolver';
 import { cityDictionaryResolver } from './services/city-dictionary.resolver';
 import { CitiesPlainPageComponent } from './data-analysis/cost-of-living-page/cities-plain-page/cities-plain-page.component';
+import { citySalariesResolver } from './services/city-salaries.resolver';
+import { regionTaxesResolver } from './services/region-taxes.resolver';
 
 export const routes: Routes = [
   {
@@ -33,12 +35,18 @@ export const routes: Routes = [
       {
         path: 'cost-of-living',
         component: CostOfLivingPageComponent,
-        resolve: { cities: citiesResolver , dictionary: cityDictionaryResolver }
+        resolve: { cities: citiesResolver,
+          dictionary: cityDictionaryResolver,
+          salaries: citySalariesResolver,
+          regionTaxes: regionTaxesResolver }
       },
       {
         path: 'city-costs-plain',
         component: CitiesPlainPageComponent,
-        resolve: { cities: citiesResolver , dictionary: cityDictionaryResolver }
+        resolve: { cities: citiesResolver,
+          dictionary: cityDictionaryResolver,
+          salaries: citySalariesResolver,
+          regionTaxes: regionTaxesResolver }
       },
 
     ]

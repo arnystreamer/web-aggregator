@@ -30,12 +30,28 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 				allItems
 				.Skip(skip)
 				.Take(take)
-				.Select(i => new CitySalaryApi(i.City, i.P25, i.Average, i.P75))
+				.Select(i => new CitySalaryApi(i.City, i.P25, i.P75))
 				.ToArray();
 
 			return new CollectionApi<CitySalaryApi>(
 				allItems.Count(), skip, take, dataItems.Length,
 				dataItems);
 		}
+
+		[HttpGet("fakes")]
+		public async Task<CollectionApi<CitySalaryApi>> GetFake()
+		{
+			var allItems = _databaseService.GetCities();
+
+			var dataItems =
+				allItems
+				.Select(i => new CitySalaryApi(i.Name, 0, 0))
+				.ToArray();
+
+			return new CollectionApi<CitySalaryApi>(
+				allItems.Count(), 0, dataItems.Count(), dataItems.Length,
+				dataItems);
+		}
+
 	}
 }

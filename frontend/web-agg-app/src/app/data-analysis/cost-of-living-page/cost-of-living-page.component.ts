@@ -9,6 +9,9 @@ import { City } from '../../models/city.model';
 import { CityDataItemPopulated } from '../../models/city-data-item-populated.model';
 import { CommonModule } from '@angular/common';
 import { DiffSpanComponent } from '../../shared/diff-span/diff-span.component';
+import { CitySalary } from '../../models/city-salary.model';
+import { RegionTax } from '../../models/region-tax.model';
+import { TaxLevel } from '../../models/tax-level.model';
 
 @Component({
   selector: 'wa-cost-of-living-page',
@@ -26,6 +29,8 @@ export class CostOfLivingPageComponent implements OnInit {
 
   public cities: CityAggregated[] = [];
   public dictionaryItems: DictionaryDataItem[] = [];
+  public salaries: CitySalary[] = [];
+  public regionTaxes: RegionTax[] = [];
 
   public overridenSalary?: number;
   public overridenSalaryMultiplicator?: number = 1.25;
@@ -36,15 +41,20 @@ export class CostOfLivingPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe(({ cities, dictionary }) => {
+    this.route.data.subscribe(({ cities, dictionary, salaries, regionTaxes }) => {
       const rawCities: City[] = cities.items;
       this.dictionaryItems.push(...dictionary.items);
+      this.salaries.push(...salaries.items);
+      this.regionTaxes.push(...regionTaxes.items);
 
       for(let rawCity of rawCities)
       {
         let dataItems: CityDataItemPopulated[] = rawCity.dataItems.filter(di => di.value).map(di => {
           return { dictionaryItem: this.dictionaryItems.filter(v => v.id == di.dictionaryId)[0], ...di }
         });
+
+        let salaryItem: CitySalary = this.salaries.filter(s => s.city == rawCity.name)[0];
+        let applicableRegionTaxes: RegionTax[] = this.regionTaxes.filter(s => s.region == rawCity.name || (s.region == null && s.country == rawCity.country));
 
         this.cities.push(
         {
@@ -56,14 +66,19 @@ export class CostOfLivingPageComponent implements OnInit {
           personalAll: this.getPersonalAll(dataItems),
           personalWithoutChildcare: this.getPersonalWithoutChildcare(dataItems),
           personalWithMortgageAndChildcare: this.getPersonalWithoutRent(dataItems) + this.getMortgagePayment(dataItems),
+          salaries: salaryItem,
+          applicableTaxes: applicableRegionTaxes,
 
-          averageExpatSalary: this.getSalary(dataItems),
+          averageExpatSalaryNet: this.getSalary(dataItems),
           apartmentFirstPayment: this.getApartmentsPrice(dataItems) * 0.2,
           mortgageMonthlyPayment: this.getMortgagePayment(dataItems),
           averageApartmentsPrice: this.getApartmentsPrice(dataItems),
           averageRentPrice: this.getRentPrice(dataItems),
 
-          sustainableSalary: this.getPersonalWithoutChildcare(dataItems) + 1500,
+          averageExpatSalaryGrossYearly: this.unapplyTaxes(this.getSalary(dataItems) * 12, applicableRegionTaxes),
+          sustainableSalaryNet: this.getPersonalWithoutChildcare(dataItems) + 1500,
+          sustainableSalaryGross: this.unapplyTaxes(this.getPersonalWithoutChildcare(dataItems) + 1500, applicableRegionTaxes),
+          p75SalaryNet: this.applyTaxes(salaryItem.p75!, applicableRegionTaxes) / 12,
           millionaireTerm: 1000000 / (this.getSalary(dataItems) - this.getPersonalAll(dataItems)),
           apartmentFirstPaymentTerm: this.getApartmentsPrice(dataItems) * 0.2 / (this.getSalary(dataItems) - this.getPersonalAll(dataItems))
         });
@@ -152,5 +167,62 @@ export class CostOfLivingPageComponent implements OnInit {
     const n = years * 12; //number of monthly payments
 
     return r * debtAmount * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  }
+
+  applyTaxes(salary: number, taxes: RegionTax[]): number
+  {
+    let deduction = 0.0;
+    for(let i = 0; i < taxes.length; i++) {
+      const currentTax = taxes[i];
+      deduction += currentTax.fixed;
+      deduction += salary * currentTax.fixedRate;
+
+      let previousLevel: TaxLevel | undefined;
+      for(let j = 0; j < currentTax.taxLevels.length; i++)
+      {
+        const currentLevel = currentTax.taxLevels[j];
+        if (previousLevel)
+        {
+          deduction += (currentLevel.lowerCut - previousLevel.lowerCut) * previousLevel.rate;
+        }
+
+        previousLevel = currentLevel;
+      }
+
+      if (previousLevel)
+      {
+        deduction += (salary - previousLevel.lowerCut) * previousLevel.rate;
+      }
+    }
+
+    return salary - deduction;
+  }
+
+  unapplyTaxes(salary: number, taxes: RegionTax[]): number
+  {
+    let min = salary;
+    let max = salary * 3;
+
+    let counter = 10;
+    let guess;
+    do
+    {
+      guess = (min + max) / 2;
+
+      var resultedSalary = this.applyTaxes(guess, taxes);
+
+      if (resultedSalary > salary)
+      {
+        max = guess;
+      }
+
+      if (resultedSalary < salary)
+      {
+        min = guess;
+      }
+    }
+    while(--counter > 0)
+
+    return guess!;
   }
 }

@@ -28,24 +28,28 @@
       <td>{{city.name}} {{city.country}}</td>
       <td>
         <ul>
-          <li><b>Net avg:</b> {{ city.averageExpatSalary | number: '1.0-0' }}</li>
+          <li><b>Net avg:</b> {{ city.averageExpatSalaryNet | number: '1.0-0' }}</li>
+          <li><b>Gross avg:</b> {{ city.averageExpatSalaryGrossYearly | number: '1.0-0' }}</li>
+          <li><b>P25 gross:</b> {{ city.salaries.p25!/12 | number: '1.0-0' }} x 12 = {{ city.salaries.p75! | number: '1.0-0' }} </li>
+          <li><b>P75 gross:</b> {{ city.salaries.p75!/12 | number: '1.0-0' }} x 12 = {{ city.salaries.p75! | number: '1.0-0' }}</li>
+          <li><b>P75 net:</b> {{ city.p75SalaryNet | number: '1.0-0' }}</li>
         </ul>
       </td>
       <td>
         <ul>
           <li><b>Personal:</b> {{ city.personalWithoutChildcare  | number: '1.0-0' }}
-            <wa-diff-span [baseValue]="city.personalWithoutChildcare" [relativeValue]="city.averageExpatSalary"></wa-diff-span></li>
+            <wa-diff-span [baseValue]="city.personalWithoutChildcare" [relativeValue]="city.p75SalaryNet"></wa-diff-span></li>
           <li><b>Personal all:</b> {{ city.personalAll | number: '1.0-0' }}
-            <wa-diff-span [baseValue]="city.personalAll" [relativeValue]="city.averageExpatSalary"></wa-diff-span></li>
+            <wa-diff-span [baseValue]="city.personalAll" [relativeValue]="city.p75SalaryNet"></wa-diff-span></li>
           <li><b>Personal with mortgage:</b> {{ city.personalWithMortgageAndChildcare  | number: '1.0-0' }}
-            <wa-diff-span [baseValue]="city.personalWithMortgageAndChildcare" [relativeValue]="city.averageExpatSalary"></wa-diff-span></li>
+            <wa-diff-span [baseValue]="city.personalWithMortgageAndChildcare" [relativeValue]="city.p75SalaryNet"></wa-diff-span></li>
         </ul>
 
       </td>
       <td>
         <ul>
-          <li><b>Sustainable salary net:</b> {{ city.sustainableSalary | number: '1.0-0' }}
-            <wa-diff-span [baseValue]="city.sustainableSalary" [relativeValue]="city.averageExpatSalary"></wa-diff-span></li>
+          <li><b>Sustainable salary net:</b> {{ city.sustainableSalaryNet | number: '1.0-0' }}
+            <wa-diff-span [baseValue]="city.sustainableSalaryNet" [relativeValue]="city.p75SalaryNet"></wa-diff-span> / {{ city.sustainableSalaryGross | number: '1.0-0' }}</li>
           <li><b>Millionaire term:</b> {{ city.millionaireTerm | number: '1.0-0' }}</li>
           <li><b>Apt. first payment (20%) term:</b> {{ city.apartmentFirstPaymentTerm  | number: '1.0-0' }}</li>
         </ul>
