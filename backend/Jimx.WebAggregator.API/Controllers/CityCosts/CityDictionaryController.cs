@@ -9,10 +9,10 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 	[ApiController]
 	public class CityDictionaryController : ControllerBase
 	{
-		private readonly ILogger<CitiesController> _logger;
+		private readonly ILogger<CityDictionaryController> _logger;
 		private readonly CitiesDatabaseService _databaseService;
 
-		public CityDictionaryController(ILogger<CitiesController> logger, CitiesDatabaseService databaseService)
+		public CityDictionaryController(ILogger<CityDictionaryController> logger, CitiesDatabaseService databaseService)
 		{
 			_logger = logger;
 			_databaseService = databaseService;
@@ -30,12 +30,7 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 				allItems
 				.Skip(skip)
 				.Take(take)
-				.Select(i => new DictionaryDataApi()
-				{
-					Id = i.ObjectId,
-					Key = i.Key,
-					Value = i.Value
-				})
+				.Select(i => new DictionaryDataApi(i.ObjectId, i.Key, i.Value))
 				.ToArray();
 
 			return new CollectionApi<DictionaryDataApi>(

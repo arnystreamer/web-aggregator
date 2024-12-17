@@ -4,10 +4,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Jimx.WebAggregator.Domain.CityCosts
 {
-	public record DataItem(int? Key, string Value) : IMongoEntity
+	public record RegionTax(string Region, string Country, decimal Fixed, TaxLevel[] Levels) : IMongoEntity
 	{
 		[BsonId]
 		[BsonRepresentation(BsonType.ObjectId)]
 		public string? ObjectId { get; set; }
-	};
+	}
 }
