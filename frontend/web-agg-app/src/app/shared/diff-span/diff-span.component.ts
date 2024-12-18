@@ -15,24 +15,30 @@ export class DiffSpanComponent {
 
   text(): string
   {
-    if (!this.baseValue || !this.relativeValue)
+    if (this.baseValue == undefined || this.relativeValue == undefined)
       return '';
 
-    return formatNumber((this.baseValue - this.relativeValue) * 100 / this.relativeValue, 'en-GB', '1.0-0')+'%';
+    var value = (this.baseValue - this.relativeValue) * 100 / this.relativeValue
+
+    if (value > 10000)
+    {
+      return 'infinity';
+    }
+    return formatNumber(value, 'en-GB', '1.0-0')+'%';
   }
 
 
   differenceClass(): string
   {
-    if (!this.baseValue || !this.relativeValue)
+    if (this.baseValue == undefined || this.relativeValue == undefined)
       return '';
 
-    if (this.baseValue > this.relativeValue * 1.2)
+    if (this.baseValue > this.relativeValue * 1.1)
     {
       return 'value-bad';
     }
 
-    if (this.baseValue * 1.2 < this.relativeValue)
+    if (this.baseValue * 1.1 < this.relativeValue)
     {
       return 'value-good';
     }

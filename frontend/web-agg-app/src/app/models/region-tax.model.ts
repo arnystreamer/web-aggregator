@@ -5,5 +5,5 @@ export interface RegionTax {
   country: string;
   fixed: number;
   fixedRate: number;
-  taxLevels: TaxLevel[];
+  levels: TaxLevel[];
 }

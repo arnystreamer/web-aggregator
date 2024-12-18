@@ -13,22 +13,34 @@ export interface CityAggregated {
     salaries: CitySalary;
     applicableTaxes: RegionTax[];
 
+    hasFreeApartment: boolean;
     personalAll: number;
     personalWithMortgageAndChildcare: number;
     personalWithoutChildcare: number;
-
-    sustainableSalaryNet?: number; //1500 per month savings
 
     averageExpatSalaryNet: number;
     apartmentFirstPayment: number;
     mortgageMonthlyPayment: number;
     averageApartmentsPrice: number;
     averageRentPrice: number;
+    averageOrdinalCarPrice: number;
+
+    chosenSalaryNetMonthly?: number;
+
+    sustainableSalaryNet?: number; //1500 per month savings
+    sustainableSalaryGross?: number;
+
+    millionaire30YSalaryNet?: number;
+    millionaire30YSalaryGross?: number;
 
     averageExpatSalaryGrossYearly?: number;
-    sustainableSalaryGross?: number;
+    p25SalaryNet?: number;
     p75SalaryNet?: number;
     millionaireTerm?: number;    //in months
+    millionaireEasyTerm?: number;    //in months
+    buyCarTerm?: number;  //in months
     apartmentFirstPaymentTerm?: number; //save 20% of apartment
 
 }
+
+
