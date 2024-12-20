@@ -2,3 +2,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: "Franklin Gothic Book", Roboto, "Helvetica Neue", sans-serif; }
+
+.actions-panel, .filters-panel
+{
+  padding: 0 0 12px 0;
+  margin-bottom: 12pt;
+  border-bottom: 1pt solid #888;
+
+  display: flex;
+  gap: 10px;
+}

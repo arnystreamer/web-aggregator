@@ -1,4 +1,5 @@
-﻿using Jimx.WebAggregator.API.Options;
+﻿using Jimx.WebAggregator.API.Models.CityCosts;
+using Jimx.WebAggregator.API.Options;
 using Jimx.WebAggregator.Domain.CityCosts;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -34,6 +35,28 @@ namespace Jimx.WebAggregator.API.Services
 
 			return collection.Find(_ => true).ToList();
 			
+		}
+
+		public List<RegionTax> GetRegionTaxes()
+		{
+			var client = new MongoClient(_databaseSettings.Value.ConnectionString);
+
+			var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
+			var collection = database.GetCollection<RegionTax>(_databaseSettings.Value.RegionTaxesCollectionName);
+
+			return collection.Find(_ => true).ToList();
+
+		}
+
+		public List<CitySalary> GetCitySalaries()
+		{
+			var client = new MongoClient(_databaseSettings.Value.ConnectionString);
+
+			var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
+			var collection = database.GetCollection<CitySalary>(_databaseSettings.Value.CitySalariesCollectionName);
+
+			return collection.Find(_ => true).ToList();
+
 		}
 	}
 }

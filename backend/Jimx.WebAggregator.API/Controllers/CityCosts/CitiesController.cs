@@ -30,20 +30,8 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 				allItems
 				.Skip(skip)
 				.Take(take)
-				.Select(i => new CityApi()
-				{
-					Id = i.ObjectId,
-					Name = i.Name,
-					Region = i.Region,
-					Country = i.Country,
-					DataItems = i.DataItems.Select(di => new CityDataItemApi()
-					{
-						DictionaryId = di.DictionaryId,
-						Key = di.Key,
-						Value = di.Value
-					})
-					.ToArray()
-				})
+				.Select(i => new CityApi(i.ObjectId, i.Name, i.Region, i.Country, i.DataItems.Select(di => new CityDataItemApi(di.Key, di.DictionaryId, di.Value))
+					.ToArray()))
 				.ToArray();
 
 			return new CollectionApi<CityApi>(

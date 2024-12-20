@@ -1,1 +1,194 @@
-<p>cost-of-living works!</p>
+<div>
+  <h2>Data analysis</h2>
+</div>
+
+<div class="actions-panel">
+  <button color="accent" mat-flat-button [routerLink]="['..']">
+    <mat-icon>arrow_back</mat-icon>
+    Back
+  </button>
+
+  <button color="accent" mat-flat-button [routerLink]="['../city-costs-plain']">
+    <mat-icon>info</mat-icon>
+    City data plain
+  </button>
+</div>
+
+<div class="actions-panel form-inline-container">
+  <form [formGroup]="filterForm">
+    <mat-form-field class="field">
+      <mat-label>Salary type</mat-label>
+      <mat-select name="selectedSalaryType" formControlName="selectedSalaryType">
+        <mat-option *ngFor="let salaryType of salaryTypes" [value]="salaryType">{{salaryType.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="field-shorter">
+      <mat-label>Manual salary</mat-label>
+      <input matInput name="manualSalary" formControlName="manualSalary">
+    </mat-form-field>
+
+    <mat-form-field class="field-shorter">
+      <mat-label>Multiplicator</mat-label>
+      <input matInput name="salaryMultiplicator" formControlName="salaryMultiplicator">
+    </mat-form-field>
+
+    <div class="splitter">
+      &nbsp;
+    </div>
+
+    <mat-form-field class="field-long">
+      <mat-label>Sorting</mat-label>
+      <mat-select name="sorting" formControlName="sorting">
+        @for(sortingGroup of sortings; track $index)
+        {
+          <mat-optgroup [label]="sortingGroup.groupName">
+            <mat-option *ngFor="let sorting of sortingGroup.items" [value]="sorting">{{sorting.name}}</mat-option>
+          </mat-optgroup>
+        }
+
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="field-short">
+      <mat-label>Sort direction</mat-label>
+      <mat-select name="sortDirectionAscending" formControlName="sortDirectionAscending">
+        <mat-option [value]="true">Ascending</mat-option>
+        <mat-option [value]="false">Descending</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button (click)="rebuildTable()">Rebuild</button>
+  </form>
+</div>
+
+<div class="actions-panel form-inline-container">
+  <form [formGroup]="searchForm">
+    <mat-form-field class="field-long">
+      <mat-label>City name</mat-label>
+      <input matInput name="cityName" formControlName="cityName">
+    </mat-form-field>
+  </form>
+</div>
+
+<table>
+  <tr>
+    <th>City</th>
+    <th>Fact salary</th>
+    <th>Expenses per month</th>
+    <th>Desirable salary</th>
+    <th>Big purchases</th>
+  </tr>
+  @for(city of cities; track $index)
+  {
+    <tr *ngIf="city.isShown">
+      <td>{{ $index + 1 }} of {{ cities.length }}<br/> {{city.name}}, {{city.country}}</td>
+      <td>
+        <ul>
+          <li>Net avg: <wa-money-span [value]="city.averageExpatSalaryNet" /></li>
+          <li>Gross avg: <wa-money-span [value]="city.averageExpatSalaryGrossYearly" /></li>
+          <li>P25 net/gross: <wa-money-span [value]="city.p25SalaryNet" /> /
+            <wa-money-span [value]="city.salaries.p25" /></li>
+          <li>P75 net/gross: <wa-money-span [value]="city.p75SalaryNet" /> /
+            <wa-money-span [value]="city.salaries.p75" /></li>
+          <li>Chosen: <wa-money-span [value]="city.chosenSalaryNetMonthly" [selected]="selectedSortFnName == 'chosenSalaryAbsoulteValue'" /></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li *ngIf="city.hasFreeApartment"><b style="color: orange;">Free apartment applied</b></li>
+          <li>As pair:
+            <wa-money-span
+              [value]="city.personalWithoutChildcare"
+              [selected]="selectedSortFnName == 'expensesAsPairAbsolute'" />
+            <wa-diff-span
+              [baseValue]="city.personalWithoutChildcare"
+              [baseSelected]="selectedSortFnName == 'expensesAsPairProximity'"
+              [relativeValue]="city.chosenSalaryNetMonthly"
+              [relativeSelected]="selectedSortFnName == 'expensesAsPairProximityRelative'" />
+          </li>
+          <li>Pair with child:
+            <wa-money-span
+              [value]="city.personalAll"
+              [selected]="selectedSortFnName == 'expensesWithChildAbsolute'" />
+            <wa-diff-span
+              [baseValue]="city.personalAll"
+              [baseSelected]="selectedSortFnName == 'expensesWithChildProximity'"
+              [relativeValue]="city.chosenSalaryNetMonthly"
+              [relativeSelected]="selectedSortFnName == 'expensesWithChildProximityRelative'" />
+          </li>
+          <li>Pair with mortgage and child:
+            <wa-money-span
+              [value]="city.personalWithMortgageAndChildcare"
+              [selected]="selectedSortFnName == 'expensesWithMortgageAndChildcareAbsolute'" />
+            <wa-diff-span
+              [baseValue]="city.personalWithMortgageAndChildcare"
+              [baseSelected]="selectedSortFnName == 'expensesWithMortgageAndChildcareProximity'"
+              [relativeValue]="city.chosenSalaryNetMonthly"
+              [relativeSelected]="selectedSortFnName == 'expensesWithMortgageAndChildcareProximityRelative'" />
+          </li>
+        </ul>
+
+      </td>
+      <td>
+        <ul>
+          <li>Sustainable net/gross:
+            <wa-money-span
+              [value]="city.sustainableSalaryNet"
+              [selected]="selectedSortFnName == 'sustainableSalaryNetAbsolute'" />
+            <wa-diff-span
+              [baseValue]="city.sustainableSalaryNet"
+              [baseSelected]="selectedSortFnName == 'sustainableSalaryNetProximity'"
+              [relativeValue]="city.chosenSalaryNetMonthly"
+              [relativeSelected]="selectedSortFnName == 'sustainableSalaryNetProximityRelative'" /> /
+            <wa-money-span
+              [value]="city.sustainableSalaryGross"
+              [selected]="selectedSortFnName == 'sustainableSalaryGrossAbsolute'" />
+          </li>
+          <li>1 mln in 30 yrs net/gross:
+            <wa-money-span
+              [value]="city.millionaire30YSalaryNet"
+              [selected]="selectedSortFnName == 'millionaire30YSalaryNetAbsolute'" />
+            <wa-diff-span
+              [baseValue]="city.millionaire30YSalaryNet"
+              [baseSelected]="selectedSortFnName == 'millionaire30YSalaryNetProximity'"
+              [relativeValue]="city.chosenSalaryNetMonthly"
+              [relativeSelected]="selectedSortFnName == 'millionaire30YSalaryNetProximityRelative'" /> /
+            <wa-money-span
+              [value]="city.millionaire30YSalaryGross"
+              [selected]="selectedSortFnName == 'millionaire30YSalaryGrossAbsolute'" />
+          </li>
+          <li>Millionaire term:
+            <wa-term-span
+              [termInMonths]="city.millionaireTerm"
+              [selected]="selectedSortFnName == 'millionaireTerm'" />
+          </li>
+          <li>Millionaire easy term:
+            <wa-term-span
+              [termInMonths]="city.millionaireEasyTerm"
+              [selected]="selectedSortFnName == 'millionaireEasyTerm'" />
+          </li>
+          <li>Car buy term:
+            <wa-term-span
+              [termInMonths]="city.buyCarTerm"
+              [selected]="selectedSortFnName == 'buyCarTerm'" />
+          </li>
+          <li>Apt. 20% payment term:
+            <wa-term-span
+              [termInMonths]="city.apartmentFirstPaymentTerm"
+              [selected]="selectedSortFnName == 'apartmentFirstPaymentTerm'" />
+          </li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li>Apt. first payment: <wa-money-span [value]="city.apartmentFirstPayment" /></li>
+          <li>Apt. monthly payment: <wa-money-span [value]="city.mortgageMonthlyPayment" /></li>
+          <li>Apt. price: <wa-money-span [value]="city.averageApartmentsPrice" /></li>
+          <li>Car price: <wa-money-span [value]="city.averageOrdinalCarPrice" /></li>
+          <li>Rent price: <wa-money-span [value]="city.averageRentPrice" /></li>
+        </ul>
+      </td>
+    </tr>
+  }
+</table>
