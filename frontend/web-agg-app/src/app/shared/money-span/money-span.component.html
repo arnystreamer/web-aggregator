@@ -1,0 +1,9 @@
+@if (value !== undefined)
+{
+  <span [class]="{ 'selected': selected }">{{ value | number: '1.0-0' }}</span>
+}
+
+@if (value === undefined)
+{
+  <span [class]="{ 'value-bad': true, 'selected': selected }">none</span>
+}

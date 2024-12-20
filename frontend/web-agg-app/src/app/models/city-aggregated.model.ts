@@ -25,6 +25,8 @@ export interface CityAggregated {
     averageRentPrice: number;
     averageOrdinalCarPrice: number;
 
+    isShown: boolean;
+
     chosenSalaryNetMonthly?: number;
 
     sustainableSalaryNet?: number; //1500 per month savings

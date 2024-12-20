@@ -1,1 +1,4 @@
-<span [class]="differenceClass()">({{ text() }})</span>
+<span [class]="differenceClass()">
+  (<span [class]="{ 'selected': baseSelected }">{{ value() }}</span>,
+  <span [class]="{ 'selected': relativeSelected }">{{ valuePercentage() }}%</span>)
+</span>

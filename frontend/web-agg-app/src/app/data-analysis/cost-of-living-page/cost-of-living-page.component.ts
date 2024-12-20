@@ -16,6 +16,9 @@ import { CitySalary } from '../../models/city-salary.model';
 import { RegionTax } from '../../models/region-tax.model';
 import { TaxLevel } from '../../models/tax-level.model';
 import { SalaryType } from '../../models/salary-type.enum';
+import { SortingFunctionsHelper } from '../../services/helpers/sorting-functions-helper';
+import { TermSpanComponent } from '../../shared/term-span/term-span.component';
+import { MoneySpanComponent } from '../../shared/money-span/money-span.component';
 
 @Component({
   selector: 'wa-cost-of-living-page',
@@ -27,14 +30,17 @@ import { SalaryType } from '../../models/salary-type.enum';
     ReactiveFormsModule,
     MatInputModule,
     RouterModule,
-    DiffSpanComponent
+    DiffSpanComponent,
+    TermSpanComponent,
+    MoneySpanComponent
   ],
   templateUrl: './cost-of-living-page.component.html',
   styleUrl: './cost-of-living-page.component.scss'
 })
 export class CostOfLivingPageComponent implements OnInit {
 
-  public form!: FormGroup;
+  public filterForm!: FormGroup;
+  public searchForm!: FormGroup;
 
   public rawCities: City[] = [];
   public dictionaryItems: DictionaryDataItem[] = [];
@@ -51,6 +57,48 @@ export class CostOfLivingPageComponent implements OnInit {
     { name: 'Developer top 25%', value: SalaryType.P75 }
   ];
 
+  public selectedSortFnName?: string;
+
+  public sortings = [
+    { groupName : 'Salaries', items: [
+        { name: 'Salary value', value: SortingFunctionsHelper.chosenSalaryAbsoulteValue },
+
+        { name: 'Sustainable net salary value', value: SortingFunctionsHelper.sustainableSalaryNetAbsolute },
+        { name: 'Sustainable net salary proximity abs.', value: SortingFunctionsHelper.sustainableSalaryNetProximity },
+        { name: 'Sustainable net salary proximity %', value: SortingFunctionsHelper.sustainableSalaryNetProximityRelative },
+
+        { name: 'Sustainable gross salary value', value: SortingFunctionsHelper.sustainableSalaryGrossAbsolute },
+
+        { name: 'Salary 30-yrs-millionaire net value', value: SortingFunctionsHelper.millionaire30YSalaryNetAbsolute },
+        { name: 'Salary 30-yrs-millionaire net proximity abs.', value: SortingFunctionsHelper.millionaire30YSalaryNetProximity },
+        { name: 'Salary 30-yrs-millionaire net proximity %', value: SortingFunctionsHelper.millionaire30YSalaryNetProximityRelative },
+
+        { name: 'Salary 30-yrs-millionaire gross value', value: SortingFunctionsHelper.millionaire30YSalaryGrossAbsolute },
+      ]
+    },
+    { groupName : 'Expenses', items: [
+        { name: 'Expenses as pair value', value: SortingFunctionsHelper.expensesAsPairAbsolute },
+        { name: 'Expenses as pair proximity abs.', value: SortingFunctionsHelper.expensesAsPairProximity },
+        { name: 'Expenses as pair proximity %', value: SortingFunctionsHelper.expensesAsPairProximityRelative },
+
+        { name: 'Expenses with child value', value: SortingFunctionsHelper.expensesWithChildAbsolute },
+        { name: 'Expenses with child proximity abs.', value: SortingFunctionsHelper.expensesWithChildProximity },
+        { name: 'Expenses with child proximity %', value: SortingFunctionsHelper.expensesWithChildProximityRelative },
+
+        { name: 'Expenses with child and mortgage value', value: SortingFunctionsHelper.expensesWithMortgageAndChildcareAbsolute },
+        { name: 'Expenses with child and mortgage proximity abs.', value: SortingFunctionsHelper.expensesWithMortgageAndChildcareProximity },
+        { name: 'Expenses with child and mortgage proximity %', value: SortingFunctionsHelper.expensesWithMortgageAndChildcareProximityRelative }
+      ]
+    },
+    { groupName : 'Terms', items: [
+        { name: 'Term to become millionaire', value: SortingFunctionsHelper.millionaireTerm },
+        { name: 'Term to become millionaire without children', value: SortingFunctionsHelper.millionaireEasyTerm },
+        { name: 'Term to buy ordinary car', value: SortingFunctionsHelper.buyCarTerm },
+        { name: 'Term to accumulate 20% of apartment', value: SortingFunctionsHelper.apartmentFirstPaymentTerm }
+      ]
+    }
+  ];
+
   public citiesWithFreeApartment: string[] = ['Moscow'];
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute)
@@ -60,27 +108,43 @@ export class CostOfLivingPageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.form = this.formBuilder.group({
+    this.filterForm = this.formBuilder.group({
       selectedSalaryType: [this.salaryTypes[0]],
       manualSalary: [50000],
       salaryMultiplicator: [1],
+      sorting: [this.sortings[0]],
+      sortDirectionAscending: [true],
     });
 
-    this.form.controls['manualSalary'].disable();
-    this.form.controls['salaryMultiplicator'].disable();
+    this.filterForm.controls['manualSalary'].disable();
+    this.filterForm.controls['salaryMultiplicator'].disable();
 
-    this.form.controls['selectedSalaryType'].valueChanges.subscribe({next: v => {
+    this.filterForm.controls['selectedSalaryType'].valueChanges.subscribe({next: v => {
 
       if (v.value == SalaryType.Expat || v.value == SalaryType.P25 || v.value == SalaryType.P75)
-        this.form.controls['salaryMultiplicator'].enable();
+        this.filterForm.controls['salaryMultiplicator'].enable();
       else
-        this.form.controls['salaryMultiplicator'].disable();
+        this.filterForm.controls['salaryMultiplicator'].disable();
 
 
       if (v.value == SalaryType.Manual)
-        this.form.controls['manualSalary'].enable();
+        this.filterForm.controls['manualSalary'].enable();
       else
-        this.form.controls['manualSalary'].disable();
+        this.filterForm.controls['manualSalary'].disable();
+    }});
+
+    this.searchForm = this.formBuilder.group({
+      cityName: ['']
+    });
+
+    this.searchForm.controls['cityName'].valueChanges.subscribe({next: (v: String) => {
+
+      var criteria: string = v ? v.trim().toLowerCase() : '';
+      for(let city of this.cities)
+      {
+        city.isShown = (!criteria || city.name.trim().toLowerCase().includes(criteria));
+      }
+
     }});
 
     this.route.data.subscribe(({ cities, dictionary, salaries, regionTaxes }) => {
@@ -95,12 +159,16 @@ export class CostOfLivingPageComponent implements OnInit {
   {
     this.cities = [];
 
-    if (!this.form.controls['selectedSalaryType'].valid)
+    if (!this.filterForm.controls['selectedSalaryType'].valid)
       return;
 
-    var selectedSalaryType = this.form.controls['selectedSalaryType'].value?.value;
-    var manualSalary = this.form.controls['manualSalary'].value;
-    var salaryMultiplicator = this.form.controls['salaryMultiplicator'].value;
+    this.searchForm.controls['cityName'].setValue('');
+
+    var selectedSalaryType = this.filterForm.controls['selectedSalaryType'].value?.value;
+    var manualSalary = this.filterForm.controls['manualSalary'].value;
+    var salaryMultiplicator = this.filterForm.controls['salaryMultiplicator'].value;
+    var sorting = this.filterForm.controls['sorting'].value;
+    var sortDirectionAscending : boolean | undefined = this.filterForm.controls['sortDirectionAscending'].value;
 
     for(let rawCity of this.rawCities)
     {
@@ -124,6 +192,7 @@ export class CostOfLivingPageComponent implements OnInit {
           personalWithMortgageAndChildcare: this.getPersonalAllWithoutRent(dataItems) + this.getMortgagePayment(dataItems),
           salaries: salaryItem,
           applicableTaxes: applicableRegionTaxes,
+          isShown: true,
 
           averageExpatSalaryNet: this.getExpatSalary(dataItems),
           apartmentFirstPayment: this.getApartmentsPrice(dataItems) * 0.2,
@@ -153,10 +222,11 @@ export class CostOfLivingPageComponent implements OnInit {
         this.cities.push(cityAggregated);
     }
 
-    var sustainableSalaryNetProximityAsc = (a: CityAggregated, b: CityAggregated) =>
-      a.sustainableSalaryNet! - a.chosenSalaryNetMonthly! - (b.sustainableSalaryNet! - b.chosenSalaryNetMonthly!);
-
-    this.cities.sort(sustainableSalaryNetProximityAsc);
+    if (sorting || sortDirectionAscending != undefined)
+    {
+      this.selectedSortFnName = sorting.value.name;
+      this.cities.sort(sorting.value(sortDirectionAscending));
+    }
   }
 
 

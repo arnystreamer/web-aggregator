@@ -11,20 +11,27 @@ export class DiffSpanComponent {
   @Input() baseValue?: number;
   @Input() relativeValue?: number;
 
+  @Input() baseSelected: boolean = false;
+  @Input() relativeSelected: boolean = false;
+
   @Input() noColoring: boolean = false;
 
-  text(): string
+  value(): string
   {
     if (this.baseValue == undefined || this.relativeValue == undefined)
       return '';
 
-    var value = (this.baseValue - this.relativeValue) * 100 / this.relativeValue
+    var value = this.baseValue - this.relativeValue;
+    return formatNumber(value, 'en-GB', '1.0-0');
+  }
 
-    if (value > 10000)
-    {
-      return 'infinity';
-    }
-    return formatNumber(value, 'en-GB', '1.0-0')+'%';
+  valuePercentage()
+  {
+    if (this.baseValue == undefined || this.relativeValue == undefined)
+      return '';
+
+    var valuePercentage = (this.baseValue - this.relativeValue) * 100.0 / this.relativeValue;
+    return (valuePercentage > 10000 ? 'inf.' : formatNumber(valuePercentage, 'en-GB', '1.0-0') );
   }
 
 
