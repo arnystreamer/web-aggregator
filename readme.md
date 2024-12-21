@@ -26,8 +26,8 @@ Cleanup:
 `rm -ri *`
 
 Load:
-`docker load -i wa-api.1_0.tar`
-`tar -xf wa-ui.1_0.tar -C /var/www/wa-ui`
+`docker load -i wa-api.1.0.tar`
+`tar -xf wa-ui.1.0.tar -C /var/www/wa-ui`
 
 ## Running
 
