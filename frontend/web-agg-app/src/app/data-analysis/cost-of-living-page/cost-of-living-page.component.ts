@@ -358,26 +358,15 @@ export class CostOfLivingPageComponent implements OnInit {
       deduction += currentTax.fixed;
       deduction += salary * currentTax.fixedRate;
 
-      let previousLevel: TaxLevel | undefined = currentTax.levels.length > 0 ? currentTax.levels[0] : undefined;
-      for(let j = 1; j < currentTax.levels.length; j++)
+      for(let j = 0; j < currentTax.levels.length; j++)
       {
-        previousLevel = currentTax.levels[j-1];
         const currentLevel = currentTax.levels[j];
+        const nextLevelCut = j+1 < currentTax.levels.length ? currentTax.levels[j+1].lowerCut : 2147483647;
 
-        if (currentLevel.lowerCut > salary)
-        {
+        deduction += Math.max((Math.min(nextLevelCut, salary) - currentLevel.lowerCut) * currentLevel.rate, 0);
+
+        if (nextLevelCut >= salary)
           break;
-        }
-
-        if (previousLevel)
-        {
-          deduction += (currentLevel.lowerCut - previousLevel.lowerCut) * previousLevel.rate;
-        }
-      }
-
-      if (previousLevel)
-      {
-        deduction += (salary - previousLevel.lowerCut) * previousLevel.rate;
       }
     }
 
@@ -387,9 +376,9 @@ export class CostOfLivingPageComponent implements OnInit {
   unapplyTaxes(salary: number, taxes: RegionTax[]): number
   {
     let min = salary;
-    let max = salary * 2.2;
+    let max = salary * 3;
 
-    let counter = 7;
+    let counter = 8;
     let guess;
     do
     {
