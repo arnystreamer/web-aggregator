@@ -71,6 +71,20 @@
   </form>
 </div>
 
+<div *ngIf="dataWarnings.length">
+  <h2>Warnings</h2>
+  <table>
+    @for(dataWarning of dataWarnings; track $index)
+      {
+<tr>
+  <td>{{dataWarning}}</td>
+</tr>
+      }
+  </table>
+</div>
+
+<h2>Cities</h2>
+
 <table>
   <tr>
     <th>City</th>
@@ -82,7 +96,11 @@
   @for(city of cities; track $index)
   {
     <tr *ngIf="city.isShown">
-      <td>{{ $index + 1 }} of {{ cities.length }}<br/> {{city.name}}, {{city.country}}</td>
+      <td>
+        {{ $index + 1 }} of {{ cities.length }}<br/>
+        {{city.name}}, {{city.region}}<sup *ngIf="city.regionTaxesAppliedNumber">{{city.regionTaxesAppliedNumber}}</sup><br/>
+        {{city.country}}<sup *ngIf="city.countryTaxesAppliedNumber">{{city.countryTaxesAppliedNumber}}</sup>
+      </td>
       <td>
         <ul>
           <li>Net avg: <wa-money-span [value]="city.averageExpatSalaryNet" /></li>
@@ -96,7 +114,6 @@
       </td>
       <td>
         <ul>
-          <li> {{ city.applicableTaxes.length }} </li>
           <li *ngIf="city.hasFreeApartment"><b style="color: orange;">Free apartment applied</b></li>
           <li>As pair:
             <wa-money-span

@@ -1,4 +1,4 @@
 ﻿using Jimx.WebAggregator.Parser;
 using Jimx.WebAggregator.ParserTest;
 
-new Parser().DoJob(new ParsingJob());
+await new Parser().DoJobAsync(new ParsingJob());

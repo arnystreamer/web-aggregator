@@ -16,6 +16,7 @@ namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 			_insertOptions = insertOptions;
 		}
 
+		[Obsolete]
 		public override IEnumerable<TCollectionItem> Do(ILogger logger, IMongoCollection<TCollectionItem> mongoCollection)
 		{
 			var existingItems = mongoCollection.Find(i => true).ToList();
@@ -32,6 +33,27 @@ namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 
 				yield return updatedItem;
 			}
+		}
+
+		public override async Task<IEnumerable<TCollectionItem>> DoAsync(ILogger logger, IMongoCollection<TCollectionItem> mongoCollection)
+		{
+			var existingItems = (await mongoCollection.FindAsync(i => true)).ToList();
+
+			IList<(Task Task,TCollectionItem Item)> tasks = new List<(Task, TCollectionItem)>();
+
+			foreach (var updatedItem in _updatedItems)
+			{
+				var existingItem = existingItems.SingleOrDefault(i => _insertOptions.IdentityComparer.Equals(i, updatedItem));
+
+				if (existingItem == null)
+				{
+					logger.LogInformation($"{mongoCollection.CollectionNamespace.FullName} MongoDb collection: inserting new item");
+					tasks.Add((mongoCollection.InsertOneAsync(updatedItem), updatedItem));
+				}
+			}
+
+			await Task.WhenAll(tasks.Select(t => t.Task));
+			return tasks.Select(t => t.Item);
 		}
 
 		public override void Dispose()

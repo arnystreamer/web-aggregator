@@ -2,6 +2,6 @@
 {
 	public interface IParsingJob
 	{
-		void Do();
+		Task DoAsync();
 	}
 }

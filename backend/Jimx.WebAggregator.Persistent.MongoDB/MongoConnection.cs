@@ -13,30 +13,53 @@ namespace Jimx.WebAggregator.Persistent.MongoDB
 			_options = options;
 		}
 
+		[Obsolete]
 		public DoWorkResult<TCollectionItem> DoWork<TUnitOfWork, TCollectionItem>(TUnitOfWork unit)
 			where TUnitOfWork : MongoUnitOfWork<TCollectionItem>
 		{
+			var collection = GetCollectionConnection<TCollectionItem>();
+			return DoWorkAsync(collection, unit).Result;
+		}
+
+		public CollectionConnection<TCollectionItem> GetCollectionConnection<TCollectionItem>()
+		{
 			MongoClient client = new MongoClient(_options.ConnectionString);
-			using (var session = client.StartSession())
+			var database = client.GetDatabase(_options.DatabaseName);
+			var collection = database.GetCollection<TCollectionItem>(_options.CollectionName);
+
+			return new CollectionConnection<TCollectionItem>(_options.Logger, collection);
+		}
+
+		public async Task<DoWorkResult<TCollectionItem>> DoWorkAsync<TUnitOfWork, TCollectionItem>(CollectionConnection<TCollectionItem> collectionConnection, TUnitOfWork unit)
+			where TUnitOfWork : MongoUnitOfWork<TCollectionItem>
+		{
+			try
 			{
-				try
-				{
-					var database = client.GetDatabase(_options.DatabaseName);
-					var collection = database.GetCollection<TCollectionItem>(_options.CollectionName);
+				_options.Logger.LogInformation($"{typeof(TUnitOfWork)} job starting");
+				var affectedItems = await unit.DoAsync(_options.Logger, collectionConnection.Collection);
+				_options.Logger.LogInformation($"{typeof(TUnitOfWork)} job finished");
 
-					_options.Logger.LogInformation($"{typeof(TUnitOfWork)} job starting");
-					var affectedItems = unit.Do(_options.Logger, collection);
-					_options.Logger.LogInformation($"{typeof(TUnitOfWork)} job finished");
+				var allItems = (await collectionConnection.Collection.FindAsync(_ => true)).ToList();
 
-					var allItems = collection.Find(_ => true).ToList();
-
-					return new DoWorkResult<TCollectionItem>(false, allItems, affectedItems.ToList());
-				}
-				catch
-				{
-					return new DoWorkResult<TCollectionItem>(true, [], []);
-				}
+				return new DoWorkResult<TCollectionItem>(false, allItems, affectedItems.ToList());
 			}
+			catch
+			{
+				return new DoWorkResult<TCollectionItem>(true, [], []);
+			}
+			
+		}
+
+		public class CollectionConnection<TCollectionItem>
+		{
+			public CollectionConnection(ILogger logger, IMongoCollection<TCollectionItem> collection)
+			{
+				Logger = logger;
+				Collection = collection;
+			}
+
+			public ILogger Logger { get; }
+			public IMongoCollection<TCollectionItem> Collection { get; }
 		}
 
 		public record DoWorkResult<TCollectionItem>(bool IsFailure, IEnumerable<TCollectionItem> AllItems, IEnumerable<TCollectionItem> AffectedItems);

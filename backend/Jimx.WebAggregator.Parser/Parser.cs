@@ -2,9 +2,9 @@
 {
 	public class Parser
 	{
-		public void DoJob(IParsingJob job)
+		public async Task DoJobAsync(IParsingJob job)
 		{
-			job.Do();
+			await job.DoAsync();
 		}
 	}
 }

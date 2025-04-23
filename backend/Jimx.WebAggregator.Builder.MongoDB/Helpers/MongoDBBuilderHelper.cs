@@ -7,24 +7,30 @@ namespace Jimx.WebAggregator.Builder.MongoDB.Helpers
 {
     public static class MongoDBBuilderHelper
 	{
-		public static PersistencyBuilder<IEnumerable<TItem>> AdjustMongoDBConnection<TItem>(this IBuilder<IEnumerable<TItem>> collectionBuilder, MongoOptions mongoOptions)
+		public static PersistencyBuilder<IEnumerable<TItem>> AdjustMongoDBConnection<TItem>(this IBuilder<IEnumerable<TItem>> collectionBuilder, MongoConnection mongoConnection)
 		{
-			var mongoConnection = new MongoConnection(mongoOptions);
-
 			return new PersistencyBuilder<IEnumerable<TItem>>(
 				mongoConnection,
 				collectionBuilder);
 		}
 
+		public static PersistencyBuilder<IEnumerable<TItem>> AdjustMongoDBConnection<TItem>(this IBuilder<IEnumerable<TItem>> collectionBuilder, MongoOptions mongoOptions)
+		{
+			var mongoConnection = new MongoConnection(mongoOptions);
+
+			return AdjustMongoDBConnection<TItem>(collectionBuilder, mongoConnection);
+		}
+
 		public static PersistencyBuilder<IEnumerable<TEntity>> UpsertInMongoDb<TBase, TEntity, TEntityIdentity>(
 			this PersistencyBuilder<IEnumerable<TBase>> collectionBuilder, UpsertOptions<TEntity, TEntityIdentity> upsertOptions, 
 			Func<TBase, TEntity> collectionSelector)
-			where TEntity : IMongoEntity
+			where TEntity : class, IMongoEntity
 		{
 			return collectionBuilder.Wrap(value =>
 			{
 				var resolvedValue = value.ToList();
 				IEnumerable<TEntity> selectedItems = resolvedValue.Select(v => collectionSelector(v));
+
 				var result = collectionBuilder.MongoConnection.DoWork<UpsertMongoUnitOfWork<TEntity, TEntityIdentity>, TEntity>(
 					new UpsertMongoUnitOfWork<TEntity, TEntityIdentity>(selectedItems.ToArray(), upsertOptions));
 				return selectedItems;

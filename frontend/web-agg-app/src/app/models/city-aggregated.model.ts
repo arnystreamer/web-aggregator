@@ -12,6 +12,8 @@ export interface CityAggregated {
     dataItems: CityDataItemPopulated[];
     salaries: CitySalary | undefined;
     applicableTaxes: RegionTax[];
+    countryTaxesAppliedNumber: number;
+    regionTaxesAppliedNumber: number;
 
     hasFreeApartment: boolean;
     personalAll: number;
