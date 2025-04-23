@@ -1,9 +1,9 @@
-@if (value !== undefined)
+@if (getValue() !== undefined)
 {
-  <span [class]="{ 'selected': selected }">{{ value | number: '1.0-0' }}</span>
+    <span [class]="{ 'selected': selected }">{{ getValue() | number: '1.0-0' }}</span>
 }
 
-@if (value === undefined)
+@if (getValue() === undefined)
 {
   <span [class]="{ 'value-bad': true, 'selected': selected }">none</span>
 }

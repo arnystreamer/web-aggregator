@@ -177,7 +177,7 @@ export class CostOfLivingPageComponent implements OnInit {
         });
 
         let salaryItem: CitySalary = this.salaries.filter(s => s.city == rawCity.name)[0];
-        let applicableRegionTaxes: RegionTax[] = this.regionTaxes.filter(s => s.region == rawCity.name || (s.region == null && s.country == rawCity.country));
+        let applicableRegionTaxes: RegionTax[] = this.regionTaxes.filter(s => s.region == rawCity.region || (s.region == null && s.country == rawCity.country));
 
         let cityAggregated: CityAggregated =
         {
@@ -203,8 +203,8 @@ export class CostOfLivingPageComponent implements OnInit {
         };
 
         cityAggregated.averageExpatSalaryGrossYearly = this.unapplyTaxes(cityAggregated.averageExpatSalaryNet * 12, applicableRegionTaxes);
-        cityAggregated.p25SalaryNet = this.applyTaxes(salaryItem.p25!, applicableRegionTaxes) / 12;
-        cityAggregated.p75SalaryNet = this.applyTaxes(salaryItem.p75!, applicableRegionTaxes) / 12;
+        cityAggregated.p25SalaryNet = this.applyTaxes(salaryItem?.p25 ?? 0, applicableRegionTaxes) / 12;
+        cityAggregated.p75SalaryNet = this.applyTaxes(salaryItem?.p75 ?? 0, applicableRegionTaxes) / 12;
 
         cityAggregated.sustainableSalaryNet = cityAggregated.personalWithoutChildcare + 1500;
         cityAggregated.sustainableSalaryGross = this.unapplyTaxes(cityAggregated.sustainableSalaryNet * 12, applicableRegionTaxes);

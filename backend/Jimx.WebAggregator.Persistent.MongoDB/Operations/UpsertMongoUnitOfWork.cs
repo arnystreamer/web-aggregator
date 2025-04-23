@@ -51,7 +51,7 @@ namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 
 			for (var i = 0; i < existingItems.Count; i++)
 			{
-				if (!touchedItemIndices.Contains(i))
+				if (!touchedItemIndices.Contains(i) && !_upsertOptions.DoNotDeleteExisting)
 				{
 					var selectorExpression = _upsertOptions.IdentityComparerExpression(_upsertOptions.IdentitySelector(existingItems[i]));
 

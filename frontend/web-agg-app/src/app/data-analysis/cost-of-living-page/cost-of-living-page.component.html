@@ -88,14 +88,15 @@
           <li>Net avg: <wa-money-span [value]="city.averageExpatSalaryNet" /></li>
           <li>Gross avg: <wa-money-span [value]="city.averageExpatSalaryGrossYearly" /></li>
           <li>P25 net/gross: <wa-money-span [value]="city.p25SalaryNet" /> /
-            <wa-money-span [value]="city.salaries.p25" /></li>
+            <wa-money-span [value]="city.salaries?.p25 ?? undefined" /></li>
           <li>P75 net/gross: <wa-money-span [value]="city.p75SalaryNet" /> /
-            <wa-money-span [value]="city.salaries.p75" /></li>
+            <wa-money-span [value]="city.salaries?.p75 ?? undefined" /></li>
           <li>Chosen: <wa-money-span [value]="city.chosenSalaryNetMonthly" [selected]="selectedSortFnName == 'chosenSalaryAbsoulteValue'" /></li>
         </ul>
       </td>
       <td>
         <ul>
+          <li> {{ city.applicableTaxes.length }} </li>
           <li *ngIf="city.hasFreeApartment"><b style="color: orange;">Free apartment applied</b></li>
           <li>As pair:
             <wa-money-span
