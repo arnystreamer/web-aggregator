@@ -229,15 +229,15 @@ export class CostOfLivingPageComponent implements OnInit {
           averageOrdinalCarPrice: this.getAverageOrdinalCarPrice(dataItems)
         };
 
-        cityAggregated.averageExpatSalaryGrossYearly = this.unapplyTaxes(cityAggregated.averageExpatSalaryNet * 12, applicableRegionTaxes);
-        cityAggregated.p25SalaryNet = this.applyTaxes(salaryItem?.p25 ?? 0, applicableRegionTaxes) / 12;
-        cityAggregated.p75SalaryNet = this.applyTaxes(salaryItem?.p75 ?? 0, applicableRegionTaxes) / 12;
+        cityAggregated.averageExpatSalaryGrossYearly = this.unapplyTaxes(cityAggregated.averageExpatSalaryNet * 12, applicableTaxes);
+        cityAggregated.p25SalaryNet = this.applyTaxes(salaryItem?.p25 ?? 0, applicableTaxes) / 12;
+        cityAggregated.p75SalaryNet = this.applyTaxes(salaryItem?.p75 ?? 0, applicableTaxes) / 12;
 
         cityAggregated.sustainableSalaryNet = cityAggregated.personalWithoutChildcare + 1500;
-        cityAggregated.sustainableSalaryGross = this.unapplyTaxes(cityAggregated.sustainableSalaryNet * 12, applicableRegionTaxes);
+        cityAggregated.sustainableSalaryGross = this.unapplyTaxes(cityAggregated.sustainableSalaryNet * 12, applicableTaxes);
 
         cityAggregated.millionaire30YSalaryNet = cityAggregated.personalAll + 2770;
-        cityAggregated.millionaire30YSalaryGross = this.unapplyTaxes(cityAggregated.millionaire30YSalaryNet * 12, applicableRegionTaxes);
+        cityAggregated.millionaire30YSalaryGross = this.unapplyTaxes(cityAggregated.millionaire30YSalaryNet * 12, applicableTaxes);
 
         cityAggregated.chosenSalaryNetMonthly = this.getSalary(selectedSalaryType, manualSalary, salaryMultiplicator, cityAggregated)!;
 
