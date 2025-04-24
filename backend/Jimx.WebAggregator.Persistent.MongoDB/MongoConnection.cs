@@ -13,14 +13,6 @@ namespace Jimx.WebAggregator.Persistent.MongoDB
 			_options = options;
 		}
 
-		[Obsolete]
-		public DoWorkResult<TCollectionItem> DoWork<TUnitOfWork, TCollectionItem>(TUnitOfWork unit)
-			where TUnitOfWork : MongoUnitOfWork<TCollectionItem>
-		{
-			var collection = GetCollectionConnection<TCollectionItem>();
-			return DoWorkAsync(collection, unit).Result;
-		}
-
 		public CollectionConnection<TCollectionItem> GetCollectionConnection<TCollectionItem>()
 		{
 			MongoClient client = new MongoClient(_options.ConnectionString);
