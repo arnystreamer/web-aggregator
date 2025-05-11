@@ -10,8 +10,10 @@ export interface CityAggregated {
     country: string;
 
     dataItems: CityDataItemPopulated[];
-    salaries: CitySalary;
+    salaries: CitySalary | undefined;
     applicableTaxes: RegionTax[];
+    countryTaxesAppliedNumber: number;
+    regionTaxesAppliedNumber: number;
 
     hasFreeApartment: boolean;
     personalAll: number;

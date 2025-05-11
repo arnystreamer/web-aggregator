@@ -5,7 +5,7 @@ using MongoDB.Driver;
 namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 {
 	public class UpsertMongoUnitOfWork<TCollectionItem, TIdentity> : MongoUnitOfWork<TCollectionItem>
-		where TCollectionItem : IMongoEntity
+		where TCollectionItem : class, IMongoEntity
 	{
 		private readonly IEnumerable<TCollectionItem> _updatedItems;
 		private readonly UpsertOptions<TCollectionItem, TIdentity> _upsertOptions;
@@ -16,10 +16,12 @@ namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 			_upsertOptions = upsertOptions;
 		}
 
-		public override IEnumerable<TCollectionItem> Do(ILogger logger, IMongoCollection<TCollectionItem> mongoCollection)
+		public override async Task<IEnumerable<TCollectionItem>> DoAsync(ILogger logger, IMongoCollection<TCollectionItem> mongoCollection)
 		{
 			var existingItems = mongoCollection.Find(i => true).ToList();
 			var touchedItemIndices = new List<int>();
+
+			IList<(Task Task, TCollectionItem? Item)> tasks = new List<(Task, TCollectionItem?)>();
 
 			foreach (var updatedItem in _updatedItems)
 			{
@@ -28,7 +30,7 @@ namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 				if (existingItem == null)
 				{
 					logger.LogInformation($"{mongoCollection.CollectionNamespace.FullName} MongoDb collection: inserting new item");
-					mongoCollection.InsertOne(updatedItem);
+					tasks.Add((mongoCollection.InsertOneAsync(updatedItem), updatedItem));
 				}
 				else
 				{
@@ -42,23 +44,24 @@ namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 						updatedItem.ObjectId = existingItem.ObjectId;
 
 						logger.LogInformation($"{mongoCollection.CollectionNamespace.FullName} MongoDb collection: replacing existing item {existingItem.ObjectId}");
-						mongoCollection.ReplaceOne(selectorExpression, updatedItem);
+						tasks.Add((mongoCollection.ReplaceOneAsync(selectorExpression, updatedItem), updatedItem));
 					}
 				}
-
-				yield return updatedItem;
 			}
 
 			for (var i = 0; i < existingItems.Count; i++)
 			{
-				if (!touchedItemIndices.Contains(i))
+				if (!touchedItemIndices.Contains(i) && !_upsertOptions.DoNotDeleteExisting)
 				{
 					var selectorExpression = _upsertOptions.IdentityComparerExpression(_upsertOptions.IdentitySelector(existingItems[i]));
 
 					logger.LogInformation($"{mongoCollection.CollectionNamespace.FullName} MongoDb collection: deleting item {existingItems[i].ObjectId}");
-					mongoCollection.DeleteOne(selectorExpression);
+					tasks.Add((mongoCollection.DeleteOneAsync(selectorExpression), null));
 				}
 			}
+
+			await Task.WhenAll(tasks.Select(t => t.Task));
+			return tasks.Where(t => t.Item != null).Select(t => t.Item!);
 		}
 
 		public override void Dispose()

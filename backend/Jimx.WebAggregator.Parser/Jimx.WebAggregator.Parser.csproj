@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Jimx.Common\Jimx.Common.csproj" />
-    <ProjectReference Include="..\Jimx.WebAggregator.Builder\Jimx.WebAggregator.Builder.csproj" />
   </ItemGroup>
 
 </Project>

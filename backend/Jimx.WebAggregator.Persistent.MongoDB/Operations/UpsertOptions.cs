@@ -10,16 +10,19 @@ namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 		public Func<TIdentity, Expression<Func<TItem, bool>>> IdentityComparerExpression { get; }
 		public IEqualityComparer<TItem> IdentityComparer { get; }
 		public IComparer<TItem>? ActualityComparer { get; } = null;
+		public bool DoNotDeleteExisting { get; } = false;
 
 		public UpsertOptions(Expression<Func<TItem, TIdentity>> identitySelectorExpression,
 			Func<TIdentity, Expression<Func<TItem, bool>>> identityComparerExpression,
-			IComparer<TItem>? actualityComparer)
+			IComparer<TItem>? actualityComparer,
+			bool doNotDeleteExising)
 		{
 			IdentitySelectorExpression = identitySelectorExpression;
 			IdentitySelector = identitySelectorExpression.Compile();
 			IdentityComparerExpression = identityComparerExpression;
 			IdentityComparer = new IdentitySelectorEqualityComparer<TItem, TIdentity>(IdentitySelector);
 			ActualityComparer = actualityComparer;
+			DoNotDeleteExisting = doNotDeleteExising;
 		}		
 	}
 

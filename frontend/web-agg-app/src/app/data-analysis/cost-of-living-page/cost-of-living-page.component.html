@@ -71,6 +71,20 @@
   </form>
 </div>
 
+<div *ngIf="dataWarnings.length">
+  <h2>Warnings</h2>
+  <table>
+    @for(dataWarning of dataWarnings; track $index)
+      {
+<tr>
+  <td>{{dataWarning}}</td>
+</tr>
+      }
+  </table>
+</div>
+
+<h2>Cities</h2>
+
 <table>
   <tr>
     <th>City</th>
@@ -82,15 +96,19 @@
   @for(city of cities; track $index)
   {
     <tr *ngIf="city.isShown">
-      <td>{{ $index + 1 }} of {{ cities.length }}<br/> {{city.name}}, {{city.country}}</td>
+      <td>
+        {{ $index + 1 }} of {{ cities.length }}<br/>
+        {{city.name}}, {{city.region}}<sup *ngIf="city.regionTaxesAppliedNumber">{{city.regionTaxesAppliedNumber}}</sup><br/>
+        {{city.country}}<sup *ngIf="city.countryTaxesAppliedNumber">{{city.countryTaxesAppliedNumber}}</sup>
+      </td>
       <td>
         <ul>
           <li>Net avg: <wa-money-span [value]="city.averageExpatSalaryNet" /></li>
           <li>Gross avg: <wa-money-span [value]="city.averageExpatSalaryGrossYearly" /></li>
           <li>P25 net/gross: <wa-money-span [value]="city.p25SalaryNet" /> /
-            <wa-money-span [value]="city.salaries.p25" /></li>
+            <wa-money-span [value]="city.salaries?.p25 ?? undefined" /></li>
           <li>P75 net/gross: <wa-money-span [value]="city.p75SalaryNet" /> /
-            <wa-money-span [value]="city.salaries.p75" /></li>
+            <wa-money-span [value]="city.salaries?.p75 ?? undefined" /></li>
           <li>Chosen: <wa-money-span [value]="city.chosenSalaryNetMonthly" [selected]="selectedSortFnName == 'chosenSalaryAbsoulteValue'" /></li>
         </ul>
       </td>

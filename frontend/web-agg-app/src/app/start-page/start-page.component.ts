@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { environment } from '../../environments/environment';
 
 
 @Component({
@@ -16,5 +17,6 @@ import { MatChipsModule } from '@angular/material/chips';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StartPageComponent {
-
+  public version = environment.version;
+  public prodFlag = environment.production ? 'P' : '';
 }

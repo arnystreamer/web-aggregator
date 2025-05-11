@@ -91,6 +91,6 @@ export const SortingFunctionsHelper =
   buyCarTerm: (ascending: boolean) =>
     genericSortingTermFunction(ascending, c => c.buyCarTerm!),
   apartmentFirstPaymentTerm: (ascending: boolean) =>
-    genericSortingTermFunction(ascending, c => c.apartmentFirstPayment!),
+    genericSortingTermFunction(ascending, c => c.apartmentFirstPaymentTerm!),
 
 }

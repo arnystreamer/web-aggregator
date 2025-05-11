@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DictionaryDataItem } from '../../models/dictionary-data-item.model';
 import { CityAggregated } from '../../models/city-aggregated.model';
 import { City } from '../../models/city.model';
@@ -14,7 +14,6 @@ import { CommonModule } from '@angular/common';
 import { DiffSpanComponent } from '../../shared/diff-span/diff-span.component';
 import { CitySalary } from '../../models/city-salary.model';
 import { RegionTax } from '../../models/region-tax.model';
-import { TaxLevel } from '../../models/tax-level.model';
 import { SalaryType } from '../../models/salary-type.enum';
 import { SortingFunctionsHelper } from '../../services/helpers/sorting-functions-helper';
 import { TermSpanComponent } from '../../shared/term-span/term-span.component';
@@ -48,6 +47,7 @@ export class CostOfLivingPageComponent implements OnInit {
   public regionTaxes: RegionTax[] = [];
 
   public cities: CityAggregated[] = [];
+  public dataWarnings: string[] = [];
 
   public salaryTypes = [
     { name: 'Zero', value: SalaryType.Zero },
@@ -139,7 +139,7 @@ export class CostOfLivingPageComponent implements OnInit {
 
     this.searchForm.controls['cityName'].valueChanges.subscribe({next: (v: String) => {
 
-      var criteria: string = v ? v.trim().toLowerCase() : '';
+      const criteria: string = v ? v.trim().toLowerCase() : '';
       for(let city of this.cities)
       {
         city.isShown = (!criteria || city.name.trim().toLowerCase().includes(criteria));
@@ -158,17 +158,18 @@ export class CostOfLivingPageComponent implements OnInit {
   rebuildTable()
   {
     this.cities = [];
+    this.dataWarnings = [];
 
     if (!this.filterForm.controls['selectedSalaryType'].valid)
       return;
 
     this.searchForm.controls['cityName'].setValue('');
 
-    var selectedSalaryType = this.filterForm.controls['selectedSalaryType'].value?.value;
-    var manualSalary = this.filterForm.controls['manualSalary'].value;
-    var salaryMultiplicator = this.filterForm.controls['salaryMultiplicator'].value;
-    var sorting = this.filterForm.controls['sorting'].value;
-    var sortDirectionAscending : boolean | undefined = this.filterForm.controls['sortDirectionAscending'].value;
+    const selectedSalaryType = this.filterForm.controls['selectedSalaryType'].value?.value;
+    const manualSalary = this.filterForm.controls['manualSalary'].value;
+    const salaryMultiplicator = this.filterForm.controls['salaryMultiplicator'].value;
+    const sorting = this.filterForm.controls['sorting'].value;
+    const sortDirectionAscending : boolean | undefined = this.filterForm.controls['sortDirectionAscending'].value;
 
     for(let rawCity of this.rawCities)
     {
@@ -176,8 +177,32 @@ export class CostOfLivingPageComponent implements OnInit {
           return { dictionaryItem: this.dictionaryItems.filter(v => v.id == di.dictionaryId)[0], ...di }
         });
 
-        let salaryItem: CitySalary = this.salaries.filter(s => s.city == rawCity.name)[0];
-        let applicableRegionTaxes: RegionTax[] = this.regionTaxes.filter(s => s.region == rawCity.name || (s.region == null && s.country == rawCity.country));
+        let salaryItems: CitySalary[] = this.salaries.filter(s => s.city == rawCity.name);
+        let salaryItem: CitySalary;
+        if (salaryItems.length == 0) {
+          this.dataWarnings.push(`${rawCity.name} has no salaries found.`);
+          salaryItem = {city: rawCity.name, p25: 0, p75: 0};
+        }
+        else {
+          if (salaryItems.length > 1)
+          {
+            this.dataWarnings.push(`${rawCity.name} has several salaries found.`);
+          }
+          salaryItem = salaryItems[0];
+        }
+
+        const applicableCountryTaxes: RegionTax[] = this.regionTaxes.filter(t => t.country == rawCity.country && t.region == null);
+        const allCountryRegionsTaxes: RegionTax[]  = this.regionTaxes.filter(t => t.country == rawCity.country && t.region != null);
+        const applicableRegionTaxes: RegionTax[] = allCountryRegionsTaxes.filter(s => s.region == rawCity.region);
+        const applicableTaxes: RegionTax[] = applicableCountryTaxes.concat(applicableRegionTaxes);
+
+        if (applicableCountryTaxes.length == 0) {
+          this.dataWarnings.push(`${rawCity.name} has no country-level taxes for ${rawCity.country}.`);
+        }
+
+        if (allCountryRegionsTaxes.length > 0 && applicableRegionTaxes.length == 0) {
+          this.dataWarnings.push(`${rawCity.name} has no taxes for region ${rawCity.region}, but other regions have taxes.`);
+        }
 
         let cityAggregated: CityAggregated =
         {
@@ -191,7 +216,9 @@ export class CostOfLivingPageComponent implements OnInit {
           personalWithoutChildcare: !this.hasFreeApartment(rawCity) ? this.getPersonalWithoutChildcare(dataItems) : this.getPersonalWithoutChildcareWithoutRent(dataItems),
           personalWithMortgageAndChildcare: this.getPersonalAllWithoutRent(dataItems) + this.getMortgagePayment(dataItems),
           salaries: salaryItem,
-          applicableTaxes: applicableRegionTaxes,
+          applicableTaxes: applicableTaxes,
+          countryTaxesAppliedNumber: applicableCountryTaxes.length,
+          regionTaxesAppliedNumber: applicableRegionTaxes.length,
           isShown: true,
 
           averageExpatSalaryNet: this.getExpatSalary(dataItems),
@@ -202,15 +229,15 @@ export class CostOfLivingPageComponent implements OnInit {
           averageOrdinalCarPrice: this.getAverageOrdinalCarPrice(dataItems)
         };
 
-        cityAggregated.averageExpatSalaryGrossYearly = this.unapplyTaxes(cityAggregated.averageExpatSalaryNet * 12, applicableRegionTaxes);
-        cityAggregated.p25SalaryNet = this.applyTaxes(salaryItem.p25!, applicableRegionTaxes) / 12;
-        cityAggregated.p75SalaryNet = this.applyTaxes(salaryItem.p75!, applicableRegionTaxes) / 12;
+        cityAggregated.averageExpatSalaryGrossYearly = this.unapplyTaxes(cityAggregated.averageExpatSalaryNet * 12, applicableTaxes);
+        cityAggregated.p25SalaryNet = this.applyTaxes(salaryItem?.p25 ?? 0, applicableTaxes) / 12;
+        cityAggregated.p75SalaryNet = this.applyTaxes(salaryItem?.p75 ?? 0, applicableTaxes) / 12;
 
         cityAggregated.sustainableSalaryNet = cityAggregated.personalWithoutChildcare + 1500;
-        cityAggregated.sustainableSalaryGross = this.unapplyTaxes(cityAggregated.sustainableSalaryNet * 12, applicableRegionTaxes);
+        cityAggregated.sustainableSalaryGross = this.unapplyTaxes(cityAggregated.sustainableSalaryNet * 12, applicableTaxes);
 
         cityAggregated.millionaire30YSalaryNet = cityAggregated.personalAll + 2770;
-        cityAggregated.millionaire30YSalaryGross = this.unapplyTaxes(cityAggregated.millionaire30YSalaryNet * 12, applicableRegionTaxes);
+        cityAggregated.millionaire30YSalaryGross = this.unapplyTaxes(cityAggregated.millionaire30YSalaryNet * 12, applicableTaxes);
 
         cityAggregated.chosenSalaryNetMonthly = this.getSalary(selectedSalaryType, manualSalary, salaryMultiplicator, cityAggregated)!;
 
@@ -220,6 +247,13 @@ export class CostOfLivingPageComponent implements OnInit {
         cityAggregated.apartmentFirstPaymentTerm = cityAggregated.apartmentFirstPayment / (cityAggregated.chosenSalaryNetMonthly - cityAggregated.personalAll);
 
         this.cities.push(cityAggregated);
+    }
+
+    const unusedTaxes = this.regionTaxes.filter(t => this.rawCities.filter(rc => rc.country == t.country && (t.region == null || rc.region == t.region)).length == 0);
+
+    for (let unusedTax of unusedTaxes)
+    {
+      this.dataWarnings.push(`Tax ${unusedTax.country}/${unusedTax.region} never used`);
     }
 
     if (sorting || sortDirectionAscending != undefined)
@@ -312,15 +346,6 @@ export class CostOfLivingPageComponent implements OnInit {
       this.getApartmentsPrice(dataItems) * 0.8)
   }
 
-  getPersonalWithMortgageAndChildcare(dataItems: CityDataItemPopulated[]): number {
-    return dataItems
-      .filter(di => di.dictionaryItem.key != null &&
-        di.dictionaryItem.key >= 10000 && di.dictionaryItem.key < 20000 &&
-        di.decimalValue != null)
-      .map(di => di.decimalValue)
-      .reduce((prevSum, item) => prevSum! + item! , 0)!;
-  }
-
   getPersonalWithoutChildcare(dataItems: CityDataItemPopulated[]): number {
     return dataItems
     .filter(di => di.dictionaryItem.key != null &&
@@ -358,26 +383,15 @@ export class CostOfLivingPageComponent implements OnInit {
       deduction += currentTax.fixed;
       deduction += salary * currentTax.fixedRate;
 
-      let previousLevel: TaxLevel | undefined = currentTax.levels.length > 0 ? currentTax.levels[0] : undefined;
-      for(let j = 1; j < currentTax.levels.length; j++)
+      for(let j = 0; j < currentTax.levels.length; j++)
       {
-        previousLevel = currentTax.levels[j-1];
         const currentLevel = currentTax.levels[j];
+        const nextLevelCut = j+1 < currentTax.levels.length ? currentTax.levels[j+1].lowerCut : 2147483647;
 
-        if (currentLevel.lowerCut > salary)
-        {
+        deduction += Math.max((Math.min(nextLevelCut, salary) - currentLevel.lowerCut) * currentLevel.rate, 0);
+
+        if (nextLevelCut >= salary)
           break;
-        }
-
-        if (previousLevel)
-        {
-          deduction += (currentLevel.lowerCut - previousLevel.lowerCut) * previousLevel.rate;
-        }
-      }
-
-      if (previousLevel)
-      {
-        deduction += (salary - previousLevel.lowerCut) * previousLevel.rate;
       }
     }
 
@@ -387,15 +401,15 @@ export class CostOfLivingPageComponent implements OnInit {
   unapplyTaxes(salary: number, taxes: RegionTax[]): number
   {
     let min = salary;
-    let max = salary * 2.2;
+    let max = salary * 3;
 
-    let counter = 7;
+    let counter = 8;
     let guess;
     do
     {
       guess = (min + max) / 2;
 
-      var resultedSalary = this.applyTaxes(guess, taxes);
+      const resultedSalary = this.applyTaxes(guess, taxes);
 
       if (resultedSalary > salary)
       {
