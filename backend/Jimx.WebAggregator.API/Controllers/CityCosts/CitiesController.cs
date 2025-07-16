@@ -1,5 +1,5 @@
-﻿using Jimx.WebAggregator.API.Models.CityCosts;
-using Jimx.WebAggregator.API.Models.Common;
+﻿using Jimx.Common.WebApi.Models;
+using Jimx.WebAggregator.API.Models.CityCosts;
 using Jimx.WebAggregator.API.Services;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,5 @@
-﻿using Jimx.Common;
+﻿using Jimx.Common.Helpers.Strings;
+using Jimx.Common.Serializing.Converters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -64,7 +65,7 @@ namespace Jimx.WebAggregator.Parser.Http
 			T? responseObject;
 			try
 			{
-				responseObject = JsonConvert.DeserializeObject<T>(responseString, new CustomIntConverter());
+				responseObject = JsonConvert.DeserializeObject<T>(responseString, new CustomIntJsonConverter());
 			}
 			catch (Exception ex)
 			{

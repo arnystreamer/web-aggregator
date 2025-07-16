@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.API", "J
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Parser", "Jimx.WebAggregator.Parser\Jimx.WebAggregator.Parser.csproj", "{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.Common", "Jimx.Common\Jimx.Common.csproj", "{377B0236-AB01-4187-8B50-98E79F076B0A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.ParserTest", "Jimx.WebAggregator.ParserTest\Jimx.WebAggregator.ParserTest.csproj", "{EAE77A52-D96F-4F67-BE56-5319692B2C14}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Parser.Html", "Jimx.WebAggregator.Parser.Html\Jimx.WebAggregator.Parser.Html.csproj", "{3EC0940B-6DBA-40C2-8929-8917D2C5AFA8}"
@@ -33,10 +31,6 @@ Global
 		{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{377B0236-AB01-4187-8B50-98E79F076B0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{377B0236-AB01-4187-8B50-98E79F076B0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{377B0236-AB01-4187-8B50-98E79F076B0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{377B0236-AB01-4187-8B50-98E79F076B0A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EAE77A52-D96F-4F67-BE56-5319692B2C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EAE77A52-D96F-4F67-BE56-5319692B2C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAE77A52-D96F-4F67-BE56-5319692B2C14}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,17 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <LangVersion>13</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Jimx.Common.Helpers" Version="1.0.1" />
+    <PackageReference Include="Jimx.Common.Serializing" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Jimx.Common\Jimx.Common.csproj" />
   </ItemGroup>
 
 </Project>

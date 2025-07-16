@@ -13,7 +13,7 @@ namespace Jimx.WebAggregator.Parser.Http
 		{
 			if (!baseUri.IsAbsoluteUri)
 			{
-				throw new ArgumentException(nameof(baseUri), "Must be absolute");
+				throw new ArgumentException("Must be absolute", nameof(baseUri));
 			}
 
 			if (requestsCountPerMinute.HasValue && requestsCountPerMinute.Value <= 0)
