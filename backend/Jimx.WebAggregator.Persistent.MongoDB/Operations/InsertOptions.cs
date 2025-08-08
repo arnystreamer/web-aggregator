@@ -1,5 +1,5 @@
-﻿using Jimx.Common.Comparers;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using Jimx.Common.Helpers.Comparers;
 
 namespace Jimx.WebAggregator.Persistent.MongoDB.Operations
 {

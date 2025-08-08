@@ -19,6 +19,6 @@ namespace Jimx.WebAggregator.API.Services
 		}
 
 		public string CredentialsSigningKey { get; init; }
-		public string IssuerSigningKey { get; init; }
+		public string IssuerSigningKey { get; init; } = string.Empty;
 	}
 }

@@ -1,7 +1,7 @@
 ﻿namespace Jimx.WebAggregator.Domain.CityCosts
 {
-	public record CityDataItem(string Key, string? Value)
+	public record CityDataItem(string Key, decimal? Value)
 	{
-		public string? DictionaryId { get; set; }
-	};
+		public int? DictionaryId { get; set; }
+	}
 }

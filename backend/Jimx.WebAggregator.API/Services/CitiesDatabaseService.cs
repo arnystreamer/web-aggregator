@@ -1,5 +1,4 @@
-﻿using Jimx.WebAggregator.API.Models.CityCosts;
-using Jimx.WebAggregator.API.Options;
+﻿using Jimx.WebAggregator.API.Options;
 using Jimx.WebAggregator.Domain.CityCosts;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -15,47 +14,57 @@ namespace Jimx.WebAggregator.API.Services
 			_databaseSettings = databaseSettings;
 		}
 
-		public List<City> GetCities()
+		public async Task<List<CityCostsItem>> GetCityCostsAsync(CancellationToken cancellationToken)
 		{
 			var client = new MongoClient(_databaseSettings.Value.ConnectionString);
 
 			var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
-			var collection = database.GetCollection<City>(_databaseSettings.Value.CitiesCollectionName);
+			var collection = database.GetCollection<CityCostsItem>(_databaseSettings.Value.CitiesCollectionName);
 
-			return collection.Find(_ => true).ToList();
+			return (await collection.FindAsync(_ => true, cancellationToken: cancellationToken)).ToList();
 						
 		}
 
-		public List<DataItem> GetDataItems()
+		public async Task<List<CityDictionaryItem>> GetCityDictionaryItemsAsync(CancellationToken cancellationToken)
 		{
 			var client = new MongoClient(_databaseSettings.Value.ConnectionString);
 			
 			var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
-			var collection = database.GetCollection<DataItem>(_databaseSettings.Value.CityDictionaryItemsCollectionName);
+			var collection = database.GetCollection<CityDictionaryItem>(_databaseSettings.Value.CityDictionaryItemsCollectionName);
 
-			return collection.Find(_ => true).ToList();
+			return (await collection.FindAsync(_ => true, cancellationToken: cancellationToken)).ToList();
 			
 		}
 
-		public List<RegionTax> GetRegionTaxes()
+		public async Task<List<RegionTax>> GetRegionTaxesAsync(CancellationToken cancellationToken)
 		{
 			var client = new MongoClient(_databaseSettings.Value.ConnectionString);
 
 			var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
 			var collection = database.GetCollection<RegionTax>(_databaseSettings.Value.RegionTaxesCollectionName);
 
-			return collection.Find(_ => true).ToList();
-
+			return (await collection.FindAsync(_ => true, cancellationToken: cancellationToken)).ToList();
 		}
 
-		public List<CitySalary> GetCitySalaries()
+		public async Task<List<RegionTaxDeduction>> GetRegionTaxDeductionsAsync(CancellationToken cancellationToken)
+		{
+			var client = new MongoClient(_databaseSettings.Value.ConnectionString);
+			
+			var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
+			var collection =
+				database.GetCollection<RegionTaxDeduction>(_databaseSettings.Value.RegionTaxDeductionsCollectionName);
+			
+			return (await collection.FindAsync(_ => true, cancellationToken: cancellationToken)).ToList();
+		}
+
+		public async Task<List<CitySalary>> GetCitySalariesAsync(CancellationToken cancellationToken)
 		{
 			var client = new MongoClient(_databaseSettings.Value.ConnectionString);
 
 			var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
 			var collection = database.GetCollection<CitySalary>(_databaseSettings.Value.CitySalariesCollectionName);
 
-			return collection.Find(_ => true).ToList();
+			return (await collection.FindAsync(_ => true, cancellationToken: cancellationToken)).ToList();
 
 		}
 	}

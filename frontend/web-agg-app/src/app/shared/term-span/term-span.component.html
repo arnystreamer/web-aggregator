@@ -1,14 +1,20 @@
-@if (termInMonths! > 0)
+@if (termInMonths != null && termInMonths! > 0)
 {
   <span [class]="{ 'value-bad': termInMonths! > 1000, 'selected': selected }">
   @if(termInMonths! / 12 >= 1)
   {
     {{ termInMonths! / 12 | number: '1.0-0' }} y
   }
+
+  @if(termInMonths! / 12 < 1)
+  {
+    {{ termInMonths! | number: '1.0-0' }} m
+  }
+
   </span>
 }
 
-@if (termInMonths! <= 0)
+@if (termInMonths == null || termInMonths! <= 0)
 {
   <span [class]="{ 'value-bad': true, 'selected': selected }">never</span>
 }

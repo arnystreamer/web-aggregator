@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Jimx.WebAggregator.Parser.Helpers;
 using Jimx.WebAggregator.Parser.Http;
 
 namespace Jimx.WebAggregator.Parser.Helpers

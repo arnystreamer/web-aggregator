@@ -1,0 +1,27 @@
+@if (profit)
+{
+
+  @if(isShowInUsd())
+  {
+    $<wa-money-span [value]="profit.valueGross.valueInUsd" />
+  }
+  @else
+  {
+    <wa-money-span [value]="profit.valueGross.value" [selected]="grossSelected" /> {{currencyCode ?? '???'}}
+  }
+  <mat-icon class="details-icon" aria-hidden="false" aria-label="Info icon" fontIcon="more_horiz"
+      #tooltip="matTooltip"
+      [matTooltip]="getTooltipText()"
+      matTooltipPosition="below"
+      matTooltipHideDelay="100000"
+      matTooltipClass="allow-cr" />
+
+  <wa-diff-span [baseValue]="profit.valueGross.value" [relativeValue]="profit.baseValueGross"
+    [baseSelected]="diffSelected" [relativeSelected]="relativeSelected" />
+  <mat-icon class="details-icon" aria-hidden="false" aria-label="Info icon" fontIcon="more_horiz"
+    #tooltip="matTooltip"
+    [matTooltip]="getDiffTooltipText()"
+    matTooltipPosition="below"
+    matTooltipHideDelay="100000"
+    matTooltipClass="allow-cr" />
+}

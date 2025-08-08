@@ -1,5 +1,6 @@
 using Jimx.WebAggregator.API.Options;
 using Jimx.WebAggregator.API.Services;
+using Jimx.WebAggregator.Calculations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,12 @@ builder.Services.Configure<GeneralOptions>(
 builder.Services.Configure<CitiesDatabaseSettings>(
 	builder.Configuration.GetSection(CitiesDatabaseSettings.OptionName));
 
+builder.Services.AddSingleton<SalaryTypesService>();
 builder.Services.AddSingleton<CitiesDatabaseService>();
+builder.Services.AddSingleton<ReportService>();
+builder.Services.AddSingleton<TaxationService>();
+builder.Services.AddSingleton<CrossRatesService>();
+builder.Services.AddSingleton<SortingFunctionsService>();
 
 builder.Services.AddSingleton<SettingsProvider>();
 builder.Services.AddSingleton<KeysProvider>();

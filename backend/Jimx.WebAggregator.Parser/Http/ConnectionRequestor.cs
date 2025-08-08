@@ -1,4 +1,5 @@
-﻿using Jimx.Common;
+﻿using Jimx.Common.Helpers.Lists;
+using Jimx.Common.Helpers.Strings;
 using Jimx.WebAggregator.Parser.Helpers;
 using Microsoft.Extensions.Logging;
 

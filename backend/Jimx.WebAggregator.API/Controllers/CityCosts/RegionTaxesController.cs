@@ -1,6 +1,8 @@
-﻿using Jimx.WebAggregator.API.Models.CityCosts;
-using Jimx.WebAggregator.API.Models.Common;
+﻿using Jimx.Common.WebApi.Models;
+using Jimx.WebAggregator.API.Models;
+using Jimx.WebAggregator.API.Models.CityCosts;
 using Jimx.WebAggregator.API.Services;
+using Jimx.WebAggregator.Domain.CityCosts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Jimx.WebAggregator.API.Controllers.CityCosts
@@ -19,12 +21,11 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 		}
 
 		[HttpGet]
-		public async Task<CollectionApi<RegionTaxApi>> GetAll([FromQuery] CollectionRequestApi requestApi)
+		public async Task<CollectionApi<RegionTaxApi>> GetAll([FromQuery] RegionTaxesRequestApi requestApi, CancellationToken cancellationToken)
 		{
-			int skip = requestApi.Skip ?? 0;
-			int take = requestApi.Take ?? 10;
+			var (skip, take) = requestApi.ToSkipTake();
 
-			var allItems = _databaseService.GetRegionTaxes();
+			var allItems = await _databaseService.GetRegionTaxesAsync(cancellationToken);
 
 			var dataItems =
 				allItems
@@ -39,20 +40,35 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 				dataItems);
 		}
 
-		[HttpGet("fakes")]
-		public async Task<CollectionApi<RegionTaxApi>> GetFake()
+		[HttpGet("extended")]
+		public async Task<CollectionApi<RegionTaxDeduction>> GetRegionTaxDeductions(
+			CancellationToken cancellationToken)
 		{
-			var allItems = _databaseService.GetCities().GroupBy(c => ( c.Region, c.Country ));
+			var (skip, take) = new CollectionRequestApi(0, 1000).ToSkipTake();
+
+			var allItems = await _databaseService.GetRegionTaxDeductionsAsync(cancellationToken);
+
+			var dataItems = allItems.Skip(skip).Take(take).ToArray();
+			
+			return new CollectionApi<RegionTaxDeduction>(allItems.Count, skip, take, dataItems.Length, dataItems);
+		}
+
+		[HttpGet("fakes")]
+		public async Task<CollectionApi<RegionTaxApi>> GetFake(CancellationToken cancellationToken)
+		{
+			var allItems = (await _databaseService.GetCityCostsAsync(cancellationToken))
+				.GroupBy(c => ( c.Region, c.Country ))
+				.ToArray();
 
 			var dataItems =
 				allItems
 				.Select(i => new RegionTaxApi(i.Key.Region, i.Key.Country, 0, 0,
-					[ new (0, 0), new(0, 0), new(0, 0) ]
+					[ new TaxLevelApi(0, 0), new TaxLevelApi(0, 0), new TaxLevelApi(0, 0) ]
 					))
 				.ToArray();
 
 			return new CollectionApi<RegionTaxApi>(
-				allItems.Count(), 0, dataItems.Count(), dataItems.Length,
+				allItems.Length, 0, dataItems.Length, dataItems.Length,
 				dataItems);
 		}
 	}

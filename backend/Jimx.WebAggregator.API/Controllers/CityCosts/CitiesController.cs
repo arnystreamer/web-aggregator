@@ -1,5 +1,5 @@
-﻿using Jimx.WebAggregator.API.Models.CityCosts;
-using Jimx.WebAggregator.API.Models.Common;
+﻿using Jimx.Common.WebApi.Models;
+using Jimx.WebAggregator.API.Models.CityCosts;
 using Jimx.WebAggregator.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,18 +19,24 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 		}
 
 		[HttpGet]
-		public async Task<CollectionApi<CityApi>> GetAll([FromQuery] CollectionRequestApi requestApi)
+		public async Task<CollectionApi<CityApi>> GetAll([FromQuery] CitiesRequestApi requestApi, 
+			CancellationToken cancellationToken)
 		{
 			int skip = requestApi.Skip ?? 0;
 			int take = requestApi.Take ?? 10;
 
-			var allItems = _databaseService.GetCities();
+			var allItems = await _databaseService.GetCityCostsAsync(cancellationToken);
 
 			var dataItems =
 				allItems
 				.Skip(skip)
 				.Take(take)
-				.Select(i => new CityApi(i.ObjectId, i.Name, i.Region, i.Country, i.DataItems.Select(di => new CityDataItemApi(di.Key, di.DictionaryId, di.Value))
+				.Select(i => new CityApi(
+					i.ObjectId!, 
+					i.Name, 
+					i.Region, 
+					i.Country, 
+					i.DataItems.Select(di => new CityDataItemApi(di.Key, di.DictionaryId, di.Value))
 					.ToArray()))
 				.ToArray();
 
