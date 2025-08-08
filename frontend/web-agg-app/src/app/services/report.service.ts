@@ -29,7 +29,7 @@ export class ReportService {
     if (parameters.salaryMultiplicator)
       params = params.set("salaryMultiplicator", parameters.salaryMultiplicator);
 
-    params = params.set("sortingFunction", parameters.sortingFunction);
+    params = params.set("sortingFunctionId", parameters.sortingFunctionId);
 
     if (parameters.sortAscending !== undefined)
       params = params.set("sortAscending", parameters.sortAscending);

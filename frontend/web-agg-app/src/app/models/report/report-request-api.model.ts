@@ -2,6 +2,6 @@ export interface ReportRequestApi {
   salaryTypeId: number;
   manualSalary?: number;
   salaryMultiplicator?: number;
-  sortingFunction: number;
+  sortingFunctionId: number;
   sortAscending?: boolean;
 }

@@ -22,10 +22,13 @@ public class ReportController : ControllerBase
     [HttpGet]
     public async Task<CollectionApi<ReportCityExtendedApi>> Get([FromQuery] ReportRequestApi requestApi, CancellationToken cancellationToken)
     {
-        var sortingFunction = _sortingFunctionsService.Get(requestApi.SortingFunction);
+        var sortingFunction = _sortingFunctionsService.Get(requestApi.SortingFunctionId);
 
         var userTaxProfile = new UserTaxProfile(
-            [],
+            [
+                "taxpayer_status:married", 
+                "taxpayer_age:36"
+            ],
             new UserFamily()
             {
                 FamilyMembersCount = 3,

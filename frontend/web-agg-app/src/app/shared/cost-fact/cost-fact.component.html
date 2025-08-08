@@ -1,10 +1,12 @@
 @if (cost)
 {
-  <wa-money-span [value]="cost.valueNet.value" /> {{currencyCode ?? '???'}}
-  @if (currencyCode != 'USD' && false)
+  @if (isShowInUsd())
   {
-    <span>/ </span>
-    <wa-money-span [value]="cost.valueNet.valueInUsd" /> USD
+    $<wa-money-span [value]="cost.valueNet.valueInUsd" />
+  }
+  @else
+  {
+    <wa-money-span [value]="cost.valueNet.value" [selected]="valueSelected" /> {{currencyCode ?? '???'}}
   }
   <mat-icon class="details-icon" aria-hidden="false" aria-label="Info icon" fontIcon="more_horiz"
       #tooltip="matTooltip"
@@ -13,7 +15,8 @@
       matTooltipHideDelay="100000"
       matTooltipClass="allow-cr" />
 
-  <wa-diff-span [baseValue]="cost.valueNet.value" [relativeValue]="cost.baseProfit.valueNet.value / 12" />
+  <wa-diff-span [baseValue]="cost.valueNet.value" [relativeValue]="cost.baseProfit.valueNet.value / 12"
+    [baseSelected]="diffSelected" [relativeSelected]="relativeSelected" />
   <mat-icon class="details-icon" aria-hidden="false" aria-label="Info icon" fontIcon="more_horiz"
     #tooltip="matTooltip"
     [matTooltip]="getDiffTooltipText()"

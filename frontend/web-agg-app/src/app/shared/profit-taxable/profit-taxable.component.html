@@ -1,12 +1,18 @@
 @if (profit)
 {
-  <wa-money-span [value]="profit.valueNet.value" /> {{currencyCode ?? '???'}} <span>/&nbsp;</span>
-  <wa-money-span [value]="profit.valueGross.value" /> {{currencyCode ?? '???'}}
-  @if (currencyCode != "USD" && false)
+  @if (isShowInUsd())
   {
-    <span>/&nbsp;</span>
-    <wa-money-span [value]="profit.valueNet.valueInUsd" /> USD
+    $<wa-money-span [value]="profit.valueNet.valueInUsd" [selected]="netSelected" />
+    <span>&nbsp;/&nbsp;</span>
+    $<wa-money-span [value]="profit.valueGross.valueInUsd" [selected]="grossSelected" />
   }
+  @else
+  {
+    <wa-money-span [value]="profit.valueNet.value" [selected]="netSelected" /> {{currencyCode ?? '???'}} <span>&nbsp;/&nbsp;</span>
+    <wa-money-span [value]="profit.valueGross.value" [selected]="grossSelected" /> {{currencyCode ?? '???'}}
+  }
+
+
   <mat-icon class="details-icon" aria-hidden="false" aria-label="Info icon" fontIcon="more_horiz"
       #tooltip="matTooltip"
       [matTooltip]="getTooltipText()"

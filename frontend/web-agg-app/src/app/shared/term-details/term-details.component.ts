@@ -14,6 +14,7 @@ import { formatNumber } from '@angular/common';
 export class TermDetailsComponent {
   @Input() term: ReportProfitTargetTerm | undefined;
   @Input() currencyCode: string | undefined;
+  @Input() selected: boolean = false;
 
   public getTooltipText() : string
   {
@@ -22,12 +23,14 @@ export class TermDetailsComponent {
       return 'No data';
     }
 
-    this.term.income.valueNet
+    var surplus = this.term.income.valueNet.value - this.term.cost.valueNet.value * 12;
+    var surplusInUsd = this.term.income.valueNet.valueInUsd - this.term.cost.valueNet.valueInUsd * 12;
 
     return 'Monthly costs are ' + formatNumber(this.term.cost.valueNet.value, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + '\n' +
       'Annual net income is ' + formatNumber(this.term.income.valueNet.value, 'en-GB', '1.0-0') + ' or ' +
         formatNumber(this.term.income.valueNet.value / 12, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + ' monthly.\n' +
-        'Surplus is ' + formatNumber(this.term.income.valueNet.value - this.term.cost.valueNet.value * 12, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + ' annually.\n' +
+        'Surplus is ' + formatNumber(surplus, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') +
+        ' (' + formatNumber(surplusInUsd, 'en-GB', '1.0-0') + ' USD) annually.\n' +
         'Target amount is ' + formatNumber(this.term.targetAmount.value, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + ' will be ' +
         (this.term.termInYears
           ? 'reached in ' + formatNumber(this.term.termInYears, 'en-GB', '1.2-2') + ' years.'

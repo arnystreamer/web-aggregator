@@ -36,7 +36,7 @@ public class ReportCityExtendedApi : ReportCityApi
     public required ReportProfitTargetTerm MortgageDownPaymentTerm { get; init; }
     public required ReportProfitTargetTerm BuyCarTerm { get; init; }
     
-    public required ReportProfitTaxableRelativeDesirable SalaryToEarn1MlnUsdIn30Yrs { get; init; }
+    public required ReportProfitTaxableRelativeDesirable MillionaireSalary { get; init; }
     public required ReportProfitTaxableRelativeDesirable SustainableSalary { get; init; }
     public required ReportProfitTaxableRelativeDesirable BareMinimumSalary { get; init; }
 }

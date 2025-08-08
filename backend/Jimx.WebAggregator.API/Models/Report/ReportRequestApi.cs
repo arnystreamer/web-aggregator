@@ -13,13 +13,13 @@ public class ReportRequestApi : CollectionRequestApi
         int salaryTypeId,
         decimal? manualSalary,
         decimal? salaryMultiplicator,
-        int sortingFunction,
+        int sortingFunctionId,
         bool? sortAscending) : base(skip, take)
     {
         SalaryTypeId = salaryTypeId;
         ManualSalary = manualSalary;
         SalaryMultiplicator = salaryMultiplicator;
-        SortingFunction = sortingFunction;
+        SortingFunctionId = sortingFunctionId;
         SortAscending = sortAscending;
     }
 
@@ -29,7 +29,7 @@ public class ReportRequestApi : CollectionRequestApi
 
     public decimal? SalaryMultiplicator { get; init; }
 
-    public required int SortingFunction { get; init; }
+    public required int SortingFunctionId { get; init; }
 
     public bool? SortAscending { get; init; }
 }

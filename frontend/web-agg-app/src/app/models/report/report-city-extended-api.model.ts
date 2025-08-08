@@ -35,7 +35,7 @@ export interface ReportCityExtendedApi extends ReportCityApi {
   mortgageDownPaymentTerm: ReportProfitTargetTerm;
   buyCarTerm: ReportProfitTargetTerm;
 
-  salaryToEarn1MlnUsdIn30Yrs: ProfitTaxableRelativeDesirableApi;
+  millionaireSalary: ProfitTaxableRelativeDesirableApi;
   sustainableSalary: ProfitTaxableRelativeDesirableApi;
   bareMinimumSalary: ProfitTaxableRelativeDesirableApi;
 }

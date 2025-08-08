@@ -24,7 +24,7 @@ public class SortingFunctionsController : ControllerBase
         return _sortingFunctionsService.GetAll()
             .Skip(requestApi.Skip ?? 0)
             .Take(requestApi.Take ?? 10)
-            .Select(x => new SortingFunctionApi(x.Id, x.Name, x.Description))
+            .Select(x => new SortingFunctionApi(x.Id, x.FunctionName, x.Name, x.Description))
             .ToArray();
     }
 }

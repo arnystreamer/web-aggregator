@@ -1,10 +1,12 @@
 import { formatNumber } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, computed, Input, Signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MoneySpanComponent } from '../money-span/money-span.component'
 import { DiffSpanComponent } from '../diff-span/diff-span.component';
 import { ReportCostRelativeExtended } from '../../models/report/report-cost-relative-extended.model';
+import { PresentationService } from '../../services/presentation.service';
+import { multiCurrencyToString } from '../../services/helpers/money-display-helper'
 
 
 @Component({
@@ -21,6 +23,16 @@ import { ReportCostRelativeExtended } from '../../models/report/report-cost-rela
 export class CostFactComponent {
   @Input() cost: ReportCostRelativeExtended | undefined;
   @Input() currencyCode: string | undefined;
+  @Input() valueSelected: boolean = false;
+  @Input() diffSelected: boolean = false;
+  @Input() relativeSelected: boolean = false;
+
+  public isShowInUsd: Signal<boolean> = computed(() => this.presentationService.currencySignal() == 'USD')
+
+  constructor(private presentationService: PresentationService)
+  {
+    presentationService.currencySignal()
+  }
 
   getTooltipText(): string
   {
@@ -37,10 +49,11 @@ export class CostFactComponent {
     }
 
     return costData +
-      'Monthly costs are ' + formatNumber(this.cost.valueNet.value, 'en-GB', '1.0-0') + ' or ' +
-      formatNumber(this.cost.valueNet.value * 12, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + '\n' +
-      'Annual income is ' + formatNumber(this.cost.baseProfit.valueNet.value, 'en-GB', '1.0-0') + ' or ' +
-        formatNumber(this.cost.baseProfit.valueNet.value / 12, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + ' monthly';
+      'Monthly costs are ' + multiCurrencyToString(this.cost.valueNet, this.currencyCode) + ' or ' +
+      formatNumber(this.cost.valueNet.value * 12, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + ' yearly \n' +
+
+      'Annual profit is ' + formatNumber(this.cost.baseProfit.valueNet.value, 'en-GB', '1.0-0') + ' or ' +
+      multiCurrencyToString(this.cost.baseProfit.valueNet, this.currencyCode, 1/12) + ' monthly';
   }
 
   getDiffTooltipText(): string
@@ -50,9 +63,9 @@ export class CostFactComponent {
       return 'No data';
     }
 
-    return 'Monthly costs are ' + formatNumber(this.cost.valueNet.value, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') +
-      ' (' + formatNumber(this.cost.valueNet.valueInUsd, 'en-GB', '1.0-0') + ' USD) \n' +
-      'Profit is ' + formatNumber(this.cost.baseProfit.valueNet.value / 12, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + ' monthly or ' +
+    return 'Monthly costs are ' + multiCurrencyToString(this.cost.valueNet, this.currencyCode) + '\n' +
+      'Profit is ' + multiCurrencyToString(this.cost.baseProfit.valueNet, this.currencyCode, 1/12) + ' monthly or ' +
       formatNumber(this.cost.baseProfit.valueNet.value, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + ' yearly';
   }
 }
+

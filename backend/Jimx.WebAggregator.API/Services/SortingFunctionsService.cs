@@ -1,5 +1,4 @@
-﻿using Jimx.WebAggregator.API.Models.CityCosts;
-using Jimx.WebAggregator.API.Models.Report;
+﻿using Jimx.WebAggregator.API.Models.Report;
 
 namespace Jimx.WebAggregator.API.Services;
 
@@ -7,48 +6,73 @@ public class SortingFunctionsService
 {
     private readonly SortingFunction[] _sortingFunctions =
     [
-        new(1, "Net selected salary in USD", string.Empty, 
-            FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SelectedSalary.ValueNet)),
-        new(2, "Gross selected salary in USD", string.Empty,
-            FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SelectedSalary.ValueGross)),
-        
-        new(10, "YearsToGet1MlnUsd", string.Empty,
+        new(100, "MillionaireTerm", "Term to become millionaire", string.Empty,
             FieldAbsoluteSortingComparerFactory.Create(x => x.MillionaireTerm.TermInMonths ?? Decimal.MaxValue)),
-        new(11, "YearsToGetMortgageDownPayment", string.Empty,
+        new(110, "MortgageDownPaymentTerm", "Term to accumulate mortgage payment", string.Empty,
             FieldAbsoluteSortingComparerFactory.Create(x => x.MortgageDownPaymentTerm.TermInMonths ?? Decimal.MaxValue)),
-        new(12, "YearsToGetCar", string.Empty,
+        new(120, "BuyCarTerm", "Term to buy car", string.Empty,
             FieldAbsoluteSortingComparerFactory.Create(x => x.BuyCarTerm.TermInMonths ?? Decimal.MaxValue)),
         
-        new(20, "SalaryToEarn1MlnUsdIn30Yrs", string.Empty, 
-            FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SalaryToEarn1MlnUsdIn30Yrs.ValueGross)),
-        new(21, "SustainableSalary", string.Empty, 
+        new(200, "MillionaireSalary", "Gross millionaire salary (absolute)", string.Empty, 
+            FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.MillionaireSalary.ValueGross)),
+        new(201, "MillionaireSalaryToSelectedSalary", "Gross millionaire salary - Selected salary", string.Empty, 
+            FieldToGrossSelectedSalarySortingComparerFactory.Create(x => x.MillionaireSalary.ValueGross)),
+        new(202, "MillionaireSalaryRelatedToSelectedSalary", "Gross millionaire salary / Selected salary", string.Empty,
+            FieldRelatesToGrossSelectedSalarySortingComparerFactory.Create(x => x.MillionaireSalary.ValueGross)),
+        
+        new(210, "SustainableSalary", "Gross sustainable salary (absolute)", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SustainableSalary.ValueGross)),
-        new(22, "BareMinimumSalary", string.Empty, 
+        new(211, "SustainableSalaryToSelectedSalary", "Gross sustainable salary - Selected salary", string.Empty, 
+            FieldToGrossSelectedSalarySortingComparerFactory.Create(x => x.SustainableSalary.ValueGross)),
+        new(212, "SustainableSalaryRelatedToSelectedSalary", "Gross sustainable salary / Selected salary", string.Empty, 
+            FieldRelatesToGrossSelectedSalarySortingComparerFactory.Create(x => x.SustainableSalary.ValueGross)),
+        
+        new(220, "BareMinimumSalary", "Gross bare minimum salary", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.BareMinimumSalary.ValueGross)),
+        new(221, "BareMinimumSalaryToSelectedSalary", "Gross bare minimum salary - Selected salary", string.Empty, 
+            FieldToGrossSelectedSalarySortingComparerFactory.Create(x => x.BareMinimumSalary.ValueGross)),
+        new(222, "BareMinimumSalaryRelatesToSelectedSalary", "Gross bare minimum salary / Selected salary", string.Empty, 
+            FieldRelatesToGrossSelectedSalarySortingComparerFactory.Create(x => x.BareMinimumSalary.ValueGross)),
 
-        new(31, "MinimumCostsWithRent", string.Empty, 
+        new(300, "MinimumCostsWithRent", "Minimum possible costs while renting", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.MinimumCostsWithRent.ValueNet)),
-        new(32, "CostsWithRent", string.Empty, 
+        new(301, "MinimumCostsWithRentToSelectedSalary", "Minimum possible costs while renting - Selected salary", string.Empty, 
+            FieldToNetSelectedSalarySortingComparerFactory.Create(x => x.MinimumCostsWithRent.ValueNet)),
+        new(302, "MinimumCostsWithRentRelatesToSelectedSalary", "Minimum possible costs while renting / Selected salary", string.Empty, 
+            FieldRelatesToGrossSelectedSalarySortingComparerFactory.Create(x => x.MinimumCostsWithRent.ValueNet)),
+        
+        new(310, "CostsWithRent", "Usual costs while renting", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.CostsWithRent.ValueNet)),
-        new(33, "CostsWithMortgage", string.Empty, 
+        new(311, "CostsWithRentToSelectedSalary", "Usual costs while renting - Selected salary", string.Empty, 
+            FieldToNetSelectedSalarySortingComparerFactory.Create(x => x.CostsWithRent.ValueNet)),
+        new(312, "CostsWithRentRelatesToSelectedSalary", "Usual costs while renting / Selected salary", string.Empty, 
+            FieldRelatesToGrossSelectedSalarySortingComparerFactory.Create(x => x.CostsWithRent.ValueNet)),
+        
+        
+        new(320, "CostsWithMortgage", "Usual costs while paying mortgage", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.CostsWithMortgage.ValueNet)),
-        new(34, "SavingsWhileRenting", string.Empty, 
+        new(321, "CostsWithMortgageToSelectedSalary", "Usual costs while paying mortgage - Selected salary", string.Empty,
+            FieldToNetSelectedSalarySortingComparerFactory.Create(x => x.CostsWithMortgage.ValueNet)),
+        new(322, "CostsWithMortgageRelatesToSelectedSalary", "Usual costs while paying mortgage / Selected salary", string.Empty, 
+            FieldRelatesToGrossSelectedSalarySortingComparerFactory.Create(x => x.CostsWithMortgage.ValueNet)),
+        
+        new(400, "MonthlySavingsWhileRenting", "Savings while renting", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.MonthlySavingsWhileRenting)),
-        new(35, "SavingsWhilePayingMortgage", string.Empty, 
+        new(410, "MonthlySavingsWhilePayingMortgage", "Savings while paying mortgage", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.MonthlySavingsWhilePayingMortgage)),
         
         
-        new(40, "AverageSalary ValueGross", string.Empty, 
+        new(1000, "AverageGrossSalary", "Gross average salary", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SalaryData.AverageSalary.ValueGross)),
-        new(41, "AverageSalary ValueNet", string.Empty,
+        new(1001, "AverageNetSalary", "Net average salary", string.Empty,
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SalaryData.AverageSalary.ValueNet)),
-        new(42, "P25Salary ValueGross", string.Empty, 
+        new(1002, "P25GrossSalary", "Gross P25 salary", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SalaryData.P25Salary.ValueGross)),
-        new(43, "P25Salary ValueNet", string.Empty,
+        new(1003, "P25NetSalary", "Net P25 salary", string.Empty,
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SalaryData.P25Salary.ValueNet)),
-        new(44, "P75Salary ValueGross", string.Empty, 
+        new(1004, "P75GrossSalary", "Gross P75 salary", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SalaryData.P75Salary.ValueGross)),
-        new(45, "P75Salary ValueNet", string.Empty,
+        new(1005, "P75NetSalary", "Net P75 salary", string.Empty,
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.SalaryData.P75Salary.ValueNet))
     ];
     
@@ -78,20 +102,25 @@ public class SortingFunctionsService
             
             return comparerFunction(x, y);
         }
+
+        public static int CompareDifference(decimal difference, SortingDirection sortingDirection)
+        {
+            if (difference == 0m)
+                return 0;
+
+            return (difference > 0m ? 1 : -1) * (sortingDirection == SortingDirection.Ascending ? 1 : -1);
+        }
     }
     
     public class FieldAbsoluteComparer(Func<ReportCityExtendedApi, decimal> valueSelector, SortingDirection sortingDirection) 
-        : Comparer((r1, r2) => CompareDecimalFields(valueSelector, r1, r2, sortingDirection))
+        : Comparer((r1, r2) => Compare(valueSelector, r1, r2, sortingDirection))
     {
-        public static int CompareDecimalFields(Func<ReportCityExtendedApi, decimal> valueSelector, 
+        public static int Compare(Func<ReportCityExtendedApi, decimal> valueSelector, 
             ReportCityExtendedApi x, ReportCityExtendedApi y, SortingDirection sortingDirection)
         {
             var comparingValue = valueSelector(x) - valueSelector(y);
-
-            if (comparingValue == 0)
-                return 0;
-
-            return (comparingValue > 0 ? 1 : -1) * (sortingDirection == SortingDirection.Ascending ? 1 : -1);
+            return CompareDifference(comparingValue, sortingDirection);
+            
         }
     }
     
@@ -104,25 +133,112 @@ public class SortingFunctionsService
     }
     
     public class FieldAbsoluteInUsdComparer(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector, SortingDirection sortingDirection) 
-        : Comparer((r1, r2) => CompareMultiCurrencyValueFields(valueSelector, r1, r2, sortingDirection))
+        : Comparer((r1, r2) => Compare(valueSelector, r1, r2, sortingDirection))
     {
-        public static int CompareMultiCurrencyValueFields(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector, 
+        public static int Compare(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector, 
             ReportCityExtendedApi x, ReportCityExtendedApi y, SortingDirection sortingDirection)
         {
             var comparingValue = valueSelector(x).ValueInUsd - valueSelector(y).ValueInUsd;
-
-            if (comparingValue == 0)
-                return 0;
-
-            return (comparingValue > 0 ? 1 : -1) * (sortingDirection == SortingDirection.Ascending ? 1 : -1);
+            return CompareDifference(comparingValue, sortingDirection);
         }
     }
-
+    
     public static class FieldAbsoluteInUsdSortingComparerFactory
     {
         public static Func<SortingDirection, IComparer<ReportCityExtendedApi>> Create(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector)
         {
             return direction => new FieldAbsoluteInUsdComparer(valueSelector, direction);
+        }
+    }
+    
+    public abstract class FieldToFieldComparer(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector, 
+        Func<ReportCityExtendedApi, MultiCurrencyValue> baseValueSelector, SortingDirection sortingDirection)
+        :Comparer((r1, r2) => Compare(valueSelector, baseValueSelector, r1, r2, sortingDirection))
+    {
+        public static int Compare(
+            Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector,
+            Func<ReportCityExtendedApi, MultiCurrencyValue> baseValueSelector,
+            ReportCityExtendedApi x, ReportCityExtendedApi y, SortingDirection sortingDirection)
+        {
+            var comparingValue = baseValueSelector(x).ValueInUsd - valueSelector(x).ValueInUsd -
+                                 (baseValueSelector(y).ValueInUsd - valueSelector(y).ValueInUsd);
+            return CompareDifference(comparingValue, sortingDirection);
+        }
+    }
+    
+    public abstract class FieldRelatesToFieldComparer(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector, 
+        Func<ReportCityExtendedApi, MultiCurrencyValue> baseValueSelector, SortingDirection sortingDirection)
+        :Comparer((r1, r2) => Compare(valueSelector, baseValueSelector, r1, r2, sortingDirection))
+    {
+        public static int Compare(
+            Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector,
+            Func<ReportCityExtendedApi, MultiCurrencyValue> baseValueSelector,
+            ReportCityExtendedApi x, ReportCityExtendedApi y, SortingDirection sortingDirection)
+        {
+            const decimal veryBigValue = 1_000_000_000_000m;
+            var usdValueX = valueSelector(x).ValueInUsd;
+            var usdValueY = valueSelector(y).ValueInUsd;
+
+            var comparingValue = (usdValueX > 0 ? baseValueSelector(x).ValueInUsd / usdValueX : veryBigValue) -
+                                 (usdValueY > 0 ? baseValueSelector(y).ValueInUsd / usdValueY : veryBigValue);
+            
+            return CompareDifference(comparingValue, sortingDirection);
+        }
+    }
+
+    public class FieldToGrossSelectedSalaryComparer(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector, SortingDirection sortingDirection)
+        :FieldToFieldComparer(
+            valueSelector, 
+            x => x.SelectedSalary.ValueGross, 
+            sortingDirection);
+    
+    public class FieldToNetSelectedSalaryComparer(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector, SortingDirection sortingDirection)
+        :FieldToFieldComparer(
+            valueSelector, 
+            x => x.SelectedSalary.ValueNet, 
+            sortingDirection);
+    
+    public class FieldRelatesToGrossSelectedSalaryComparer(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector, SortingDirection sortingDirection)
+        :FieldRelatesToFieldComparer(
+            valueSelector, 
+            x => x.SelectedSalary.ValueGross, 
+            sortingDirection);
+    
+    public class FieldRelatesToNetSelectedSalaryComparer(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector, SortingDirection sortingDirection)
+        :FieldRelatesToFieldComparer(
+            valueSelector, 
+            x => x.SelectedSalary.ValueNet, 
+            sortingDirection);
+
+    public static class FieldToGrossSelectedSalarySortingComparerFactory
+    {
+        public static Func<SortingDirection, IComparer<ReportCityExtendedApi>> Create(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector)
+        {
+            return direction => new FieldToGrossSelectedSalaryComparer(valueSelector, direction);
+        }
+    }
+    
+    public static class FieldToNetSelectedSalarySortingComparerFactory
+    {
+        public static Func<SortingDirection, IComparer<ReportCityExtendedApi>> Create(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector)
+        {
+            return direction => new FieldToNetSelectedSalaryComparer(valueSelector, direction);
+        }
+    }
+    
+    public static class FieldRelatesToGrossSelectedSalarySortingComparerFactory
+    {
+        public static Func<SortingDirection, IComparer<ReportCityExtendedApi>> Create(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector)
+        {
+            return direction => new FieldRelatesToGrossSelectedSalaryComparer(valueSelector, direction);
+        }
+    }
+    
+    public static class FieldRelatesToNetSelectedSalarySortingComparerFactory
+    {
+        public static Func<SortingDirection, IComparer<ReportCityExtendedApi>> Create(Func<ReportCityExtendedApi, MultiCurrencyValue> valueSelector)
+        {
+            return direction => new FieldRelatesToNetSelectedSalaryComparer(valueSelector, direction);
         }
     }
 }

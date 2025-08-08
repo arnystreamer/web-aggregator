@@ -198,7 +198,7 @@ public class ReportCityExtendedApiFactory
             MortgageDownPaymentTerm = mortgageDownPaymentTerm,
             BuyCarTerm = buyCarTerm,
             
-            SalaryToEarn1MlnUsdIn30Yrs = desirableSalaryObjectToMillionaire,
+            MillionaireSalary = desirableSalaryObjectToMillionaire,
             SustainableSalary = desirableSalaryObjectToSustain,
             BareMinimumSalary = desirableSalaryObjectToSurvive
         };

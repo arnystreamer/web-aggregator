@@ -1,9 +1,11 @@
 import { formatNumber } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, computed, Input, Signal } from '@angular/core';
 import { ProfitTaxableApi } from '../../models/profit-taxable-api.model';
 import { MoneySpanComponent } from '../money-span/money-span.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PresentationService } from '../../services/presentation.service';
+import { multiCurrencyToString } from '../../services/helpers/money-display-helper'
 
 @Component({
   selector: 'wa-profit-taxable',
@@ -18,6 +20,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class ProfitTaxableComponent {
   @Input() profit: ProfitTaxableApi | undefined;
   @Input() currencyCode: string | undefined;
+  @Input() netSelected: boolean = false;
+  @Input() grossSelected: boolean = false;
+
+  public isShowInUsd: Signal<boolean> = computed(() => this.presentationService.currencySignal() == 'USD')
+
+  constructor(private presentationService: PresentationService)
+  {
+
+  }
 
   public getTooltipText() : string
   {
@@ -33,10 +44,8 @@ export class ProfitTaxableComponent {
       taxData += currentTaxResult.name + ': ' + formatNumber(currentTaxResult.value, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') + '\n';
     }
 
-    return formatNumber(this.profit.valueGross.value, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') +
-      ' (' + formatNumber(this.profit.valueGross.valueInUsd, 'en-GB', '1.0-0') + ' USD) gross \n'+
+    return multiCurrencyToString(this.profit.valueGross, this.currencyCode) + ' gross\n'+
       taxData +
-      formatNumber(this.profit.valueNet.value, 'en-GB', '1.0-0') + ' ' + (this.currencyCode ?? '???') +
-      ' (' + formatNumber(this.profit.valueNet.valueInUsd, 'en-GB', '1.0-0') + ' USD) net';
+      multiCurrencyToString(this.profit.valueNet, this.currencyCode) + ' USD) net';
   }
 }

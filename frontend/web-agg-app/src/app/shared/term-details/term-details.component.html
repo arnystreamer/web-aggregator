@@ -1,7 +1,8 @@
 @if (term)
 {
-  <wa-term-span [termInMonths]="term.termInMonths" />
-    <mat-icon class="details-icon" aria-hidden="false" aria-label="Info icon" fontIcon="more_horiz"
+  <wa-term-span [termInMonths]="term.termInMonths" [selected]="selected" />
+  &nbsp;
+  <mat-icon class="details-icon" aria-hidden="false" aria-label="Info icon" fontIcon="more_horiz"
       #tooltip="matTooltip"
       [matTooltip]="getTooltipText()"
       matTooltipPosition="below"
