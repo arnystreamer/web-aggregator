@@ -8,6 +8,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './term-span.component.scss'
 })
 export class TermSpanComponent {
-    @Input() termInMonths?: number;
+    @Input() termInMonths?: number | null;
     @Input() selected: boolean = false;
 }

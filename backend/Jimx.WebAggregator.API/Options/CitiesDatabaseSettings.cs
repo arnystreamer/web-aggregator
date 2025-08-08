@@ -10,6 +10,7 @@
 		public string CitiesCollectionName { get; set; } = string.Empty;
 		public string CityDictionaryItemsCollectionName { get; set; } = string.Empty;
 		public string RegionTaxesCollectionName { get; set; } = string.Empty;
+		public string RegionTaxDeductionsCollectionName { get; set; } = string.Empty;
 		public string CitySalariesCollectionName { get; set; } = string.Empty;
 	}
 }

@@ -19,12 +19,13 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 		}
 
 		[HttpGet]
-		public async Task<CollectionApi<CitySalaryApi>> GetAll([FromQuery] CollectionRequestApi requestApi)
+		public async Task<CollectionApi<CitySalaryApi>> GetAll([FromQuery] CitySalariesRequestApi requestApi,
+			CancellationToken cancellationToken)
 		{
 			int skip = requestApi.Skip ?? 0;
 			int take = requestApi.Take ?? 10;
 
-			var allItems = _databaseService.GetCitySalaries();
+			var allItems = await _databaseService.GetCitySalariesAsync(cancellationToken);
 
 			var dataItems =
 				allItems
@@ -39,9 +40,9 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 		}
 
 		[HttpGet("fakes")]
-		public async Task<CollectionApi<CitySalaryApi>> GetFake()
+		public async Task<CollectionApi<CitySalaryApi>> GetFake(CancellationToken cancellationToken)
 		{
-			var allItems = _databaseService.GetCities();
+			var allItems = await _databaseService.GetCityCostsAsync(cancellationToken);
 
 			var dataItems =
 				allItems

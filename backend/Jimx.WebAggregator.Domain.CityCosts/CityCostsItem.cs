@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Jimx.WebAggregator.Domain.CityCosts
 {
-	public record DataItem(int? Key, string Value) : IMongoEntity
+	public record CityCostsItem(string Name, string Region, string Country, IEnumerable<CityDataItem> DataItems) : IMongoEntity
 	{
 		[BsonId]
 		[BsonRepresentation(BsonType.ObjectId)]

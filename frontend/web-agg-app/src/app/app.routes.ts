@@ -9,6 +9,7 @@ import { cityDictionaryResolver } from './services/city-dictionary.resolver';
 import { CitiesPlainPageComponent } from './data-analysis/cost-of-living-page/cities-plain-page/cities-plain-page.component';
 import { citySalariesResolver } from './services/city-salaries.resolver';
 import { regionTaxesResolver } from './services/region-taxes.resolver';
+import { CostOfLivingExPageComponent } from './data-analysis/cost-of-living-ex-page/cost-of-living-ex-page/cost-of-living-ex-page.component';
 
 export const routes: Routes = [
   {
@@ -39,6 +40,10 @@ export const routes: Routes = [
           dictionary: cityDictionaryResolver,
           salaries: citySalariesResolver,
           regionTaxes: regionTaxesResolver }
+      },
+      {
+        path: 'cost-of-living-extended',
+        component: CostOfLivingExPageComponent,
       },
       {
         path: 'city-costs-plain',

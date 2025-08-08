@@ -19,18 +19,19 @@ namespace Jimx.WebAggregator.API.Controllers.CityCosts
 		}
 
 		[HttpGet]
-		public async Task<CollectionApi<DictionaryDataApi>> GetAll([FromQuery] CollectionRequestApi requestApi)
+		public async Task<CollectionApi<DictionaryDataApi>> GetAll([FromQuery] CityDictionaryRequestApi requestApi,
+			CancellationToken cancellationToken)
 		{
 			int skip = requestApi.Skip ?? 0;
 			int take = requestApi.Take ?? 10;
 
-			var allItems = _databaseService.GetDataItems();
+			var allItems = await _databaseService.GetCityDictionaryItemsAsync(cancellationToken);
 
 			var dataItems = 
 				allItems
 				.Skip(skip)
 				.Take(take)
-				.Select(i => new DictionaryDataApi(i.ObjectId, i.Key, i.Value))
+				.Select(i => new DictionaryDataApi(i.ObjectId!, i.Key, i.Value))
 				.ToArray();
 
 			return new CollectionApi<DictionaryDataApi>(

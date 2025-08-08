@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.API", "J
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Parser", "Jimx.WebAggregator.Parser\Jimx.WebAggregator.Parser.csproj", "{8828E89B-6E61-4FBE-8A72-A7242F02AE7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.ParserTest", "Jimx.WebAggregator.ParserTest\Jimx.WebAggregator.ParserTest.csproj", "{EAE77A52-D96F-4F67-BE56-5319692B2C14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.DownloadDataApp", "Jimx.WebAggregator.DownloadDataApp\Jimx.WebAggregator.DownloadDataApp.csproj", "{EAE77A52-D96F-4F67-BE56-5319692B2C14}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jimx.WebAggregator.Parser.Html", "Jimx.WebAggregator.Parser.Html\Jimx.WebAggregator.Parser.Html.csproj", "{3EC0940B-6DBA-40C2-8929-8917D2C5AFA8}"
 EndProject
@@ -16,6 +16,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Domain.CityCosts", "Jimx.WebAggregator.Domain.CityCosts\Jimx.WebAggregator.Domain.CityCosts.csproj", "{61A1B512-000E-4C24-BCAD-669AA58D043A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Domain.MongoDB", "Jimx.WebAggregator.Domain.MongoDB\Jimx.WebAggregator.Domain.MongoDB.csproj", "{16AC31C8-F286-441F-8FB7-CFD4FBB7B64D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Calculations", "Jimx.WebAggregator.Calculations\Jimx.WebAggregator.Calculations.csproj", "{A3C9F565-85ED-4544-A363-EAD6F44E3526}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Calculations.Tests", "Jimx.WebAggregator.Calculations.Tests\Jimx.WebAggregator.Calculations.Tests.csproj", "{C48A3CA9-A788-4513-A1BA-618E8AAEBFD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{16AC31C8-F286-441F-8FB7-CFD4FBB7B64D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16AC31C8-F286-441F-8FB7-CFD4FBB7B64D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16AC31C8-F286-441F-8FB7-CFD4FBB7B64D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3C9F565-85ED-4544-A363-EAD6F44E3526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3C9F565-85ED-4544-A363-EAD6F44E3526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3C9F565-85ED-4544-A363-EAD6F44E3526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3C9F565-85ED-4544-A363-EAD6F44E3526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C48A3CA9-A788-4513-A1BA-618E8AAEBFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C48A3CA9-A788-4513-A1BA-618E8AAEBFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C48A3CA9-A788-4513-A1BA-618E8AAEBFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C48A3CA9-A788-4513-A1BA-618E8AAEBFD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,16 @@
+@if (profit)
+{
+  <wa-money-span [value]="profit.valueNet.value" /> {{currencyCode ?? '???'}} <span>/&nbsp;</span>
+  <wa-money-span [value]="profit.valueGross.value" /> {{currencyCode ?? '???'}}
+  @if (currencyCode != "USD" && false)
+  {
+    <span>/&nbsp;</span>
+    <wa-money-span [value]="profit.valueNet.valueInUsd" /> USD
+  }
+  <mat-icon class="details-icon" aria-hidden="false" aria-label="Info icon" fontIcon="more_horiz"
+      #tooltip="matTooltip"
+      [matTooltip]="getTooltipText()"
+      matTooltipPosition="below"
+      matTooltipHideDelay="100000"
+      matTooltipClass="allow-cr" />
+}

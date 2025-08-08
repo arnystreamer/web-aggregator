@@ -1,6 +1,6 @@
 ﻿using Jimx.WebAggregator.Parser;
 
-namespace Jimx.WebAggregator.ParserTest
+namespace Jimx.WebAggregator.DownloadDataApp
 {
 	internal class ParsingJob : IParsingJob
 	{

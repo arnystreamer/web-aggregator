@@ -12,3 +12,8 @@ body { margin: 0; font-family: "Franklin Gothic Book", Roboto, "Helvetica Neue",
   display: flex;
   gap: 10px;
 }
+
+.allow-cr {
+  white-space: pre-line;
+  max-width: unset !important;
+}
