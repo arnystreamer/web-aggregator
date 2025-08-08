@@ -20,6 +20,7 @@ import { TermSpanComponent } from '../../../shared/term-span/term-span.component
 import { ProfitTaxableComponent } from '../../../shared/profit-taxable/profit-taxable.component';
 import { CostFactComponent } from "../../../shared/cost-fact/cost-fact.component";
 import { ProfitDesirableComponent } from "../../../shared/profit-desirable/profit-desirable.component";
+import { TermDetailsComponent } from "../../../shared/term-details/term-details.component";
 
 @Component({
   selector: 'wa-cost-of-living-ex-page',
@@ -35,7 +36,8 @@ import { ProfitDesirableComponent } from "../../../shared/profit-desirable/profi
     TermSpanComponent,
     ProfitTaxableComponent,
     CostFactComponent,
-    ProfitDesirableComponent
+    ProfitDesirableComponent,
+    TermDetailsComponent
 ],
   templateUrl: './cost-of-living-ex-page.component.html',
   styleUrl: './cost-of-living-ex-page.component.scss'

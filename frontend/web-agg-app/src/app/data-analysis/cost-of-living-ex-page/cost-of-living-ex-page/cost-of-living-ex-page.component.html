@@ -103,9 +103,9 @@
 
         <td>
           <ul>
-            <li>Earn 1 mln USD: <wa-term-span [termInMonths]="city.millionaireTerm.termInMonths" /> </li>
-            <li>Earn mortgage down payment: <wa-term-span [termInMonths]="city.mortgageDownPaymentTerm.termInMonths" /></li>
-            <li>Earn for new car: <wa-term-span [termInMonths]="city.buyCarTerm.termInMonths" /></li>
+            <li>Earn 1 mln USD: <wa-term-details [term]="city.millionaireTerm" [currencyCode]="city.currencyCode" /></li>
+            <li>Earn mortgage down payment: <wa-term-details [term]="city.mortgageDownPaymentTerm" [currencyCode]="city.currencyCode" /></li>
+            <li>Earn for new car: <wa-term-details [term]="city.buyCarTerm" [currencyCode]="city.currencyCode" /></li>
           </ul>
         </td>
       </tr>

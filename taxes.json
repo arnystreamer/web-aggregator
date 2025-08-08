@@ -1,0 +1,51 @@
+[
+    {
+        "Region": null,
+        "Country": "UK",
+        "ID": "UK",
+        "CurrencyCode": "GBP",
+        "Source": {
+            "123": "https://123",
+            "IsTrustworthy": false,
+            "Comment": ""
+        },
+        "IncomeTaxes": [
+            {
+                "ID": "123",        //used only for constructions like "ApplyOn": "tax(123)". Can be omitted
+                "Name": "Tax Name", //used for people
+                                    
+                                    //every calculation has parameters. every parameter can have one or more values (X="a,b"). If parameter X is omitted calculation parameter X is considered as equal to "default". 
+                "Tags": [           //Tax is matched if one of calculation parameter is equal to one of tax tag values (calculation parameter X = "a,b", tax tag X = "a,c" - consider as matched by X = "a" )
+                    "year:2025",                        //specifies year of income to differ changing tables
+                    "taxpayer_status:single,married,default",  //tax payers martial status
+                    "taxtype:income,pension,household",        //tax type, not filtering anything 
+                    "taxpayer_age:17-52",              //tax payer min-max age
+                    "taxpayer_residency:geneva,luzern,zurich,default"   //where tax payer resides
+                ],
+                "ApplyOn": "gross",     //apply it on gross income
+                "ApplyOn": "tax(ID)",   //apply on tax with ID equal to ID string. Do not consider Multiplier of source tax
+                "ApplyOn": "after_taxes", //apply this tax after all others. if there is 2 taxes with ApplyOn="after_taxes", then fail
+                "ApplyOn": "before_taxes", //apply this tax before all others. if there is 2 taxes with ApplyOn="before_taxes", then fail
+                "ApplyOn": "housing", //apply on occupied item, can be only in absolute values (MonthlyFixedAmount, AnnualFixedAmount), not rates (Rate, Levels), as it applies on number of rented properties
+                "ApplyOn": "person", //apply on person, can be only in absolute values (MonthlyFixedAmount, AnnualFixedAmount), not rates (Rate, Levels), as it applies on number of people
+                "ApplyOn": "owned_housing",  //apply on owned item
+                "IsActive": false,
+                "MonthlyFixedAmount": 150,
+                "AnnualFixedAmount": 1400,
+                "Rate": 0.012,
+                "Multiplier": 1.1,
+                "Comment": "",
+                "FixedDeductionAmount": 10500, //deducted amount from Levels or Rate
+                "Levels": [
+                    {
+                        "From": 0,
+                        "To": null,
+                        "Rate": 0.1,
+                        "RateFrom": 0.05,
+                        "RateTo": 0.15
+                    }
+                ]
+            }
+        ]
+    }
+]

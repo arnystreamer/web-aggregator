@@ -1,0 +1,10 @@
+@if (term)
+{
+  <wa-term-span [termInMonths]="term.termInMonths" />
+    <mat-icon class="details-icon" aria-hidden="false" aria-label="Info icon" fontIcon="more_horiz"
+      #tooltip="matTooltip"
+      [matTooltip]="getTooltipText()"
+      matTooltipPosition="below"
+      matTooltipHideDelay="100000"
+      matTooltipClass="allow-cr" />
+}
