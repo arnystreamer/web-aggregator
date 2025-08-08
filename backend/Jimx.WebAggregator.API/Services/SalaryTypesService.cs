@@ -1,5 +1,4 @@
-﻿using Jimx.WebAggregator.API.Models.CityCosts;
-using Jimx.WebAggregator.API.Models.Report;
+﻿using Jimx.WebAggregator.API.Models.Report;
 
 namespace Jimx.WebAggregator.API.Services;
 

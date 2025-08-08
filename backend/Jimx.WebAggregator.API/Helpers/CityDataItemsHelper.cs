@@ -1,4 +1,4 @@
-﻿using Jimx.WebAggregator.API.Models.CityCosts;
+﻿using Jimx.WebAggregator.API.Models;
 using Jimx.WebAggregator.API.Models.Common;
 using Jimx.WebAggregator.Calculations.Helpers;
 
