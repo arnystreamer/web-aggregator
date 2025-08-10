@@ -2,12 +2,11 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Jimx.WebAggregator.Domain.CityCosts
+namespace Jimx.WebAggregator.Domain.CityCosts;
+
+public record CityCostsItem(string Name, string Region, string Country, IEnumerable<CityDataItem> DataItems) : IMongoEntity
 {
-	public record CityCostsItem(string Name, string Region, string Country, IEnumerable<CityDataItem> DataItems) : IMongoEntity
-	{
-		[BsonId]
-		[BsonRepresentation(BsonType.ObjectId)]
-		public string? ObjectId { get; set; }
-	};
+	[BsonId]
+	[BsonRepresentation(BsonType.ObjectId)]
+	public string? ObjectId { get; set; }
 }

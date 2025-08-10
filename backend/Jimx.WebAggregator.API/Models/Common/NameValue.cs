@@ -1,13 +1,7 @@
 ﻿namespace Jimx.WebAggregator.API.Models.Common;
 
-public abstract class NameValue
+public abstract class NameValue(string name, decimal value)
 {
-    public string Name { get; set; }
-    public decimal Value { get; set; }
-
-    public NameValue(string name, decimal value)
-    {
-        Name = name;
-        Value = value;
-    }
+    public string Name { get; set; } = name;
+    public decimal Value { get; set; } = value;
 }

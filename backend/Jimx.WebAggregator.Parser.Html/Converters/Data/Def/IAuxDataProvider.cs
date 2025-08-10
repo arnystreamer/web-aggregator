@@ -1,9 +1,8 @@
 ﻿using HtmlAgilityPack;
 
-namespace Jimx.WebAggregator.Parser.Html.Converters.Data.Def
+namespace Jimx.WebAggregator.Parser.Html.Converters.Data.Def;
+
+public interface IAuxDataProvider
 {
-	public interface IAuxDataProvider
-	{
-		string? GetAuxDataValueFromDocument(HtmlNode documentNode);
-	}
+	string? GetAuxDataValueFromDocument(HtmlNode documentNode);
 }

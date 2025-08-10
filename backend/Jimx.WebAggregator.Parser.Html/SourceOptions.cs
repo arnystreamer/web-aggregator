@@ -5,13 +5,13 @@ namespace Jimx.WebAggregator.Parser.Html;
 
 public class SourceOptions
 {
-	public ITableFilter TableFilter { get; init; }
-	public IHeaderRowToFieldsConverter RowToFieldsConverter { get; init; }
-	public IDataRowToValuesConverter DataRowToValuesConverter { get; init; }
-	public IAuxDataSelectorsProvider? AuxDataSelectorsProvider { get; init; }
+	public ITableFilter TableFilter { get; }
+	public IHeaderRowToFieldsConverter RowToFieldsConverter { get; }
+	public IDataRowToValuesConverter DataRowToValuesConverter { get; }
+	public IAuxDataSelectorsProvider? AuxDataSelectorsProvider { get; }
 
-	public bool IgnoreRowsWithCellsDiscrepancies { get; set; }
-	public bool ExpectNullsInSubsectionNames { get; set; }
+	public bool IgnoreRowsWithCellsDiscrepancies { get; init; }
+	public bool ExpectNullsInSubsectionNames { get; init; }
 
 	public SourceOptions(ITableFilter tableFilter, IHeaderRowToFieldsConverter rowToFieldsConverter, IDataRowToValuesConverter dataRowToValuesConverter, 
 		IAuxDataSelectorsProvider? auxDataSelectorsProvider = null)

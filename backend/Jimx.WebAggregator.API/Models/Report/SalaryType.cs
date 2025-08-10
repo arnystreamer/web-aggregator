@@ -1,5 +1,8 @@
-﻿namespace Jimx.WebAggregator.API.Models.Report;
+﻿using JetBrains.Annotations;
 
+namespace Jimx.WebAggregator.API.Models.Report;
+
+[PublicAPI]
 public class SalaryTypeApi(int id, string name, string? description)
 {
     public int Id { get; set; } = id;

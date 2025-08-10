@@ -45,19 +45,12 @@ public class UserTaxProfile
         
         if (currentProfileTagValues == null)
         {
-            if (taxParameterValues.Contains("default"))
-            {
-                return true;
-            }
-            return false;
+            return taxParameterValues.Contains("default");
         }
 
-        if (taxParameterKey == "taxpayer_age")
-        {
-            return IsParametersAsIntRangeMatched(currentProfileTagValues, taxParameterValues);
-        }
-
-        return IsParametersAsStringsMatched(currentProfileTagValues, taxParameterValues);
+        return taxParameterKey == "taxpayer_age" 
+            ? IsParametersAsIntRangeMatched(currentProfileTagValues, taxParameterValues) 
+            : IsParametersAsStringsMatched(currentProfileTagValues, taxParameterValues);
     }
 
     private bool IsParametersAsIntRangeMatched(string[] profileTagValues, string[] taxParameterValues)
@@ -82,15 +75,7 @@ public class UserTaxProfile
 
     private bool IsParametersAsStringsMatched(string[] profileTagValues, string[] taxParameterValues)
     {
-        foreach (var taxParameterValue in taxParameterValues)
-        {
-            if (profileTagValues.Contains(taxParameterValue))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return taxParameterValues.Any(profileTagValues.Contains);
     }
 
     private (string Key, string[] Values) ParseParameter(string parameterString)

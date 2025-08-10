@@ -1,7 +1,6 @@
-﻿namespace Jimx.WebAggregator.Parser.Builder
+﻿namespace Jimx.WebAggregator.Parser.Builder;
+
+public interface IExtensionRequest<TInput, TOutput>
 {
-	public interface IExtensionRequest<TInput, TOutput>
-	{
-		Task<TOutput> Request(TInput input);
-	}
+	Task<TOutput> Request(TInput input);
 }

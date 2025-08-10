@@ -17,9 +17,4 @@ public class SalaryTypesService
     {
         return _salaryTypes;
     }
-
-    public SalaryTypeApi Get(int id)
-    {
-        return _salaryTypes.First(s => s.Id == id);
-    }
 }

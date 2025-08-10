@@ -1,7 +1,9 @@
-﻿using Jimx.WebAggregator.Calculations.Models;
+﻿using JetBrains.Annotations;
+using Jimx.WebAggregator.Calculations.Models;
 
 namespace Jimx.WebAggregator.API.Models.Report;
 
+[PublicAPI]
 public class ReportProfitTaxable
 {
     public MultiCurrencyValue ValueGross { get; }

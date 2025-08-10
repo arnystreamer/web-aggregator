@@ -31,7 +31,7 @@ public class DataRowToValuesConverter : IDataRowToValuesConverter
 		var result = new string?[dataCells.Length];
 		for (var index = 0; index < dataCells.Length; index++)
 		{
-			RowField? rowField = rowFieldsIndexer[index];
+			var rowField = rowFieldsIndexer[index];
 			if (rowField == null)
 			{
 				result[index] = null;

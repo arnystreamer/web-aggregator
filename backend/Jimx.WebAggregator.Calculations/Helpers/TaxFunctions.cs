@@ -153,8 +153,8 @@ public static class TaxFunctions
 
             if (!taxValueForThisLevel.HasValue)
             {
-                throw new Exception($"Failed to calculate tax for level because of rates: "+
-                                    "Rate {level.Rate}, RateFrom {level.RateFrom}, RateTo {level.RateTo}");
+                throw new Exception("Failed to calculate tax for level because of rates: "+
+                                    $"Rate {level.Rate}, RateFrom {level.RateFrom}, RateTo {level.RateTo}");
             }
 
             accumulatedTaxValue += taxValueForThisLevel.Value;

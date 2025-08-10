@@ -1,7 +1,6 @@
-﻿namespace Jimx.WebAggregator.Parser.Html.Converters.Data.Def
+﻿namespace Jimx.WebAggregator.Parser.Html.Converters.Data.Def;
+
+public interface IAuxDataSelectorsProvider
 {
-	public interface IAuxDataSelectorsProvider
-	{
-		IDictionary<string, IAuxDataProvider> Providers { get; }
-	}
+	IDictionary<string, IAuxDataProvider> Providers { get; }
 }

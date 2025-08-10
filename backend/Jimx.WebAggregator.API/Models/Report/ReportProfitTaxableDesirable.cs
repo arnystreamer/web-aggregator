@@ -18,13 +18,4 @@ public class ReportProfitTaxableRelativeDesirable : ReportProfitTaxableRelative
         CostBits = costBits;
         AnnualSavings = annualSavings;
     }
-
-    public ReportProfitTaxableRelativeDesirable(ReportProfitTaxableRelative reportProfitTaxableRelative,
-        MultiCurrencyValue requestedAnnualIncome, CostBit[] costBits, MultiCurrencyValue annualSavings)
-        :base(reportProfitTaxableRelative, reportProfitTaxableRelative.BaseValueGross)
-    {
-        RequestedAnnualIncome = requestedAnnualIncome;
-        CostBits = costBits;
-        AnnualSavings = annualSavings;
-    }
 }

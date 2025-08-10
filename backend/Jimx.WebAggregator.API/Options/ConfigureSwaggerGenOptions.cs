@@ -2,43 +2,42 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Jimx.WebAggregator.API.Options
+namespace Jimx.WebAggregator.API.Options;
+
+public class ConfigureSwaggerGenOptions : IConfigureNamedOptions<SwaggerGenOptions>
 {
-	public class ConfigureSwaggerGenOptions : IConfigureNamedOptions<SwaggerGenOptions>
+	public void Configure(string? name, SwaggerGenOptions options)
 	{
-		public void Configure(string? name, SwaggerGenOptions options)
-		{
-			Configure(options);
-		}
+		Configure(options);
+	}
 
-		public void Configure(SwaggerGenOptions options)
+	public void Configure(SwaggerGenOptions options)
+	{
+		options.SwaggerDoc("v1", new OpenApiInfo { Title = "Jimx.WebAggregator.API", Version = "v1" });
+		options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 		{
-			options.SwaggerDoc("v1", new OpenApiInfo { Title = "Jimx.WebAggregator.API", Version = "v1" });
-			options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-			{
-				In = ParameterLocation.Header,
-				Description = "Please enter token",
-				Name = "Authorization",
-				Type = SecuritySchemeType.Http,
-				BearerFormat = "JWT",
-				Scheme = "bearer"
-			});
+			In = ParameterLocation.Header,
+			Description = "Please enter token",
+			Name = "Authorization",
+			Type = SecuritySchemeType.Http,
+			BearerFormat = "JWT",
+			Scheme = "bearer"
+		});
 
-			options.AddSecurityRequirement(new OpenApiSecurityRequirement
+		options.AddSecurityRequirement(new OpenApiSecurityRequirement
+		{
 			{
+				new OpenApiSecurityScheme
 				{
-					new OpenApiSecurityScheme
+					Reference = new OpenApiReference
 					{
-						Reference = new OpenApiReference
-						{
-							Type=ReferenceType.SecurityScheme,
-							Id="Bearer"
+						Type=ReferenceType.SecurityScheme,
+						Id="Bearer"
 							
-						},
 					},
-					new string[]{}
-				}
-			});
-		}
+				},
+				[]
+			}
+		});
 	}
 }

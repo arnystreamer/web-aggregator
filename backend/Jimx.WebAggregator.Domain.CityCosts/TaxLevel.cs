@@ -1,4 +1,3 @@
-﻿namespace Jimx.WebAggregator.Domain.CityCosts
-{
-	public record TaxLevel(decimal LowerCut, decimal Rate);
-}
+﻿namespace Jimx.WebAggregator.Domain.CityCosts;
+
+public record TaxLevel(decimal LowerCut, decimal Rate);

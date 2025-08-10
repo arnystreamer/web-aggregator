@@ -1,6 +1,5 @@
 ﻿using Jimx.WebAggregator.API.Helpers;
 using Jimx.WebAggregator.Calculations;
-using Jimx.WebAggregator.Calculations.Models;
 using Jimx.WebAggregator.Domain.CityCosts;
 
 namespace Jimx.WebAggregator.API.Models.Report;
@@ -79,7 +78,7 @@ public class ReportCityExtendedApiFactory
         CostBit[] costBitsWithRent =
         [
             ..costBitsWithoutRent,
-            new CostBit("Rent", hasFreeApartment ? 0m : rentCosts)
+            new("Rent", hasFreeApartment ? 0m : rentCosts)
         ];
         var costsWithRent = new ReportCostRelativeExtended(costBitsWithRent,
             dynamicParameters.CrossRateToUsd, selectedSalaryNet);
@@ -87,7 +86,7 @@ public class ReportCityExtendedApiFactory
         CostBit[] minimumCostBitsWithRent =
         [
             ..minimumCostsBitsWithoutRent,
-            new CostBit("Rent", hasFreeApartment ? 0m : rentCosts)
+            new("Rent", hasFreeApartment ? 0m : rentCosts)
         ];
         var minimumCostsWithRent = new ReportCostRelativeExtended(minimumCostBitsWithRent,
             dynamicParameters.CrossRateToUsd, selectedSalaryNet);
@@ -95,7 +94,7 @@ public class ReportCityExtendedApiFactory
         CostBit[] costBitsWithMortgage =
         [
             ..costBitsWithoutRent,
-            new CostBit("Mortgage", mortgageMonthlyPayment)
+            new("Mortgage", mortgageMonthlyPayment)
         ];
         var costsWithMortgage = new ReportCostRelativeExtended(costBitsWithMortgage,
             dynamicParameters.CrossRateToUsd, selectedSalaryNet);
@@ -130,7 +129,7 @@ public class ReportCityExtendedApiFactory
             carPriceTarget,
             monthlySavingsWhileRenting > 0 ? carPriceTarget.Value / monthlySavingsWhileRenting : null);
 
-        var millionaireTargetAnnualSavingsInUsd = 1_000_000m / 30m;
+        const decimal millionaireTargetAnnualSavingsInUsd = 1_000_000m / 30m;
         var netAnnualSalaryToMillionaireInUsd = millionaireTargetAnnualSavingsInUsd + costsWithRent.ValueNet.ValueInUsd * 12m;
         var netAnnualSalaryToMillionaire = netAnnualSalaryToMillionaireInUsd / dynamicParameters.CrossRateToUsd;
         var desirableSalaryObjectToMillionaire = new ReportProfitTaxableRelativeDesirable(
@@ -141,7 +140,7 @@ public class ReportCityExtendedApiFactory
             costBitsWithRent,
             new MultiCurrencyValue(millionaireTargetAnnualSavingsInUsd / dynamicParameters.CrossRateToUsd, millionaireTargetAnnualSavingsInUsd));
 
-        var sustainableAnnualSavingsInUsd = 15000m;
+        const decimal sustainableAnnualSavingsInUsd = 15000m;
         var netSustainableAnnualSalaryInUsd = costsWithRent.ValueNet.ValueInUsd * 12m + sustainableAnnualSavingsInUsd;
         var netSustainableAnnualSalary = netSustainableAnnualSalaryInUsd / dynamicParameters.CrossRateToUsd;
         var desirableSalaryObjectToSustain = new ReportProfitTaxableRelativeDesirable(
@@ -165,7 +164,7 @@ public class ReportCityExtendedApiFactory
         return new ReportCityExtendedApi(reportCityApi.Name, reportCityApi.Region, reportCityApi.Country, reportCityApi.CountryCode)
         {
             SelectedSalary = new ReportProfitTaxable(taxesCalculator.ApplyTaxes(dynamicParameters.SelectedSalary), dynamicParameters.CrossRateToUsd),
-            SalaryData = new SalaryData()
+            SalaryData = new SalaryData
             {
                 AverageSalary = new ReportProfitTaxable(taxesCalculator.ApplyTaxes(dynamicParameters.AnnualGrossSalary), dynamicParameters.CrossRateToUsd),
                 P25Salary = new ReportProfitTaxable(taxesCalculator.ApplyTaxes(dynamicParameters.DeveloperGrossSalaryP25), dynamicParameters.CrossRateToUsd),

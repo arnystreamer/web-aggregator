@@ -5,13 +5,13 @@ namespace Jimx.WebAggregator.Calculations.Tests;
 
 public class TaxationServiceTests
 {
-    private readonly TaxationService _taxationService = new TaxationService();
+    private readonly TaxationService _taxationService = new();
     
     private readonly Func<string[], IncomeTaxItem> _incomeTaxFactory =
         tags =>
             new IncomeTaxItem("Some_tax", "Tax", tags, "gross", true, 335, null, null, null, null, "", []);
 
-    private readonly UserFamily userFamily = new()
+    private readonly UserFamily _userFamily = new()
     {
         FamilyMembersCount = 3,
         ToddlersCount = 1,
@@ -31,7 +31,7 @@ public class TaxationServiceTests
             "taxpayer_status:single",
             "taxpayer_age:35",
             "taxpayer_residency:luzern"
-        ], userFamily);
+        ], _userFamily);
         
         var disabledIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [], "gross", false, 335, null, null, null, null, "", []);
         Assert.That(
@@ -40,7 +40,7 @@ public class TaxationServiceTests
         
         var enabledNoTagsIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [], "gross", true, null, 1300, null, null, null, "comment", []);
         Assert.That(
-            TaxFunctions.IsTaxApplicable(new UserTaxProfile([], userFamily), enabledNoTagsIncomeTax),
+            TaxFunctions.IsTaxApplicable(new UserTaxProfile([], _userFamily), enabledNoTagsIncomeTax),
             Is.True);
         
         var enabledAllDefaultTagsIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [
@@ -48,7 +48,7 @@ public class TaxationServiceTests
             "taxpayer_residency:default"
         ], "gross", true, 210, null, null, null, null, "", []);
         Assert.That(
-            TaxFunctions.IsTaxApplicable(new UserTaxProfile([], userFamily), enabledAllDefaultTagsIncomeTax),
+            TaxFunctions.IsTaxApplicable(new UserTaxProfile([], _userFamily), enabledAllDefaultTagsIncomeTax),
             Is.True);
         
         var enabledMultiValueTagsIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [
@@ -56,7 +56,7 @@ public class TaxationServiceTests
             "taxpayer_residency:zurich,default"
         ], "gross", true, null, 4200, null, null, null, "", []);
         Assert.That(
-            TaxFunctions.IsTaxApplicable(new UserTaxProfile([], userFamily), enabledMultiValueTagsIncomeTax),
+            TaxFunctions.IsTaxApplicable(new UserTaxProfile([], _userFamily), enabledMultiValueTagsIncomeTax),
             Is.True);
         
         Assert.Pass();
@@ -69,18 +69,18 @@ public class TaxationServiceTests
             "taxpayer_status:single",
             "taxpayer_age:35",
             "taxpayer_residency:luzern"
-        ], userFamily);
+        ], _userFamily);
         
         var marriedTaxUser = new UserTaxProfile([
             "taxpayer_status:married",
             "taxpayer_age:42",
             "taxpayer_residency:zurich"
-        ], userFamily);
+        ], _userFamily);
         
         var noStatusTaxUser = new UserTaxProfile([
             "taxpayer_age:35",
             "taxpayer_residency:zug"
-        ], userFamily);
+        ], _userFamily);
 
         var marriedTax = _incomeTaxFactory(["taxpayer_status:married"]);
         
@@ -110,18 +110,18 @@ public class TaxationServiceTests
             "taxpayer_status:single",
             "taxpayer_age:17",
             "taxpayer_residency:luzern"
-        ], userFamily);
+        ], _userFamily);
         
         var age40TaxUser = new UserTaxProfile([
             "taxpayer_status:single",
             "taxpayer_age:40",
             "taxpayer_residency:zug"
-        ], userFamily);
+        ], _userFamily);
         
         var noAgeTaxUser = new UserTaxProfile([
             "taxpayer_status:single",
             "taxpayer_residency:luzern"
-        ], userFamily);
+        ], _userFamily);
 
         var ageRangeTax = _incomeTaxFactory(["taxpayer_age:15-32"]);
                 
@@ -145,17 +145,17 @@ public class TaxationServiceTests
             "taxpayer_status:single",
             "taxpayer_age:35",
             "taxpayer_residency:luzern"
-        ], userFamily);
+        ], _userFamily);
         
         var zurichTaxUser = new UserTaxProfile([
             "taxpayer_status:single",
             "taxpayer_age:42",
             "taxpayer_residency:zurich"
-        ], userFamily);
+        ], _userFamily);
         
         var noResidencyTaxUser = new UserTaxProfile([
-            "taxpayer_status:single",
-        ], userFamily);
+            "taxpayer_status:single"
+        ], _userFamily);
 
         var zurichTax = _incomeTaxFactory(["taxpayer_residency:zurich"]);
         
@@ -181,11 +181,11 @@ public class TaxationServiceTests
     [Test]
     public void IsTaxApplicable_Year_Test()
     {   
-        var noTagsUser = new UserTaxProfile([], userFamily);
+        var noTagsUser = new UserTaxProfile([], _userFamily);
         
         var taxUser = new UserTaxProfile([
             "taxpayer_age:35"
-        ], userFamily);
+        ], _userFamily);
         
         var noYearTax = _incomeTaxFactory([]);
         var currentYearTax = _incomeTaxFactory(["year:2025"]);
@@ -246,15 +246,15 @@ public class TaxationServiceTests
                     "housing", true, null, 160.0m, null, null, null, null, [])
             ]);
 
-        var netSalary = _taxationService.GetCalculation(new UserTaxProfile([], userFamily))
+        var netSalary = _taxationService.GetCalculation(new UserTaxProfile([], _userFamily))
             .WithTaxes([finlandTaxes]).ApplyTaxes(60000);
         Assert.That(netSalary, Is.InRange(41611.0m, 41612.0m));
         
-        netSalary = _taxationService.GetCalculation(new UserTaxProfile([ "taxpayer_age:40" ], userFamily))
+        netSalary = _taxationService.GetCalculation(new UserTaxProfile([ "taxpayer_age:40" ], _userFamily))
             .WithTaxes([finlandTaxes]).ApplyTaxes(60000);
         Assert.That(netSalary, Is.InRange(37321.0m, 37322.0m));
         
-        netSalary = _taxationService.GetCalculation(new UserTaxProfile([ "taxpayer_residency:oulu", "taxpayer_age:40" ], userFamily))
+        netSalary = _taxationService.GetCalculation(new UserTaxProfile([ "taxpayer_residency:oulu", "taxpayer_age:40" ], _userFamily))
             .WithTaxes([finlandTaxes]).ApplyTaxes(60000);
         Assert.That(netSalary, Is.InRange(40501.0m, 40502.0m));
         
@@ -284,7 +284,7 @@ public class TaxationServiceTests
                         new IncomeTaxLevel(148200, 150300, 0.11m, null, null),
                         new IncomeTaxLevel(150300, 152300, 0.12m, null, null),
                         new IncomeTaxLevel(152300, 940800, 0.13m, null, null),
-                        new IncomeTaxLevel(940800, null, 0.115m, null, null),
+                        new IncomeTaxLevel(940800, null, 0.115m, null, null)
                     ]),
                 new IncomeTaxItem(null, "Old Age and Survivors Insurance (AHV)", [],
                     null, true, null, null, 0.0435m, null, null, null, []),
@@ -294,12 +294,12 @@ public class TaxationServiceTests
                     null, true, null, null, 0.0025m, null, null, null, []),
                 new IncomeTaxItem(null, "Unemployment Insurance (ALV)", [],
                     "gross", true, null, null, null, null, null, null, [
-                        new IncomeTaxLevel(0, 148200, 0.011m, null, null),
+                        new IncomeTaxLevel(0, 148200, 0.011m, null, null)
                     ]),
                 new IncomeTaxItem(null, "Occupational Pension (BVG - 2nd Pillar)",
                     ["taxtype:pension", "taxpayer_age:35-44"],
                     null, true, null, null, null, null, null, "some comment", [
-                        new IncomeTaxLevel(29400, 88200, 0.10m, null, null),
+                        new IncomeTaxLevel(29400, 88200, 0.10m, null, null)
                     ]),
                 new IncomeTaxItem(null, "Compulsory health Insurance", [],
                     "housing", true, 400.0m, null, null, null, null, null, []),
@@ -323,22 +323,22 @@ public class TaxationServiceTests
                         new IncomeTaxLevel(99000, 137900, 0.05m, null, null),
                         new IncomeTaxLevel(137900, 159000, 0.055m, null, null),
                         new IncomeTaxLevel(159000, 1424300, 0.058m, null, null),
-                        new IncomeTaxLevel(1424300, null, 0.056m, null, null),
+                        new IncomeTaxLevel(1424300, null, 0.056m, null, null)
                     ]),
                 new IncomeTaxItem("Municipal", "Luzern municipal income tax", ["taxpayer_residency:luzern,default", "year:2025"],
-                    "tax(Cantonal)", true, null, null, 1.55m, null, null, null, []),
+                    "tax(Cantonal)", true, null, null, 1.55m, null, null, null, [])
                 
             ]);
         
-        var netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36"], userFamily))
+        var netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36"], _userFamily))
             .WithTaxes([switzerlandFederalTaxes, luzernCantonalTaxes]).ApplyTaxes(100000);
         Assert.That(netSalary, Is.InRange(70506.0m, 70507.0m));
         
-        netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36", "taxpayer_residency:littau"], userFamily))
+        netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36", "taxpayer_residency:littau"], _userFamily))
             .WithTaxes([switzerlandFederalTaxes, luzernCantonalTaxes]).ApplyTaxes(100000);
         Assert.That(netSalary, Is.InRange(75649.0m, 75650.0m));
         
-        netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_residency:littau"], userFamily))
+        netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_residency:littau"], _userFamily))
             .WithTaxes([switzerlandFederalTaxes, luzernCantonalTaxes]).ApplyTaxes(100000);
         Assert.That(netSalary, Is.InRange(81529.0m, 81530.0m));
         
@@ -374,7 +374,7 @@ public class TaxationServiceTests
                     ])
             ]);
         
-        var netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36"], userFamily))
+        var netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36"], _userFamily))
             .WithTaxes([germanyTaxes]).ApplyTaxes(100000);
         Assert.That(netSalary, Is.InRange(70917.0m, 70918.0m)); //calculate this value by hand
     }
