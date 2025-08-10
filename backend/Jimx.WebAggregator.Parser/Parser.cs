@@ -1,10 +1,9 @@
-﻿namespace Jimx.WebAggregator.Parser
+﻿namespace Jimx.WebAggregator.Parser;
+
+public class Parser
 {
-	public class Parser
+	public async Task DoJobAsync(IParsingJob job)
 	{
-		public async Task DoJobAsync(IParsingJob job)
-		{
-			await job.DoAsync();
-		}
+		await job.DoAsync();
 	}
 }

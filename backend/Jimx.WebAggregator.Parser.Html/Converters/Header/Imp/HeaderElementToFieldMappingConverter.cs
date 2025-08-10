@@ -16,11 +16,8 @@ public class HeaderElementToFieldMappingConverter : IHeaderElementToFieldConvert
 	{
 		var text = rowCellNode.InnerText.Trim();
 
-		if (_columnToFieldMapping.TryGetValue(text, out string? value))
-		{
-			return (text, value);
-		}
-
-		return (text, text);
+		return _columnToFieldMapping.TryGetValue(text, out var value) 
+			? (text, value) 
+			: (text, text);
 	}
 }

@@ -45,7 +45,7 @@ public enum CostCategory
     
     SportsFitnessClubMonthly = 20501,
     SportsTennisCourtRent = 20502,
-    CinemaInternationalRelease = 20502,
+    CinemaInternationalRelease = 20503,
     
     ChildcareKindergartenMonthly = 20601,
     ChildcareInternationalPrimarySchoolYearly = 20602,

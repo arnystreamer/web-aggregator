@@ -1,5 +1,8 @@
-﻿namespace Jimx.WebAggregator.API.Models.Report;
+﻿using JetBrains.Annotations;
 
+namespace Jimx.WebAggregator.API.Models.Report;
+
+[PublicAPI]
 public class ReportCityExtendedApi : ReportCityApi
 {
     public ReportCityExtendedApi(string name, string region, string country, string? countryCode) : base(name, region, country, countryCode)

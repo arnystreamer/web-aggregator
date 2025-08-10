@@ -1,7 +1,6 @@
-﻿namespace Jimx.WebAggregator.Domain.MongoDB
+﻿namespace Jimx.WebAggregator.Domain.MongoDB;
+
+public interface IMongoEntity
 {
-	public interface IMongoEntity
-	{
-		public string? ObjectId { get; set; }
-	}
+	public string? ObjectId { get; set; }
 }

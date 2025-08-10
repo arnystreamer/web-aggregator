@@ -11,8 +11,8 @@ public class MultiCurrencyValue
         ValueInUsd = valueInUsd;
     }
 
-    public MultiCurrencyValue ShallowCopy()
+    public MultiCurrencyValue ApplyMultiplicator(decimal multiplicator)
     {
-        return new MultiCurrencyValue(Value, ValueInUsd);
+        return new MultiCurrencyValue(Value * multiplicator, ValueInUsd * multiplicator);
     }
 }

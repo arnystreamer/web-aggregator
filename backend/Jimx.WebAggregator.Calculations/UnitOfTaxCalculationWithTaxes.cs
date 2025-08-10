@@ -19,9 +19,9 @@ public class UnitOfTaxCalculationWithTaxes
     {
         var taxResults = new List<TaxResult>();
         
-        for (var i = 0; i < _taxDeductions.Length; i++)
+        foreach (var taxDeduction in _taxDeductions)
         {
-            var taxes = _taxDeductions[i].IncomeTaxes.Where(tax => TaxFunctions.IsTaxApplicable(_userTaxProfile, tax))
+            var taxes = taxDeduction.IncomeTaxes.Where(tax => TaxFunctions.IsTaxApplicable(_userTaxProfile, tax))
                 .ToArray();
             
             var deductionsById = new Dictionary<string, decimal>();
@@ -80,12 +80,11 @@ public class UnitOfTaxCalculationWithTaxes
         var max = annualSalaryNet * 3;
 
         var counter = 12;
-        decimal guess;
 
         AppliedTaxesResult lastApplyTaxesResult;
         do
         {
-            guess = (min + max) / 2;
+            var guess = (min + max) / 2;
 
             lastApplyTaxesResult = ApplyTaxes(guess);
 

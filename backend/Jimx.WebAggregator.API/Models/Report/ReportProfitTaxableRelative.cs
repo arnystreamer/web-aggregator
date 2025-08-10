@@ -1,7 +1,9 @@
-﻿using Jimx.WebAggregator.Calculations.Models;
+﻿using JetBrains.Annotations;
+using Jimx.WebAggregator.Calculations.Models;
 
 namespace Jimx.WebAggregator.API.Models.Report;
 
+[PublicAPI]
 public class ReportProfitTaxableRelative : ReportProfitTaxable
 {
     public decimal BaseValueGross { get; }
@@ -13,7 +15,7 @@ public class ReportProfitTaxableRelative : ReportProfitTaxable
     {
         if (baseValueGross < 0)
         {
-            throw new ArgumentException(nameof(baseValueGross));
+            throw new ArgumentException(null, nameof(baseValueGross));
         }
         
         BaseValueGross = baseValueGross;
@@ -24,7 +26,7 @@ public class ReportProfitTaxableRelative : ReportProfitTaxable
     {
         if (baseValueGross < 0)
         {
-            throw new ArgumentException(nameof(baseValueGross));
+            throw new ArgumentException(null, nameof(baseValueGross));
         }
         
         BaseValueGross = baseValueGross;

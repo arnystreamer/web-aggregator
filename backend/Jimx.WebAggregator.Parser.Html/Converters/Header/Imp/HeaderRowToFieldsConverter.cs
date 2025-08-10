@@ -17,7 +17,7 @@ public class HeaderRowToFieldsConverter : IHeaderRowToFieldsConverter
 
 	public IRowFieldsIndexer GetFieldsToSerialize(HtmlNode rowNode)
 	{
-		var rowFields = GetFieldsToSerializeInternal(rowNode);
+		var rowFields = GetFieldsToSerializeInternal(rowNode).ToArray();
 		return new RowFieldsIndexer(rowFields, false);
 	}
 
@@ -48,7 +48,7 @@ public class StaticFieldsConverter : IHeaderRowToFieldsConverter
 
 	public IRowFieldsIndexer GetFieldsToSerialize(HtmlNode rowNode)
 	{
-		var rowFields = GetFieldsToSerializeInternal();
+		var rowFields = GetFieldsToSerializeInternal().ToArray();
 		return new RowFieldsIndexer(rowFields, true);
 	}
 

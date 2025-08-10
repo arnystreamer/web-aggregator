@@ -2,9 +2,9 @@
 
 public class RowField
 {
-	public int Index { get; init; }
-	public string? Name { get; init; }
-	public string CellText { get; init; }
+	public int Index { get; }
+	public string? Name { get; }
+	public string CellText { get; }
 
 	public bool IsToSerialise => Name != null;
 

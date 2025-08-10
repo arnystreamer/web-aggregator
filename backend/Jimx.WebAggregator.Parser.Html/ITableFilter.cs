@@ -1,10 +1,9 @@
 ﻿using HtmlAgilityPack;
 
-namespace Jimx.WebAggregator.Parser.Html
+namespace Jimx.WebAggregator.Parser.Html;
+
+public interface ITableFilter
 {
-	public interface ITableFilter
-	{
-		string Selector { get; }
-		bool Filter(HtmlNode tableNode);
-	}
+	string Selector { get; }
+	bool Filter(HtmlNode tableNode);
 }

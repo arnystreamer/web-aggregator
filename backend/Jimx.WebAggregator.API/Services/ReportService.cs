@@ -1,5 +1,5 @@
 ﻿using Jimx.WebAggregator.API.Helpers;
-using Jimx.WebAggregator.API.Models.CityCosts;
+using Jimx.WebAggregator.API.Models;
 using Jimx.WebAggregator.API.Models.Report;
 using Jimx.WebAggregator.Calculations;
 using Jimx.WebAggregator.Domain.CityCosts;
@@ -35,9 +35,9 @@ public class ReportService
 
         var reportCityItemFactory = new ReportCityExtendedApiFactory(_taxationService.GetCalculation(userTaxProfile));
         
-        List<ReportCityExtendedApi> reportCityExtendedApis = new List<ReportCityExtendedApi>(cityCostsItems.Count);
+        var reportCityExtendedApis = new List<ReportCityExtendedApi>(cityCostsItems.Count);
 
-        IList<string> differErrors = new List<string>(); 
+        var differErrors = new List<string>(); 
         foreach (var cityCosts in cityCostsItems)
         {
             var countryName = cityCosts.Country;
@@ -75,7 +75,7 @@ public class ReportService
 
             var hasFreeApartment = _citiesWithFreeApartment.Contains(cityName);
 
-            ReportApartmentParameters apartmentParameters = ReportApartmentParameters.Big;
+            var apartmentParameters = ReportApartmentParameters.Big;
             if (hasFreeApartment)
             {
                 apartmentParameters |= ReportApartmentParameters.Free;
@@ -84,14 +84,14 @@ public class ReportService
             var cityItem = reportCityItemFactory.Create(new ReportCityApi(cityCosts.Name, cityCosts.Region, cityCosts.Country, countryCode),
                 dataItems,
                 taxDeductionItems, 
-                new ReportCityDynamicParameters()
+                new ReportCityDynamicParameters
                 {
                     ApartmentParameters = apartmentParameters,
                     SelectedSalary = grossSalary,
                     AnnualGrossSalary = averageExpatAnnualNetSalary,
                     DeveloperGrossSalaryP25 = citySalary.P25.Value,
                     DeveloperGrossSalaryP75 = citySalary.P75.Value,
-                    HouseholdMembers = new ReportHouseholdMembersParameters()
+                    HouseholdMembers = new ReportHouseholdMembersParameters
                     {
                         TotalCount = userTaxProfile.UserFamily.FamilyMembersCount,
                         Toddlers = userTaxProfile.UserFamily.ToddlersCount,
@@ -103,7 +103,7 @@ public class ReportService
                     ArePricesNominatedInUsd = arePricesNominatedInUsd
                 });
     
-            const decimal threshold = 10m;
+            const decimal threshold = 20m;
             var averageGrossSalary = cityItem.SalaryData.AverageSalary.ValueGross.Value;
             var allCosts = cityItem.CostsWithRent.ValueNet.Value;
             

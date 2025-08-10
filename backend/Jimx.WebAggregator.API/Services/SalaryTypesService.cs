@@ -1,5 +1,4 @@
-﻿using Jimx.WebAggregator.API.Models.CityCosts;
-using Jimx.WebAggregator.API.Models.Report;
+﻿using Jimx.WebAggregator.API.Models.Report;
 
 namespace Jimx.WebAggregator.API.Services;
 
@@ -17,10 +16,5 @@ public class SalaryTypesService
     public SalaryTypeApi[] GetAll()
     {
         return _salaryTypes;
-    }
-
-    public SalaryTypeApi Get(int id)
-    {
-        return _salaryTypes.First(s => s.Id == id);
     }
 }

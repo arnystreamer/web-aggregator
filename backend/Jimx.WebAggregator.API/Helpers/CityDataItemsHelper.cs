@@ -1,4 +1,4 @@
-﻿using Jimx.WebAggregator.API.Models.CityCosts;
+﻿using Jimx.WebAggregator.API.Models;
 using Jimx.WebAggregator.API.Models.Common;
 using Jimx.WebAggregator.Calculations.Helpers;
 
@@ -20,35 +20,35 @@ public static class CityDataItemsHelper
     {
         return 
             GetCostOrDefault(dataItems, CostCategory.RestaurantInexpensive) * 8.00m +
-            GetCostOrDefault(dataItems, CostCategory.RestaurantMidRange) * 6.00m +
+            GetCostOrDefault(dataItems, CostCategory.RestaurantMidRange) * 4.00m +
             GetCostOrDefault(dataItems, CostCategory.RestaurantMcDonalds) * 4.00m +
             GetCostOrDefault(dataItems, CostCategory.RestaurantDomesticBeer) * 6.00m +
             GetCostOrDefault(dataItems, CostCategory.RestaurantImportedBeer) * 6.00m +
             GetCostOrDefault(dataItems, CostCategory.RestaurantCappuccino) * 24.00m +
             GetCostOrDefault(dataItems, CostCategory.RestaurantCoke033) * 8.00m +
             GetCostOrDefault(dataItems, CostCategory.RestaurantWater033) * 16.00m +
-            GetCostOrDefault(dataItems, CostCategory.CinemaInternationalRelease) * 8.00m;
+            GetCostOrDefault(dataItems, CostCategory.CinemaInternationalRelease) * 4.00m;
     }
 
     public static decimal GetGroceriesCosts(this CityDataItemApi[] dataItems, int numberOfPeople)
     {
         return
             GetCostOrDefault(dataItems, CostCategory.MarketMilk) * 8.0m * numberOfPeople +
-            GetCostOrDefault(dataItems, CostCategory.MarketWhiteBread) * 8.0m * numberOfPeople +
+            GetCostOrDefault(dataItems, CostCategory.MarketWhiteBread) * 6.0m * numberOfPeople +
             GetCostOrDefault(dataItems, CostCategory.MarketRice) * 4.0m * numberOfPeople +
-            GetCostOrDefault(dataItems, CostCategory.Market12Eggs) * 8.0m * numberOfPeople +
-            GetCostOrDefault(dataItems, CostCategory.MarketLocalCheese) * 4.0m * numberOfPeople +
+            GetCostOrDefault(dataItems, CostCategory.Market12Eggs) * 6.0m * numberOfPeople +
+            GetCostOrDefault(dataItems, CostCategory.MarketLocalCheese) * 3.0m * numberOfPeople +
             GetCostOrDefault(dataItems, CostCategory.MarketChickenFillets) * 6.0m * numberOfPeople +
-            GetCostOrDefault(dataItems, CostCategory.MarketBeefRound) * 6.0m * numberOfPeople +
-            GetCostOrDefault(dataItems, CostCategory.MarketApples) * 8.0m * numberOfPeople +
-            GetCostOrDefault(dataItems, CostCategory.MarketBanana) * 8.0m * numberOfPeople +
-            GetCostOrDefault(dataItems, CostCategory.MarketOranges) * 8.0m * numberOfPeople +
+            GetCostOrDefault(dataItems, CostCategory.MarketBeefRound) * 4.0m * numberOfPeople +
+            GetCostOrDefault(dataItems, CostCategory.MarketApples) * 6.0m * numberOfPeople +
+            GetCostOrDefault(dataItems, CostCategory.MarketBanana) * 6.0m * numberOfPeople +
+            GetCostOrDefault(dataItems, CostCategory.MarketOranges) * 6.0m * numberOfPeople +
             GetCostOrDefault(dataItems, CostCategory.MarketTomato) * 8.0m * numberOfPeople +
             GetCostOrDefault(dataItems, CostCategory.MarketPotato) * 8.0m * numberOfPeople +
             GetCostOrDefault(dataItems, CostCategory.MarketOnion) * 4.0m * numberOfPeople +
             GetCostOrDefault(dataItems, CostCategory.MarketLettuce) * 4.0m * numberOfPeople +
             GetCostOrDefault(dataItems, CostCategory.MarketDomesticBeer) * 8.0m +
-            GetCostOrDefault(dataItems, CostCategory.MarketImportedBeer) * 8.0m +
+            GetCostOrDefault(dataItems, CostCategory.MarketImportedBeer) * 6.0m +
             GetCostOrDefault(dataItems, CostCategory.MarketBottleOfWine) * 4.0m +
             GetCostOrDefault(dataItems, CostCategory.Market15Water) * 12.0m * numberOfPeople;
     }
@@ -56,11 +56,11 @@ public static class CityDataItemsHelper
     public static decimal GetTransportationCosts(this CityDataItemApi[] dataItems, int numberOfPeople)
     {
         return
-            GetCostOrDefault(dataItems, CostCategory.TransportOneWayTicket) * 8.0m * numberOfPeople +
+            GetCostOrDefault(dataItems, CostCategory.TransportOneWayTicket) * 4.0m * numberOfPeople +
             GetCostOrDefault(dataItems, CostCategory.TransportMonthlyPass) * 1.0m * numberOfPeople +
-            GetCostOrDefault(dataItems, CostCategory.TransportTaxiStart) * 6.0m +
-            GetCostOrDefault(dataItems, CostCategory.TransportTaxi1Km) * 6.0m * 10.0m +
-            GetCostOrDefault(dataItems, CostCategory.TransportTaxi1HWaiting) * 6.0m * 0.15m +
+            GetCostOrDefault(dataItems, CostCategory.TransportTaxiStart) * 4.0m +
+            GetCostOrDefault(dataItems, CostCategory.TransportTaxi1Km) * 4.0m * 10.0m +
+            GetCostOrDefault(dataItems, CostCategory.TransportTaxi1HWaiting) * 4.0m * 0.15m +
             GetCostOrDefault(dataItems, CostCategory.TransportGasoline) * 90.0m +
             GetCostOrDefault(dataItems, CostCategory.TransportVolkswagenGolf) / 12.0m / 10.0m;
     }

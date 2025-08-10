@@ -1,12 +1,11 @@
 ﻿using Jimx.WebAggregator.Parser;
 
-namespace Jimx.WebAggregator.DownloadDataApp
+namespace Jimx.WebAggregator.DownloadDataApp;
+
+internal class ParsingJob : IParsingJob
 {
-	internal class ParsingJob : IParsingJob
+	public Task DoAsync()
 	{
-		public Task DoAsync()
-		{
-			return Task.CompletedTask;
-		}
+		return Task.CompletedTask;
 	}
 }

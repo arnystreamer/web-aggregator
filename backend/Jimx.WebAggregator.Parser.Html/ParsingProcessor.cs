@@ -17,10 +17,10 @@ public class ParsingProcessor
 		var tables = document.QuerySelectorAll(sourceOptions.TableFilter.Selector) 
 			?? throw new ArgumentException("No table found for the given selector.");
 		
-		HtmlNode table = tables.FirstOrDefault(t => t != null && sourceOptions.TableFilter.Filter(t)) 
-			?? throw new ArgumentException("No table found for the given selector.");
+		var table = tables.FirstOrDefault(t => t != null && sourceOptions.TableFilter.Filter(t)) 
+		            ?? throw new ArgumentException("No table found for the given selector.");
 
-		var rows = table.QuerySelectorAll("tr")
+		var rows = table.QuerySelectorAll("tr").ToArray()
 			?? throw new Exception("No rows in table");
 
 		var firstRow = rows.First();
@@ -50,10 +50,8 @@ public class ParsingProcessor
 				{
 					continue;
 				}
-				else
-				{
-					throw new InvalidOperationException($"Number of values and fields mismatch: row #{index + 1}");
-				}
+
+				throw new InvalidOperationException($"Number of values and fields mismatch: row #{index + 1}");
 			}
 
 			var fieldValues = new string?[fields.Length];
@@ -99,7 +97,7 @@ public class ParsingProcessor
 			}
 			catch
 			{
-				continue;
+				// ignored
 			}
 		}
 

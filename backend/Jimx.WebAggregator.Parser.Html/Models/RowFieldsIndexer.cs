@@ -5,13 +5,13 @@ public class RowFieldsIndexer : IRowFieldsIndexer
 	private readonly RowField?[] _rowFields;
 	private readonly int _length;
 
-	public RowFieldsIndexer(IEnumerable<RowField> rowFields, bool isFirstRowData) 
+	public RowFieldsIndexer(RowField[] rowFields, bool isFirstRowData) 
 	{
 		_length = rowFields.Max(x => x.Index) + 1;
 		_rowFields = new RowField?[_length];
 		IsFirstRowData = isFirstRowData;
 
-		foreach (RowField rowField in rowFields.Where(r => r.IsToSerialise))
+		foreach (var rowField in rowFields.Where(r => r.IsToSerialise))
 		{
 			_rowFields[rowField.Index] = rowField;
 		}
@@ -21,7 +21,7 @@ public class RowFieldsIndexer : IRowFieldsIndexer
 
 	public int Length => _length;
 
-	public bool IsFirstRowData { get; private set; }
+	public bool IsFirstRowData { get; }
 
 	public DataSet CreateDataSet()
 	{

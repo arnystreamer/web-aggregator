@@ -3,81 +3,85 @@ using Jimx.Common.Serializing.Converters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace Jimx.WebAggregator.Parser.Http
+namespace Jimx.WebAggregator.Parser.Http;
+
+public class Requestor
 {
-	public class Requestor
+	private readonly List<ConnectionRequestor> _connectionRequestors = new();
+	private readonly ILogger _logger;
+
+	private int _counter;
+
+	public Requestor(ILogger logger)
 	{
-		private List<ConnectionRequestor> _connectionRequestors = new List<ConnectionRequestor>();
-		private ILogger _logger;
+		_logger = logger;
+	}
 
-		private int _counter = 0;
+	public ConnectionRequestor RegisterConnection(Connection connection)
+	{
+		var connectionRequestor = _connectionRequestors.FirstOrDefault(c => connection.BaseUri.IsUrlSubstringOf(c.BaseUri));
 
-		public Requestor(ILogger logger)
+		if (connectionRequestor == null)
 		{
-			_logger = logger;
+			connectionRequestor = new ConnectionRequestor(connection);
+			_connectionRequestors.Add(connectionRequestor);
 		}
 
-		public ConnectionRequestor RegisterConnection(Connection connection)
+		_logger.LogInformation("Registered connection to {ConnectionBaseUri}", 
+			connection.BaseUri);
+		return connectionRequestor;
+	}
+
+	public async Task<HttpResponseMessage> RequestAsMessage(Uri uri, HttpMethod httpMethod, HttpHeaders? additionalHeaders)
+	{
+		var connection = _connectionRequestors.Single(c => uri.IsUrlSubstringOf(c.BaseUri));
+
+		HttpResponseMessage response;
+		try
 		{
-			var connectionRequestor = _connectionRequestors.FirstOrDefault(c => connection.BaseUri.IsUrlSubstringOf(c.BaseUri));
-
-			if (connectionRequestor == null)
-			{
-				connectionRequestor = new ConnectionRequestor(connection);
-				_connectionRequestors.Add(connectionRequestor);
-			}
-
-			_logger.LogInformation($"Registered connection to {connection.BaseUri}");
-			return connectionRequestor;
+			Interlocked.Increment(ref _counter);
+			_logger.LogInformation("Requestor [{Counter}]: Enqueuing request to {S}", 
+				_counter, uri.ToString());
+			response = await connection.EnqueueRequestAsync(uri, httpMethod, additionalHeaders);
+			_logger.LogInformation("Requestor [{Counter}]: Request received from {S}", 
+				_counter, uri.ToString());
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error in RequestAsMessage");
+			throw;
 		}
 
-		public async Task<HttpResponseMessage> RequestAsMessage(Uri uri, HttpMethod httpMethod, HttpHeaders? additionalHeaders)
+		response.EnsureSuccessStatusCode();
+		return response;
+	}
+
+	public async Task<string> RequestAsString(Uri uri, HttpMethod httpMethod, HttpHeaders? additionalHeaders)
+	{
+		var response = await RequestAsMessage(uri, httpMethod, additionalHeaders);
+		return await response.Content.ReadAsStringAsync();
+	}
+
+	public async Task<T> RequestAsJson<T>(Uri uri, HttpMethod httpMethod, HttpHeaders? additionalHeaders)
+	{
+		var responseString = await RequestAsString(uri, httpMethod, additionalHeaders);
+
+		T? responseObject;
+		try
 		{
-			var connection = _connectionRequestors.Single(c => uri.IsUrlSubstringOf(c.BaseUri));
-
-			HttpResponseMessage response;
-			try
-			{
-				Interlocked.Increment(ref _counter);
-				_logger.LogInformation($"Requestor [{_counter}]: Enqueuing request to {uri.ToString()}");
-				response = await connection.EnqueueRequestAsync(uri, httpMethod, additionalHeaders);
-				_logger.LogInformation($"Requestor [{_counter}]: Request received from {uri.ToString()}");
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
-
-			response.EnsureSuccessStatusCode();
-			return response;
+			responseObject = JsonConvert.DeserializeObject<T>(responseString, new CustomIntJsonConverter());
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error in RequestAsJson");
+			throw;
 		}
 
-		public async Task<string> RequestAsString(Uri uri, HttpMethod httpMethod, HttpHeaders? additionalHeaders)
+		if (responseObject == null)
 		{
-			var response = await RequestAsMessage(uri, httpMethod, additionalHeaders);
-			return await response.Content.ReadAsStringAsync();
+			throw new Exception("responseObject is null");
 		}
 
-		public async Task<T> RequestAsJson<T>(Uri uri, HttpMethod httpMethod, HttpHeaders? additionalHeaders)
-		{
-			var responseString = await RequestAsString(uri, httpMethod, additionalHeaders);
-
-			T? responseObject;
-			try
-			{
-				responseObject = JsonConvert.DeserializeObject<T>(responseString, new CustomIntJsonConverter());
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
-
-			if (responseObject == null)
-			{
-				throw new Exception("responseObject is null");
-			}
-
-			return responseObject;
-		}
+		return responseObject;
 	}
 }

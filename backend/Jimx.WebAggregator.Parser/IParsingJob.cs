@@ -1,7 +1,6 @@
-﻿namespace Jimx.WebAggregator.Parser
+﻿namespace Jimx.WebAggregator.Parser;
+
+public interface IParsingJob
 {
-	public interface IParsingJob
-	{
-		Task DoAsync();
-	}
+	Task DoAsync();
 }

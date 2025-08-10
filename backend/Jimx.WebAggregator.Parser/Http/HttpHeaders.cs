@@ -1,59 +1,58 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Jimx.WebAggregator.Parser.Http
+namespace Jimx.WebAggregator.Parser.Http;
+
+public class HttpHeaders
 {
-	public class HttpHeaders
+	public HttpHeaderItem[] HeaderItems { get; protected set; }
+
+	public HttpHeaders() 
 	{
-		public HttpHeaderItem[] HeaderItems { get; protected set; }
+		HeaderItems = [];
+	}
 
-		public HttpHeaders() 
+	public HttpHeaders(HttpHeaderItem[] headerItems)
+	{
+		HeaderItems = headerItems;
+	}
+
+	public HttpHeaders((string Header, string? Value)[] items) 
+		:this(items.Select(i => new HttpHeaderItem(i.Header, i.Value)).ToArray())
+	{
+
+	}
+
+	public static HttpHeaders CreateFromCurlCommand(string curlBashCommand)
+	{
+		var matches = Regex.Matches(curlBashCommand.Trim(), @"['].+?[']|[^ \n\r\\]+")
+			.Select(v => v.Value)
+			.Where(v => !string.IsNullOrWhiteSpace(v))
+			.ToArray();
+
+		if (matches[0] != "curl")
+			throw new Exception("Command is not curl invocation");
+
+		IList<HttpHeaderItem> headers = [];
+
+		for (var i = 2; i < matches.Length; i++)
 		{
-			HeaderItems = Array.Empty<HttpHeaderItem>();
-		}
+			var argument = matches[i];
 
-		public HttpHeaders(HttpHeaderItem[] headerItems)
-		{
-			HeaderItems = headerItems;
-		}
-
-		public HttpHeaders((string Header, string? Value)[] items) 
-			:this(items.Select(i => new HttpHeaderItem(i.Header, i.Value)).ToArray())
-		{
-
-		}
-
-		public static HttpHeaders CreateFromCurlCommand(string curlBashCommand)
-		{
-			var matches = Regex.Matches(curlBashCommand.Trim(), @"['].+?[']|[^ \n\r\\]+")
-				.Select(v => v.Value)
-				.Where(v => !string.IsNullOrWhiteSpace(v))
-				.ToArray();
-
-			if (matches[0] != "curl")
-				throw new Exception("Command is not curl invocation");
-
-			IList<HttpHeaderItem> headers = [];
-
-			for (var i = 2; i < matches.Length; i++)
+			if (argument.StartsWith("-") || argument.StartsWith("--"))
 			{
-				var argument = matches[i];
+				i++;
 
-				if (argument.StartsWith("-") || argument.StartsWith("--"))
+				if (argument == "-H")
 				{
-					i++;
+					var headerArgumentValue = matches[i].Trim('\'');
 
-					if (argument == "-H")
-					{
-						var headerArgumentValue = matches[i].Trim('\'');
+					var headerAndValue = headerArgumentValue.Split(':', 2, StringSplitOptions.TrimEntries);
 
-						var headerAndValue = headerArgumentValue.Split(':', 2, StringSplitOptions.TrimEntries);
-
-						headers.Add(new HttpHeaderItem(headerAndValue[0], headerAndValue[1]));
-					}
+					headers.Add(new HttpHeaderItem(headerAndValue[0], headerAndValue[1]));
 				}
 			}
-
-			return new HttpHeaders(headers.ToArray());
 		}
+
+		return new HttpHeaders(headers.ToArray());
 	}
 }

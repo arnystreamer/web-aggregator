@@ -7,11 +7,11 @@ public class SortingFunctionsService
     private readonly SortingFunction[] _sortingFunctions =
     [
         new(100, "MillionaireTerm", "Term to become millionaire", string.Empty,
-            FieldAbsoluteSortingComparerFactory.Create(x => x.MillionaireTerm.TermInMonths ?? Decimal.MaxValue)),
+            FieldAbsoluteSortingComparerFactory.Create(x => x.MillionaireTerm.TermInMonths ?? decimal.MaxValue)),
         new(110, "MortgageDownPaymentTerm", "Term to accumulate mortgage payment", string.Empty,
-            FieldAbsoluteSortingComparerFactory.Create(x => x.MortgageDownPaymentTerm.TermInMonths ?? Decimal.MaxValue)),
+            FieldAbsoluteSortingComparerFactory.Create(x => x.MortgageDownPaymentTerm.TermInMonths ?? decimal.MaxValue)),
         new(120, "BuyCarTerm", "Term to buy car", string.Empty,
-            FieldAbsoluteSortingComparerFactory.Create(x => x.BuyCarTerm.TermInMonths ?? Decimal.MaxValue)),
+            FieldAbsoluteSortingComparerFactory.Create(x => x.BuyCarTerm.TermInMonths ?? decimal.MaxValue)),
         
         new(200, "MillionaireSalary", "Gross millionaire salary (absolute)", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.MillionaireSalary.ValueGross)),
@@ -37,24 +37,24 @@ public class SortingFunctionsService
         new(300, "MinimumCostsWithRent", "Minimum possible costs while renting", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.MinimumCostsWithRent.ValueNet)),
         new(301, "MinimumCostsWithRentToSelectedSalary", "Minimum possible costs while renting - Selected salary", string.Empty, 
-            FieldToNetSelectedSalarySortingComparerFactory.Create(x => x.MinimumCostsWithRent.ValueNet)),
+            FieldToNetSelectedSalarySortingComparerFactory.Create(x => x.MinimumCostsWithRent.ValueNet.ApplyMultiplicator(12m))),
         new(302, "MinimumCostsWithRentRelatesToSelectedSalary", "Minimum possible costs while renting / Selected salary", string.Empty, 
-            FieldRelatesToGrossSelectedSalarySortingComparerFactory.Create(x => x.MinimumCostsWithRent.ValueNet)),
+            FieldRelatesToNetSelectedSalarySortingComparerFactory.Create(x => x.MinimumCostsWithRent.ValueNet.ApplyMultiplicator(12m))),
         
         new(310, "CostsWithRent", "Usual costs while renting", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.CostsWithRent.ValueNet)),
         new(311, "CostsWithRentToSelectedSalary", "Usual costs while renting - Selected salary", string.Empty, 
-            FieldToNetSelectedSalarySortingComparerFactory.Create(x => x.CostsWithRent.ValueNet)),
+            FieldToNetSelectedSalarySortingComparerFactory.Create(x => x.CostsWithRent.ValueNet.ApplyMultiplicator(12m))),
         new(312, "CostsWithRentRelatesToSelectedSalary", "Usual costs while renting / Selected salary", string.Empty, 
-            FieldRelatesToGrossSelectedSalarySortingComparerFactory.Create(x => x.CostsWithRent.ValueNet)),
+            FieldRelatesToNetSelectedSalarySortingComparerFactory.Create(x => x.CostsWithRent.ValueNet.ApplyMultiplicator(12m))),
         
         
         new(320, "CostsWithMortgage", "Usual costs while paying mortgage", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.CostsWithMortgage.ValueNet)),
         new(321, "CostsWithMortgageToSelectedSalary", "Usual costs while paying mortgage - Selected salary", string.Empty,
-            FieldToNetSelectedSalarySortingComparerFactory.Create(x => x.CostsWithMortgage.ValueNet)),
+            FieldToNetSelectedSalarySortingComparerFactory.Create(x => x.CostsWithMortgage.ValueNet.ApplyMultiplicator(12m))),
         new(322, "CostsWithMortgageRelatesToSelectedSalary", "Usual costs while paying mortgage / Selected salary", string.Empty, 
-            FieldRelatesToGrossSelectedSalarySortingComparerFactory.Create(x => x.CostsWithMortgage.ValueNet)),
+            FieldRelatesToNetSelectedSalarySortingComparerFactory.Create(x => x.CostsWithMortgage.ValueNet.ApplyMultiplicator(12m))),
         
         new(400, "MonthlySavingsWhileRenting", "Savings while renting", string.Empty, 
             FieldAbsoluteInUsdSortingComparerFactory.Create(x => x.MonthlySavingsWhileRenting)),

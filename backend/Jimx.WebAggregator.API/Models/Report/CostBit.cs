@@ -2,9 +2,4 @@
 
 namespace Jimx.WebAggregator.API.Models.Report;
 
-public class CostBit : NameValue
-{
-    public CostBit(string name, decimal value) : base(name, value)
-    {
-    }
-}
+public class CostBit(string name, decimal value) : NameValue(name, value);
