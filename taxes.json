@@ -23,12 +23,11 @@
                     "taxpayer_residency:geneva,luzern,zurich,default"   //where tax payer resides
                 ],
                 "ApplyOn": "gross",     //apply it on gross income
-                "ApplyOn": "tax(ID)",   //apply on tax with ID equal to ID string. Do not consider Multiplier of source tax
-                "ApplyOn": "after_taxes", //apply this tax after all others. if there is 2 taxes with ApplyOn="after_taxes", then fail
-                "ApplyOn": "before_taxes", //apply this tax before all others. if there is 2 taxes with ApplyOn="before_taxes", then fail
+                "ApplyOn": "tax(ID)",   //apply on tax with ID equal to ID string. Do not consider Multiplier of source tax                
                 "ApplyOn": "housing", //apply on occupied item, can be only in absolute values (MonthlyFixedAmount, AnnualFixedAmount), not rates (Rate, Levels), as it applies on number of rented properties
                 "ApplyOn": "person", //apply on person, can be only in absolute values (MonthlyFixedAmount, AnnualFixedAmount), not rates (Rate, Levels), as it applies on number of people
                 "ApplyOn": "owned_housing",  //apply on owned item
+				"Order": 1,	//default is 0, negative is before, positive is after
                 "IsActive": false,
                 "MonthlyFixedAmount": 150,
                 "AnnualFixedAmount": 1400,
@@ -36,6 +35,7 @@
                 "Multiplier": 1.1,
                 "Comment": "",
                 "FixedDeductionAmount": 10500, //deducted amount from Levels or Rate
+				"FixedDeductionRate": 0.3, //deducted amount from Levels or Rate
                 "Levels": [
                     {
                         "From": 0,
