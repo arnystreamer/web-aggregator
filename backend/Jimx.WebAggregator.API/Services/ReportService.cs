@@ -55,7 +55,7 @@ public class ReportService
             var crossRateToUsd = _crossRatesService.Get(currencyCode);
             
             var citySalary = citySalaries.SingleOrDefault(cs => cs.City == cityName);
-            if (citySalary == null || !citySalary.P25.HasValue || !citySalary.P75.HasValue)
+            if (citySalary == null || citySalary.Items.Length == 0)
             {
                 throw new Exception($"Salary not specified for {cityName}");
             }
@@ -70,8 +70,13 @@ public class ReportService
             var averageExpatAnnualNetSalary = averageExpatNetSalary.Value * 12.0m *
                                               (arePricesNominatedInUsd ? 1m / crossRateToUsd : 1m);
             
+            var sumOfScores = citySalary.Items.Sum(i => i.Score ?? 1);
+            
+            var developerGrossSalaryP25 = citySalary.Items.Sum(i => i.P25 * (i.Score ?? 1)) / sumOfScores;
+            var developerGrossSalaryP75 = citySalary.Items.Sum(i => i.P75 * (i.Score ?? 1)) / sumOfScores;
+            
             var grossSalary = GetAnnualGrossSalary(cityName, salaryTypeId, manualSalary, crossRateToUsd, salaryMultiplicator, 
-                averageExpatAnnualNetSalary, citySalary);
+                averageExpatAnnualNetSalary, developerGrossSalaryP25, developerGrossSalaryP75);
 
             var hasFreeApartment = _citiesWithFreeApartment.Contains(cityName);
 
@@ -89,8 +94,8 @@ public class ReportService
                     ApartmentParameters = apartmentParameters,
                     SelectedSalary = grossSalary,
                     AnnualGrossSalary = averageExpatAnnualNetSalary,
-                    DeveloperGrossSalaryP25 = citySalary.P25.Value,
-                    DeveloperGrossSalaryP75 = citySalary.P75.Value,
+                    DeveloperGrossSalaryP25 = developerGrossSalaryP25,
+                    DeveloperGrossSalaryP75 = developerGrossSalaryP75,
                     HouseholdMembers = new ReportHouseholdMembersParameters
                     {
                         TotalCount = userTaxProfile.UserFamily.FamilyMembersCount,
@@ -122,8 +127,8 @@ public class ReportService
         return reportCityExtendedApis.Order(sortingFunction.SortingComparer(sortingDirection)).ToArray();
     }
 
-    private static decimal GetAnnualGrossSalary(string cityName, int salaryTypeId, decimal? manualSalary,  decimal crossRateToUsd, decimal? salaryMultiplicator,
-        decimal? expatNetSalary, CitySalary citySalary)
+    private static decimal GetAnnualGrossSalary(string cityName, int salaryTypeId, decimal? manualSalary, decimal crossRateToUsd, decimal? salaryMultiplicator,
+        decimal? expatNetSalary, decimal developerGrossSalaryP25, decimal developerGrossSalaryP75)
     {
         decimal grossSalary;
         switch (salaryTypeId)
@@ -145,35 +150,13 @@ public class ReportService
                 throw new ArgumentException("Manual salary not specified", nameof(manualSalary));
                 
             case 4:
-                if (citySalary == null)
-                {
-                    throw new Exception("Salary is not specified");
-                }
-
-                var p25 = citySalary.P25;
-                if (!p25.HasValue)
-                {
-                    throw new Exception("P25 is not specified");
-                }
-
-                grossSalary = p25.Value * (salaryMultiplicator ?? 1.0m);
+                grossSalary = developerGrossSalaryP25 * (salaryMultiplicator ?? 1.0m);
                 break;
                 
             case 5:
-                if (citySalary == null)
-                {
-                    throw new Exception("Salary is not specified");
-                }
-
-                var p75 = citySalary.P75;
-                if (!p75.HasValue)
-                {
-                    throw new Exception("P75 is not specified");
-                }
-
-                grossSalary = p75.Value * (salaryMultiplicator ?? 1.0m);
+                grossSalary = developerGrossSalaryP75 * (salaryMultiplicator ?? 1.0m);
                 break;
-                
+            
             default:
                 throw new ArgumentOutOfRangeException(nameof(salaryTypeId));
         }

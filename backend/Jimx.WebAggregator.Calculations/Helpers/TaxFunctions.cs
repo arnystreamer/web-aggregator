@@ -19,36 +19,30 @@ public static class TaxFunctions
     public static TaxResult GetPersonTaxValue(IncomeTaxItem tax, int numberOfPeople)
     {
         var value = GetFixedTaxValue(tax).Value * numberOfPeople * (tax.Multiplier ?? 1);
-        return new TaxResult(tax.Name, value);
+        return new TaxResult(tax.ID, tax.Name, value, tax.Multiplier ?? 1);
     }
     
     public static TaxResult GetHousingTaxValue(IncomeTaxItem tax, int numberOfRentedHouses)
     {
         var value = GetFixedTaxValue(tax).Value * numberOfRentedHouses * (tax.Multiplier ?? 1);
-        return new TaxResult(tax.Name, value);
+        return new TaxResult(tax.ID,tax.Name, value, tax.Multiplier ?? 1);
     }
     
     public static TaxResult GetOwnedHousingTaxValue(IncomeTaxItem tax, int numberOfOwnedHouses)
     {
         var value = GetFixedTaxValue(tax).Value * numberOfOwnedHouses * (tax.Multiplier ?? 1);
-        return new TaxResult(tax.Name, value);
+        return new TaxResult(tax.ID, tax.Name, value, tax.Multiplier ?? 1);
     }
 
-    public static TaxResult GetGrossTaxValue(IncomeTaxItem tax, decimal annualTaxBaseBeforeDeductions, Action<string, decimal> identifiedTaxSetter)
+    public static TaxResult GetGrossTaxValue(IncomeTaxItem tax, decimal annualTaxBaseBeforeDeductions)
     {
-        var taxBase = annualTaxBaseBeforeDeductions - (tax.FixedDeductionAmount ?? 0);
-        
-        var taxValueBeforeMultiplier = taxBase > 0 ? GetRatedTaxValue(tax, taxBase).Value : 0;
-        if (!string.IsNullOrEmpty(tax.ID))
-        {
-            identifiedTaxSetter(tax.ID, taxValueBeforeMultiplier);
-        }
-
-        var value = taxValueBeforeMultiplier * (tax.Multiplier ?? 1);
-        return new TaxResult(tax.Name, value);
+        var taxValueBeforeMultiplier = annualTaxBaseBeforeDeductions > 0 ? GetRatedTaxValue(tax, annualTaxBaseBeforeDeductions).Value : 0;
+        var multiplier = tax.Multiplier ?? 1;
+        var value = taxValueBeforeMultiplier * multiplier;
+        return new TaxResult(tax.ID, tax.Name, value, multiplier);
     }
-
-    public static TaxResult GetTaxOnTaxValue(IncomeTaxItem tax, Func<string, decimal> identifiedTaxGetter)
+    
+    public static TaxResult GetTaxOnTaxValue(IncomeTaxItem tax, Func<string, decimal> valueByTaxId)
     {
         var regexMatch = Regex.Match(tax.ApplyOn!, @"tax\((\w+)\)");
 
@@ -58,7 +52,7 @@ public static class TaxFunctions
         }
 
         var taxId = regexMatch.Groups[1].Value;
-        var taxDeductionValue = identifiedTaxGetter(taxId);
+        var taxDeductionValue = valueByTaxId(taxId);
         
         return GetRatedTaxValue(tax, taxDeductionValue * (tax.Multiplier ?? 1));
     }
@@ -70,9 +64,9 @@ public static class TaxFunctions
             throw new Exception("Fixed tax cannot have Rate or Levels");
         }
 
-        if (tax.FixedDeductionAmount.HasValue)
+        if (tax.FixedDeductionAmount.HasValue || tax.FixedDeductionRate.HasValue)
         {
-            throw new Exception("Fixed tax cannot have FixedDeductionAmount");
+            throw new Exception("Fixed tax cannot have FixedDeductionAmount or FixedDeductionRate");
         }
         
         if (!(tax.MonthlyFixedAmount.HasValue ^ tax.AnnualFixedAmount.HasValue))
@@ -84,7 +78,7 @@ public static class TaxFunctions
             ? tax.MonthlyFixedAmount.Value * 12 
             : tax.AnnualFixedAmount!.Value;
 
-        return new TaxResult(tax.Name, value);
+        return new TaxResult(tax.ID, tax.Name, value, tax.Multiplier ?? 1);
     }
 
     public static TaxResult GetRatedTaxValue(IncomeTaxItem tax, decimal taxBase)
@@ -104,19 +98,18 @@ public static class TaxFunctions
             throw new Exception("Rated tax must have Rate or Levels");
         }
 
-        var actualTaxBase = taxBase - (tax.FixedDeductionAmount ?? 0.0m);
-
+        var actualTaxBase = (taxBase - (tax.FixedDeductionAmount ?? 0.0m)) * (1.0m - (tax.FixedDeductionRate ?? 0.0m));
         
         if (tax.Rate.HasValue)
         {
             var value = actualTaxBase * tax.Rate.Value;
-            return new TaxResult(tax.Name, value);
+            return new TaxResult(tax.ID, tax.Name, value, tax.Multiplier ?? 1);
         }
 
-        return GetLeveledTaxValue(tax.Name, tax.Levels!, actualTaxBase);
+        return GetLeveledTaxValue(tax, tax.Levels!, actualTaxBase);
     }
 
-    public static TaxResult GetLeveledTaxValue(string taxName, IncomeTaxLevel[] levels, decimal taxBase)
+    public static TaxResult GetLeveledTaxValue(IncomeTaxItem tax, IncomeTaxLevel[] levels, decimal taxBase)
     {
         var accumulatedTaxValue = 0.0m;
         
@@ -145,10 +138,9 @@ public static class TaxFunctions
                 
                 var yDelta = level.RateTo.Value - level.RateFrom.Value;
                 var xDelta = level.To.Value - level.From;
-                
-                var averageTax = (yDelta/xDelta * (upperThresholdForThisLevel - level.From) + 2.0m * level.RateFrom.Value) / 2.0m;
 
-                taxValueForThisLevel = (upperThresholdForThisLevel - level.From) * averageTax;
+                taxValueForThisLevel = (yDelta * (upperThresholdForThisLevel - level.From) / xDelta / 2.0m + level.RateFrom.Value)
+                                       * (upperThresholdForThisLevel - level.From);
             }
 
             if (!taxValueForThisLevel.HasValue)
@@ -160,7 +152,7 @@ public static class TaxFunctions
             accumulatedTaxValue += taxValueForThisLevel.Value;
         }
 
-        return new TaxResult(taxName, accumulatedTaxValue);
+        return new TaxResult(tax.ID, tax.Name, accumulatedTaxValue, tax.Multiplier ?? 1);
     }
     
     public static double GetMortgageMonthlyPayment(double interestYearlyPercentage, double years, double debtAmount)
@@ -175,5 +167,17 @@ public static class TaxFunctions
         var monthlyInterestRate = interestYearlyPercentage / 100.0 / 12.0;
         return monthlyInterestRate * debtAmount * Math.Pow(1 + monthlyInterestRate, numberOfMonthlyPayments) /
                (Math.Pow(1 + monthlyInterestRate, numberOfMonthlyPayments) - 1);
+    }
+    
+    public class TaxDeductionResult
+    {
+        public decimal Base { get; }
+        public decimal Result { get; }
+
+        public TaxDeductionResult(decimal @base, decimal result)
+        {
+            Base = @base;
+            Result = result;
+        }
     }
 }
