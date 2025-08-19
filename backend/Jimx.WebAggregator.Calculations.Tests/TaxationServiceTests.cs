@@ -9,7 +9,7 @@ public class TaxationServiceTests
     
     private readonly Func<string[], IncomeTaxItem> _incomeTaxFactory =
         tags =>
-            new IncomeTaxItem("Some_tax", "Tax", tags, "gross", true, 335, null, null, null, null, "", []);
+            new IncomeTaxItem("Some_tax", "Tax", tags, "gross", 0, true, 335, null, null, null, null, null, "", []);
 
     private readonly UserFamily _userFamily = new()
     {
@@ -33,12 +33,12 @@ public class TaxationServiceTests
             "taxpayer_residency:luzern"
         ], _userFamily);
         
-        var disabledIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [], "gross", false, 335, null, null, null, null, "", []);
+        var disabledIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [], "gross", 0, false, 335, null, null, null, null, null, "", []);
         Assert.That(
             TaxFunctions.IsTaxApplicable(taxUser, disabledIncomeTax),
             Is.False);
         
-        var enabledNoTagsIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [], "gross", true, null, 1300, null, null, null, "comment", []);
+        var enabledNoTagsIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [], "gross", 0, true, null, 1300, null, null, null, null, "comment", []);
         Assert.That(
             TaxFunctions.IsTaxApplicable(new UserTaxProfile([], _userFamily), enabledNoTagsIncomeTax),
             Is.True);
@@ -46,7 +46,7 @@ public class TaxationServiceTests
         var enabledAllDefaultTagsIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [
             "taxpayer_status:default",
             "taxpayer_residency:default"
-        ], "gross", true, 210, null, null, null, null, "", []);
+        ], "gross", 0, true, 210, null, null, null, null, null, "", []);
         Assert.That(
             TaxFunctions.IsTaxApplicable(new UserTaxProfile([], _userFamily), enabledAllDefaultTagsIncomeTax),
             Is.True);
@@ -54,7 +54,7 @@ public class TaxationServiceTests
         var enabledMultiValueTagsIncomeTax = new IncomeTaxItem("Some_tax", "Tax", [
             "taxpayer_status:married,default",
             "taxpayer_residency:zurich,default"
-        ], "gross", true, null, 4200, null, null, null, "", []);
+        ], "gross", 0, true, null, 4200, null, null, null, null, "", []);
         Assert.That(
             TaxFunctions.IsTaxApplicable(new UserTaxProfile([], _userFamily), enabledMultiValueTagsIncomeTax),
             Is.True);
@@ -222,7 +222,7 @@ public class TaxationServiceTests
             new RegionTaxDeductionSource(null, null, null, null, null),
             [
                 new IncomeTaxItem("National", "National income tax", [ "year:2025" ],
-                    null, true, null, null, null, null, null, null,
+                    null, 0, true, null, null, null, null, null, null, null,
                     [
                         new IncomeTaxLevel(0, 21200, 0.1264m, null, null),
                         new IncomeTaxLevel(21200, 31500, 0.19m, null, null),
@@ -233,30 +233,30 @@ public class TaxationServiceTests
                     ]),
                 new IncomeTaxItem("Municipal", "Helsinki City municipal income tax",
                     ["taxpayer_residency:helsinki,default"],
-                    null, true, null, null, 0.053m, null, null, null, []),
+                    null, 0, true, null, null, 0.053m, null, null, null, null, []),
                 new IncomeTaxItem(null, "Pension insurance", [ "taxpayer_age:17-52" ],
-                    null, true, null, null, 0.0715m, null, null, null, []),
+                    null, -1, true, null, null, 0.0715m, null, null, null, null, []),
                 new IncomeTaxItem(null, "Medicare", [],
-                    null, true, null, null, 0.0106m, null, null, null, []),
+                    null, -1, true, null, null, 0.0106m, null, null, null, null, []),
                 new IncomeTaxItem(null, "Daily Allowance contribution", [],
-                    "gross", true, null, null, 0.0084m, null, null, null, []),
+                    "gross", -1, true, null, null, 0.0084m, null, null, null, null, []),
                 new IncomeTaxItem(null, "Unemployment insurance", [],
-                    null, true, null, null, 0.0059m, null, null, "some comment", []),
+                    null, -1, true, null, null, 0.0059m, null, null, null, "some comment", []),
                 new IncomeTaxItem(null, "Public broadcasting tax", [],
-                    "housing", true, null, 160.0m, null, null, null, null, [])
+                    "housing", 1, true, null, 160.0m, null, null, null, null, null, [])
             ]);
 
         var netSalary = _taxationService.GetCalculation(new UserTaxProfile([], _userFamily))
             .WithTaxes([finlandTaxes]).ApplyTaxes(60000);
-        Assert.That(netSalary, Is.InRange(41611.0m, 41612.0m));
+        Assert.That(netSalary.SalaryNet, Is.InRange(42198.0m, 42199.0m));
         
         netSalary = _taxationService.GetCalculation(new UserTaxProfile([ "taxpayer_age:40" ], _userFamily))
             .WithTaxes([finlandTaxes]).ApplyTaxes(60000);
-        Assert.That(netSalary, Is.InRange(37321.0m, 37322.0m));
+        Assert.That(netSalary.SalaryNet, Is.InRange(39594.0m, 39595.0m));
         
         netSalary = _taxationService.GetCalculation(new UserTaxProfile([ "taxpayer_residency:oulu", "taxpayer_age:40" ], _userFamily))
             .WithTaxes([finlandTaxes]).ApplyTaxes(60000);
-        Assert.That(netSalary, Is.InRange(40501.0m, 40502.0m));
+        Assert.That(netSalary.SalaryNet, Is.InRange(42468.0m, 42469.0m));
         
         Assert.Pass();
     }
@@ -268,7 +268,7 @@ public class TaxationServiceTests
             new RegionTaxDeductionSource(null, null, null, null, null),
             [
                 new IncomeTaxItem("Federal", "Federal income tax", ["taxpayer_status:married,default", "year:2025"],
-                    null, true, null, null, null, null, null, null,
+                    null, null, true, null, null, null, null, null, null, null,
                     [
                         new IncomeTaxLevel(0, 32000, 0.0m, null, null),
                         new IncomeTaxLevel(32000, 53400, 0.01m, null, null),
@@ -287,31 +287,31 @@ public class TaxationServiceTests
                         new IncomeTaxLevel(940800, null, 0.115m, null, null)
                     ]),
                 new IncomeTaxItem(null, "Old Age and Survivors Insurance (AHV)", [],
-                    null, true, null, null, 0.0435m, null, null, null, []),
+                    null, -1, true, null, null, 0.0435m, null, null, null, null, []),
                 new IncomeTaxItem(null, "Disability Insurance (IV)", [],
-                    null, true, null, null, 0.007m, null, null, null, []),
+                    null, -1, true, null, null, 0.007m, null, null, null, null, []),
                 new IncomeTaxItem(null, "Income Compensation Insurance (EO)", [],
-                    null, true, null, null, 0.0025m, null, null, null, []),
+                    null, -1, true, null, null, 0.0025m, null, null, null, null, []),
                 new IncomeTaxItem(null, "Unemployment Insurance (ALV)", [],
-                    "gross", true, null, null, null, null, null, null, [
+                    "gross", -1, true, null, null, null, null, null, null, null, [
                         new IncomeTaxLevel(0, 148200, 0.011m, null, null)
                     ]),
                 new IncomeTaxItem(null, "Occupational Pension (BVG - 2nd Pillar)",
                     ["taxtype:pension", "taxpayer_age:35-44"],
-                    null, true, null, null, null, null, null, "some comment", [
+                    null, -1, true, null, null, null, null, null, null, "some comment", [
                         new IncomeTaxLevel(29400, 88200, 0.10m, null, null)
                     ]),
                 new IncomeTaxItem(null, "Compulsory health Insurance", [],
-                    "housing", true, 400.0m, null, null, null, null, null, []),
+                    "housing", 1, true, 400.0m, null, null, null, null, null, null, []),
                 new IncomeTaxItem(null, "Radio and Television License Fee", ["taxtype:household"],
-                    "housing", true, null, 335.0m, null, null, null, null, [])
+                    "housing", 1, true, null, 335.0m, null, null, null, null, null, [])
             ]);
         
         var luzernCantonalTaxes = new RegionTaxDeduction("Lucerne", "Switzerland", "CH-LU", "CHF",
             new RegionTaxDeductionSource(null, null, null, null, null),
             [
                 new IncomeTaxItem("Cantonal", "Luzern cantonal income tax", ["taxpayer_status:married,default", "year:2025"],
-                    null, true, null, null, null, 1.55m, null, null,
+                    null, null, true, null, null, null, 1.55m, null, null, null,
                     [
                         new IncomeTaxLevel(0, 19900, 0.0m, null, null),
                         new IncomeTaxLevel(19900, 24000, 0.005m, null, null),
@@ -326,21 +326,21 @@ public class TaxationServiceTests
                         new IncomeTaxLevel(1424300, null, 0.056m, null, null)
                     ]),
                 new IncomeTaxItem("Municipal", "Luzern municipal income tax", ["taxpayer_residency:luzern,default", "year:2025"],
-                    "tax(Cantonal)", true, null, null, 1.55m, null, null, null, [])
+                    "tax(Cantonal)", null, true, null, null, 1.55m, null, null, null, null, [])
                 
             ]);
         
         var netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36"], _userFamily))
             .WithTaxes([switzerlandFederalTaxes, luzernCantonalTaxes]).ApplyTaxes(100000);
-        Assert.That(netSalary, Is.InRange(70506.0m, 70507.0m));
+        Assert.That(netSalary.SalaryNet, Is.InRange(72776.0m, 72777.0m));
         
         netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36", "taxpayer_residency:littau"], _userFamily))
             .WithTaxes([switzerlandFederalTaxes, luzernCantonalTaxes]).ApplyTaxes(100000);
-        Assert.That(netSalary, Is.InRange(75649.0m, 75650.0m));
+        Assert.That(netSalary.SalaryNet, Is.InRange(77055.0m, 77056.0m));
         
         netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_residency:littau"], _userFamily))
             .WithTaxes([switzerlandFederalTaxes, luzernCantonalTaxes]).ApplyTaxes(100000);
-        Assert.That(netSalary, Is.InRange(81529.0m, 81530.0m));
+        Assert.That(netSalary.SalaryNet, Is.InRange(82290.0m, 82291.0m));
         
         Assert.Pass();
     }
@@ -352,7 +352,7 @@ public class TaxationServiceTests
             new RegionTaxDeductionSource(null, null, null, null, null),
             [
                 new IncomeTaxItem("Federal", "Federal income tax", ["taxpayer_status:married,default", "year:2025"],
-                    null, true, null, null, null, null, null, null,
+                    null, 0, true, null, null, null, null, 24192.0m, null, null,
                     [
                         new IncomeTaxLevel(0, 23208, 0.0m, null, null),
                         new IncomeTaxLevel(23208, 34010, null, 0.14m, 0.24m),
@@ -361,21 +361,46 @@ public class TaxationServiceTests
                         new IncomeTaxLevel(555650, null, 0.45m, null, null)
                     ]),
                 new IncomeTaxItem(null, "Solidaritatszuschlag", ["taxpayer_status:married,default", "year:2025"],
-                    "tax(Federal)", true, null, null, null, null, null, null,
+                    "tax(Federal)", 0, true, null, null, null, null, null, null, null,
                     [
                         new IncomeTaxLevel(0, 39900, 0.0m, null, null),
                         new IncomeTaxLevel(39900, 55961, null, 0.0m, 0.055m),
                         new IncomeTaxLevel(55961, null, 0.055m, null, null)
                     ]),
-                new IncomeTaxItem(null, "Fake Pension Insurance Tax", [],
-                    null, true, null, null, null, null, 11000, null,
+                new IncomeTaxItem(null, "Pension Insurance", [],
+                    null, -1, true, null, null, null, null, null, null, null,
                     [
                         new IncomeTaxLevel(0, 84600, 0.093m, null, null)
-                    ])
+                    ]),
+                new IncomeTaxItem(null, "Unemployment Insurance", [],
+                    null, -1, true, null, null, null, null, null, null, null,
+                    [
+                        new IncomeTaxLevel(0, 84600, 0.013m, null, null)
+                    ]),
+                new IncomeTaxItem(null, "Health Insurance", [],
+                    null, -1, true, null, null, null, null, null, null, null,
+                    [
+                        new IncomeTaxLevel(0, 58050, 0.081m, null, null)
+                    ]),
+                new IncomeTaxItem(null, "Long-Term Care Insurance", [],
+                    null, -1, true, null, null, null, null, null, null, null,
+                    [
+                        new IncomeTaxLevel(0, 58050, 0.0205m, null, null)
+                    ]),
+                new IncomeTaxItem(null, "Public Broadcasting Fee", ["taxtype:household"],
+                    "housing", 1, true, null, 220.32m, null, null, null, null, null, [])
             ]);
         
         var netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36"], _userFamily))
-            .WithTaxes([germanyTaxes]).ApplyTaxes(100000);
-        Assert.That(netSalary, Is.InRange(70917.0m, 70918.0m)); //calculate this value by hand
+            .WithTaxes([germanyTaxes]).ApplyTaxes(81075);
+        Assert.That(netSalary.SalaryNet, Is.InRange(62239.0m, 62240.0m));
+        
+        netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36"], _userFamily))
+            .WithTaxes([germanyTaxes]).ApplyTaxes(230000);
+        Assert.That(netSalary.SalaryNet, Is.InRange(155300.0m, 155301.0m));
+        
+        netSalary = _taxationService.GetCalculation(new UserTaxProfile(["taxpayer_age:36"], _userFamily))
+            .WithTaxes([germanyTaxes]).ApplyTaxes(490000);
+        Assert.That(netSalary.SalaryNet, Is.InRange(300094.0m, 300095.0m));
     }
 }

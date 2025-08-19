@@ -35,6 +35,10 @@ public class CrossRatesService
             case "AED": return 0.272300m;
             case "VND": return 0.000038205m;
             case "CZK": return 0.0470947m;
+            case "JPY": return 0.006764m;
+            case "INR": return 0.01140m;
+            case "CNY": return 0.1393m;
+            case "KRW": return 0.000716m;
             default:
                 throw new ArgumentOutOfRangeException(nameof(currencyCode), currencyCode, "No cross rate found");
         }

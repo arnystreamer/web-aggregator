@@ -1,6 +1,6 @@
 ﻿namespace Jimx.WebAggregator.Domain.CityCosts;
 
-public record IncomeTaxItem(string? ID, string Name, string[]? Tags, string? ApplyOn, bool? IsActive, 
+public record IncomeTaxItem(string? ID, string Name, string[]? Tags, string? ApplyOn, int? Order, bool? IsActive, 
     decimal? MonthlyFixedAmount, decimal? AnnualFixedAmount, decimal? Rate, decimal? Multiplier,
-    decimal? FixedDeductionAmount, string? Comment,
+    decimal? FixedDeductionAmount, decimal? FixedDeductionRate, string? Comment,
     IncomeTaxLevel[]? Levels);
