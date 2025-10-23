@@ -9,15 +9,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.10" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Jimx.WebAggregator.Browser\Jimx.WebAggregator.Browser.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Domain.CityCosts\Jimx.WebAggregator.Domain.CityCosts.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Parser.Html\Jimx.WebAggregator.Parser.Html.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Parser\Jimx.WebAggregator.Parser.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Persistent.MongoDB\Jimx.WebAggregator.Persistent.MongoDB.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
