@@ -1,4 +1,4 @@
-﻿namespace Jimx.WebAggregator.Browser.WebCrawler;
+﻿namespace Jimx.WebAggregator.Browser.WebCrawler.JobSearch.Parameters;
 
 public class JobSearchLocations(JobSearchLocation[] locations)
 {

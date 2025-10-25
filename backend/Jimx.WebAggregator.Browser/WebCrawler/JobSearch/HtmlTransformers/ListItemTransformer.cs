@@ -57,12 +57,21 @@ public partial class ListItemTransformer : HtmlBlockTransformer<JobListItem>
                     location = location.Replace($"({captured})", string.Empty).Trim();
                 }
             }
+            
+            var metadataNodes = itemRootNode.QuerySelectorAll("div.artdeco-entity-lockup__content > div.artdeco-entity-lockup__metadata > ul > li").ToList();
+            string? metadata = null;
+            if (metadataNodes.Count == 1)
+            {
+                metadata = metadataNodes.First().ChildNodes.First(n => n.Name == "span").InnerText.Trim();
+            }
 
             var footerItemNodes = itemRootNode.QuerySelectorAll("ul.job-card-container__footer-wrapper > li");
 
             string? publishedAgoString = null;
             string? viewedString = null;
             bool isEasyApply = false;
+            bool isPromoted = false;
+            bool beAnEarlyApplicant = false;
             foreach (var footerItemNode in footerItemNodes)
             {
                 if (footerItemNode.ChildNodes.All(n => n.Name == "#text"))
@@ -77,15 +86,25 @@ public partial class ListItemTransformer : HtmlBlockTransformer<JobListItem>
                     publishedAgoString = timeElement.GetDirectInnerText().Trim();
                 }
 
-                var spanNodes = footerItemNode.ChildNodes.Where(n => n.Name == "span");
+                var spanNodes = footerItemNode.ChildNodes.Where(n => n.Name == "span").ToList();
                 if (spanNodes.Any(n => n.InnerText.Trim() == "Easy Apply"))
                 {
                     isEasyApply = true;
                 }
+                
+                if (spanNodes.Any(n => n.InnerText.Trim() == "Promoted"))
+                {
+                    isPromoted = true;
+                }
+                
+                if (spanNodes.Any(n => n.GetDirectInnerText().Trim() == "Be an early applicant"))
+                {
+                    beAnEarlyApplicant = true;
+                }
             }
 
-            return new JobListItem(link, title, verifiedIconPicture != null, companyName, location, locationFormat,
-                publishedAgoString, viewedString, isEasyApply, html);
+            return new JobListItem(link, title, verifiedIconPicture != null, companyName, location, locationFormat, metadata,
+                publishedAgoString, viewedString, isEasyApply, isPromoted, beAnEarlyApplicant, html);
         }
         catch (Exception exception)
         {

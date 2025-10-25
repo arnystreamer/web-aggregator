@@ -15,11 +15,14 @@ var config =
         .AddJsonFile("appsettings.json", optional: false)
         .Build();
 
-var parsingWebSiteOptions = config.GetSection("ParsingWebSiteOptions").Get<ParsingWebSiteOptions>();
+var parser = new Parser();
 
-if (parsingWebSiteOptions == null)
-{
-    throw new ApplicationException("ParsingWebSiteOptions is null");
-}
+await parser.DoJobAsync(new LifeLevelParsingJob(
+    logger,
+    config.GetParsingWebsiteOptionsWithAdditionalData<LifeLevelParsingJob, LifeLevelAdditionalData>(),
+    config.GetPersistencyOptions<LifeLevelPersistencyOptions>(LifeLevelParsingJob.ConfigurationName)));
 
-await new Parser().DoJobAsync(new JobNetParsingJob(logger, parsingWebSiteOptions));
+await parser.DoJobAsync(new JobNetParsingJob(
+    logger, 
+    config.GetParsingWebsiteOptions<JobNetParsingJob>(),
+    config.GetPersistencyOptions<JobNetPersistencyOptions>(JobNetParsingJob.ConfigurationName)));

@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using Jimx.WebAggregator.Browser.WebCrawler.JobSearch.Enumeration;
-using Jimx.WebAggregator.Browser.WebCrawler.Page;
+using Jimx.WebAggregator.Browser.WebCrawler.JobSearch.Parameters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
 
@@ -88,10 +88,29 @@ public class JobSearchBrowserContext : IAsyncDisposable
             var query = HttpUtility.ParseQueryString(string.Empty);
 
             query.Add("f_TPR", searchParameters.Interval.ToString());
+            if (searchParameters.IsEarlyApplicant == true)
+            {
+                query.Add("f_EA", "true");
+            }
+
             query.Add("f_WT", searchParameters.Locations.ToString());
             query.Add("keywords", searchParameters.Keywords);
             query.Add("geoId", searchParameters.Geo.ToString());
             query.Add("origin", "JOB_SEARCH_PAGE_JOB_FILTER");
+
+            switch (searchParameters.SortBy)
+            {
+                case JobSearchSorting.MostRecent:
+                    query.Add("sortBy", "DD");
+                    break;
+                case JobSearchSorting.Relevance:
+                    query.Add("sortBy", "R");
+                    break;
+                case null:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             var fullUrl = $"{url}?{query}";
             _logger.LogDebug("Url built: {FullUrl}", fullUrl);

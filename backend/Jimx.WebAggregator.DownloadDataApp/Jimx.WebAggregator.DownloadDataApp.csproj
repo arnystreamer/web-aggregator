@@ -18,6 +18,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Jimx.WebAggregator.Browser\Jimx.WebAggregator.Browser.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Domain.CityCosts\Jimx.WebAggregator.Domain.CityCosts.csproj" />
+    <ProjectReference Include="..\Jimx.WebAggregator.Domain.JobNet\Jimx.WebAggregator.Domain.JobNet.csproj" />
+    <ProjectReference Include="..\Jimx.WebAggregator.Parser.Html.LifeLevel\Jimx.WebAggregator.Parser.Html.LifeLevel.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Parser.Html\Jimx.WebAggregator.Parser.Html.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Parser\Jimx.WebAggregator.Parser.csproj" />
     <ProjectReference Include="..\Jimx.WebAggregator.Persistent.MongoDB\Jimx.WebAggregator.Persistent.MongoDB.csproj" />
@@ -27,6 +29,10 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ExtensionRequests\" />
   </ItemGroup>
 
 </Project>

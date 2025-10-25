@@ -1,8 +1,7 @@
 ﻿namespace Jimx.WebAggregator.Browser.WebCrawler.JobSearch.Parameters;
 
-public enum JobSearchLocation
+public enum JobSearchSorting
 {
-    Onsite = 1,
-    Remote = 2,
-    Hybrid = 3
+    MostRecent = 1,
+    Relevance = 2
 }
