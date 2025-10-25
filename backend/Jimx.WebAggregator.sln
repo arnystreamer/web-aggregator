@@ -21,6 +21,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Calculat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Calculations.Tests", "Jimx.WebAggregator.Calculations.Tests\Jimx.WebAggregator.Calculations.Tests.csproj", "{C48A3CA9-A788-4513-A1BA-618E8AAEBFD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Browser", "Jimx.WebAggregator.Browser\Jimx.WebAggregator.Browser.csproj", "{34448154-8D21-4024-AEC3-06498D5E2513}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Domain.JobNet", "Jimx.WebAggregator.Domain.JobNet\Jimx.WebAggregator.Domain.JobNet.csproj", "{F01A635F-33E0-44A6-892F-661783CCDBC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Parser.Html.LifeLevel", "Jimx.WebAggregator.Parser.Html.LifeLevel\Jimx.WebAggregator.Parser.Html.LifeLevel.csproj", "{C3F0A641-DC45-4903-95AB-A864E600ACBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +69,18 @@ Global
 		{C48A3CA9-A788-4513-A1BA-618E8AAEBFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C48A3CA9-A788-4513-A1BA-618E8AAEBFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C48A3CA9-A788-4513-A1BA-618E8AAEBFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34448154-8D21-4024-AEC3-06498D5E2513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34448154-8D21-4024-AEC3-06498D5E2513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34448154-8D21-4024-AEC3-06498D5E2513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34448154-8D21-4024-AEC3-06498D5E2513}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F01A635F-33E0-44A6-892F-661783CCDBC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F01A635F-33E0-44A6-892F-661783CCDBC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F01A635F-33E0-44A6-892F-661783CCDBC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F01A635F-33E0-44A6-892F-661783CCDBC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3F0A641-DC45-4903-95AB-A864E600ACBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3F0A641-DC45-4903-95AB-A864E600ACBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3F0A641-DC45-4903-95AB-A864E600ACBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3F0A641-DC45-4903-95AB-A864E600ACBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

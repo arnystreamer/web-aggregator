@@ -1,0 +1,3 @@
+﻿namespace Jimx.WebAggregator.Browser.WebCrawler.JobSearch.Enumeration;
+
+public record PagingEnumeratorOptions(int MinimalWaitAfterNetworkOperation, PageItemsEnumeratorOptions ItemEnumeratorOptions);

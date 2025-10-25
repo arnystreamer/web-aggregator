@@ -22,6 +22,21 @@ public class HttpHeaders
 
 	}
 
+	public static HttpHeaders CreateFromDictionary(IDictionary<string, string>? dictionary)
+	{
+		IList<HttpHeaderItem> headers = [];
+
+		if (dictionary != null)
+		{
+			foreach (var dictionaryItem in dictionary)
+			{
+				headers.Add(new HttpHeaderItem(dictionaryItem.Key, dictionaryItem.Value));
+			}
+		}
+
+		return new HttpHeaders(headers.ToArray());
+	}
+
 	public static HttpHeaders CreateFromCurlCommand(string curlBashCommand)
 	{
 		var matches = Regex.Matches(curlBashCommand.Trim(), @"['].+?[']|[^ \n\r\\]+")
