@@ -24,5 +24,5 @@ await parser.DoJobAsync(new LifeLevelParsingJob(
 
 await parser.DoJobAsync(new JobNetParsingJob(
     logger, 
-    config.GetParsingWebsiteOptions<JobNetParsingJob>(),
+    config.GetParsingWebsiteOptionsWithAdditionalData<JobNetParsingJob, JobNetAdditionalData>(),
     config.GetPersistencyOptions<JobNetPersistencyOptions>(JobNetParsingJob.ConfigurationName)));

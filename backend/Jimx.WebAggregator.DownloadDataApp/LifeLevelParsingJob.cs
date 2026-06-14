@@ -44,7 +44,11 @@ public class LifeLevelParsingJob : IParsingJob
 
 		var baseUrl = _options.BaseUrl;
 		
-		var citiesToConsider = _additionalData.InitialCityRows.Select(r => new CityCostsItem(r.Values[0], r.Values[1], r.Values[2], []));
+		var month = DateTime.UtcNow.Month;
+		var year = DateTime.UtcNow.Year;
+		
+		var citiesToConsider = _additionalData.InitialCityRows
+			.Select(r => new CityCostsItem(r.Values[0], r.Values[1], r.Values[2], month, year, []));
 		
 		var headers = HttpHeaders.CreateFromDictionary(_options.CookiesOptions.Headers?.ToDictionary(h => h.Name, h => h.Value));
 		
@@ -75,7 +79,7 @@ public class LifeLevelParsingJob : IParsingJob
 
 				var cityDatas = await Task.WhenAll(cityWithCommonCostsRequest, cityWithPropertyInvestmentsRequest);
 
-				var completeCity = new CityCostsItem(city.Name, city.Region, city.Country,
+				var completeCity = new CityCostsItem(city.Name, city.Region, city.Country, city.Month, city.Year,
 					cityDatas.Aggregate(city.DataItems, (items, newCity) => items.Union(newCity.DataItems)));
 
 				yield return completeCity;
@@ -89,7 +93,11 @@ public class LifeLevelParsingJob : IParsingJob
 		MongoConnection mongoCities, MongoConnection mongoDictionaries)
 	{
 		var dictionaryInsertOptions = new InsertOptions<CityDictionaryItem, string>(di => di.Value, key => di => di.Value == key, false);
-		var cityUpsertOptions = new UpsertOptions<CityCostsItem, string>(c => c.Name, id => c => c.Name == id, null, true);
+		var cityUpsertOptions = new UpsertOptions<CityCostsItem, CityKey>(
+			c => new CityKey(c.Name, c.Region, c.Country, c.Month, c.Year), 
+			id => c => c.Name == id.Name && c.Region == id.Region && c.Country == id.Country && c.Month == id.Month && c.Year == id.Year, 
+			null, 
+			true);
 
 		IList<CityCostsItem> cities = new List<CityCostsItem>();
 
@@ -117,7 +125,7 @@ public class LifeLevelParsingJob : IParsingJob
 					
 				var cityUpsertResult = await mongoCities.DoWorkAsync(
 					mongoCities.GetCollectionConnection<CityCostsItem>(),
-					new UpsertMongoUnitOfWork<CityCostsItem, string>([city], cityUpsertOptions));
+					new UpsertMongoUnitOfWork<CityCostsItem, CityKey>([city], cityUpsertOptions));
 
 				logger.LogInformation("{CityName}: upsert city result is {B}", 
 					city.Name, !cityUpsertResult.IsFailure);
@@ -136,3 +144,5 @@ public class LifeLevelParsingJob : IParsingJob
 		return new GeneralExtensionRequestSettings(settings.DataSetName, settings.UrlTemplate); 
 	}
 }
+
+public record CityKey(string Name, string Region, string Country, int Month, int Year);

@@ -20,6 +20,8 @@ public class PagingEnumerator : IAsyncEnumerator<PageItemsEnumerable>
     
     private int? _currentPageNumber;
 
+    private PageItemsEnumerable? _current = null;
+
     public PagingEnumerator(ILogger logger, ILocator layoutLocator, PagingEnumeratorOptions options)
     {
         _logger = logger;
@@ -89,11 +91,22 @@ public class PagingEnumerator : IAsyncEnumerator<PageItemsEnumerable>
             _currentPageNumber++;
         }
         
-        Current = new PageItemsEnumerable(_logger, _listLocator, _jobDetailsBlock, 
+        _current = new PageItemsEnumerable(_logger, _listLocator, _jobDetailsBlock, 
             _listItemTransformer, _listItemDetailsTransformer, _options.ItemEnumeratorOptions);
         _logger.LogDebug("Paging: current page ready to be processed");
         return true;
     }
 
-    public PageItemsEnumerable Current { get; private set; }
+    public PageItemsEnumerable Current
+    {
+        get
+        {
+            if (_current == null)
+            {
+                throw new InvalidOperationException("Paging enumerator not initialized");
+            }
+
+            return _current;
+        }
+    }
 }

@@ -50,7 +50,7 @@ public abstract class LifeLevelExtensionRequest : ExtensionRequest<CityCostsItem
 			.Select(row => new CityDataItem($"{dataSetName} - {row.Subsection} - {row.Data[0]}", row.Data[1].ParseToDecimal()))
 			.ToArray();
 
-		return new CityCostsItem(input.Name, input.Region, input.Country, input.DataItems.Union(newDataItems));
+		return new CityCostsItem(input.Name, input.Region, input.Country, input.Year, input.Month, input.DataItems.Union(newDataItems));
 	}
 
 	protected abstract string GetDataSetName();

@@ -14,15 +14,30 @@ public class CitiesDatabaseService
 		_databaseSettings = databaseSettings;
 	}
 
-	public async Task<List<CityCostsItem>> GetCityCostsAsync(CancellationToken cancellationToken)
+	public async Task<List<CityCostsItem>> GetCityCostsAsync(int year, int month, CancellationToken cancellationToken)
 	{
 		var client = new MongoClient(_databaseSettings.Value.ConnectionString);
 
 		var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
 		var collection = database.GetCollection<CityCostsItem>(_databaseSettings.Value.CitiesCollectionName);
 
-		return (await collection.FindAsync(_ => true, cancellationToken: cancellationToken)).ToList();
-						
+		return (await collection.FindAsync(c => c.Year == year && c.Month == month, cancellationToken: cancellationToken)).ToList();
+	}
+
+	public async Task<CityDataTimeStamp[]> GetCityDataTimeStampsAsync(CancellationToken cancellationToken)
+	{
+		var client = new MongoClient(_databaseSettings.Value.ConnectionString);
+
+		var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
+		var collection = database.GetCollection<CityCostsItem>(_databaseSettings.Value.CitiesCollectionName);
+		
+		var allTimeStamps = (await collection.FindAsync(_ => true, cancellationToken: cancellationToken)).ToList()
+			.GroupBy(c => new CityDataTimeStamp(c.Year, c.Month))
+			.OrderBy(g => g.Key)
+			.Select(g => g.Key)
+			.ToArray();
+
+		return allTimeStamps;
 	}
 
 	public async Task<List<CityDictionaryItem>> GetCityDictionaryItemsAsync(CancellationToken cancellationToken)
