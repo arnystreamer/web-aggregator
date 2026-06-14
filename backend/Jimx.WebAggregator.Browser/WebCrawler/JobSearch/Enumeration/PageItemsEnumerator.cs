@@ -19,6 +19,8 @@ public class PageItemsEnumerator : IAsyncEnumerator<JobItem>
 
     private int? _currentItemIndex;
 
+    private JobItem? _current;
+
     public PageItemsEnumerator(ILogger logger, ILocator ulLocator, HtmlBlock jobDetailsBlock, 
         ListItemTransformer listItemTransformer, ListItemDetailsTransformer listItemDetailsTransformer,
         PageItemsEnumeratorOptions options)
@@ -91,7 +93,7 @@ public class PageItemsEnumerator : IAsyncEnumerator<JobItem>
             _logger.LogInformation("Listing: specification indicates not to expand this job");
         }
         
-        Current = new JobItem(jobId, listItem, details);
+        _current = new JobItem(jobId, listItem, details);
         _logger.LogDebug("Listing: current list item ready to be processed");
         return true;
     }
@@ -101,5 +103,16 @@ public class PageItemsEnumerator : IAsyncEnumerator<JobItem>
         await ValueTask.CompletedTask;
     }
 
-    public JobItem Current { get; private set; }
+    public JobItem Current
+    {
+        get
+        {
+            if (_current == null)
+            {
+                throw new InvalidOperationException("Page items enumerator not initialized");
+            }
+
+            return _current;
+        }
+    }
 }

@@ -21,10 +21,10 @@ public class JobNetParsingJob : IParsingJob
 
     private MongoConnection.CollectionConnection<JobVacancyItem>? _jobsConnection;
 
-    public JobNetParsingJob(ILogger logger, ParsingWebSite parsingWebSite, PersistencyOptionsBundle<JobNetPersistencyOptions> persistencyOptions)
+    public JobNetParsingJob(ILogger logger, ParsingWebSiteWithAdditionalData<JobNetAdditionalData> options, PersistencyOptionsBundle<JobNetPersistencyOptions> persistencyOptions)
     {
         _logger = logger;
-        _options = parsingWebSite.Options;
+        _options = options.Options;
         _persistencyOptions = persistencyOptions;
     }
 
@@ -33,10 +33,10 @@ public class JobNetParsingJob : IParsingJob
     public async Task DoAsync()
     {
         var searchParameters = new JobSearchParameters(
-            JobSearchInterval.FullDay,
+            new JobSearchInterval("30m"),
             new JobSearchLocations([JobSearchLocation.Onsite, JobSearchLocation.Hybrid]),
             ".net developer",
-            JobSearchGeo.Switzerland,
+            JobSearchGeo.EuropeanUnion,
             true,
             JobSearchSorting.Relevance
         );

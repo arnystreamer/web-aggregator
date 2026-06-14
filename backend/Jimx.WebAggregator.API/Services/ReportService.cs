@@ -29,7 +29,20 @@ public class ReportService
     public async Task<ReportCityExtendedApi[]> Get(int salaryTypeId, decimal? manualSalary, decimal? salaryMultiplicator, 
         SortingFunction sortingFunction, SortingDirection sortingDirection, UserTaxProfile userTaxProfile, CancellationToken cancellationToken)
     {
-        var cityCostsItems = await _databaseService.GetCityCostsAsync(cancellationToken);
+        var availableTimeStamps = await _databaseService.GetCityDataTimeStampsAsync(cancellationToken);
+
+        if (availableTimeStamps.Length == 0)
+        {
+            return [];
+        }
+
+        var latestTimeStamp = availableTimeStamps.Max();
+        if (latestTimeStamp == null)
+        {
+            return [];
+        }
+        
+        var cityCostsItems = await _databaseService.GetCityCostsAsync(latestTimeStamp.Month, latestTimeStamp.Year, cancellationToken);
         var citySalaries = await _databaseService.GetCitySalariesAsync(cancellationToken);
         var taxDeductions = await _databaseService.GetRegionTaxDeductionsAsync(cancellationToken);
 

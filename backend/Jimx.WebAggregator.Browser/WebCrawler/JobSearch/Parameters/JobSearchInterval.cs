@@ -1,4 +1,4 @@
-﻿namespace Jimx.WebAggregator.Browser.WebCrawler;
+﻿namespace Jimx.WebAggregator.Browser.WebCrawler.JobSearch.Parameters;
 
 public class JobSearchInterval(string value)
 {
@@ -6,6 +6,4 @@ public class JobSearchInterval(string value)
     {
         return value;
     }
-
-    public static readonly JobSearchInterval FullDay = new ("r86400");
 }
