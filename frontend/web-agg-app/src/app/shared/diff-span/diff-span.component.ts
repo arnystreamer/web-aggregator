@@ -1,10 +1,11 @@
 import { formatNumber } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'wa-diff-span',
   imports: [],
   templateUrl: './diff-span.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './diff-span.component.scss'
 })
 export class DiffSpanComponent {

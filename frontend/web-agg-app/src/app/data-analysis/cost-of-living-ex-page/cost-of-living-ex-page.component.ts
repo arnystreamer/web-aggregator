@@ -1,5 +1,5 @@
 
-import { Component, computed, OnInit, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, computed, OnInit, signal, Signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,6 +38,7 @@ import { PresentationService } from '../../services/presentation.service';
     TermDetailsComponent
 ],
   templateUrl: './cost-of-living-ex-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cost-of-living-ex-page.component.scss'
 })
 export class CostOfLivingExPageComponent implements OnInit {

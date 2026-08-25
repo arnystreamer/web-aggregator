@@ -1,5 +1,5 @@
 import { formatNumber } from '@angular/common';
-import { Component, computed, Input, Signal } from '@angular/core';
+import { Component, computed, Input, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MoneySpanComponent } from '../money-span/money-span.component'
@@ -18,6 +18,7 @@ import { multiCurrencyToString } from '../../services/helpers/money-display-help
     DiffSpanComponent
   ],
   templateUrl: './cost-fact.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cost-fact.component.scss'
 })
 export class CostFactComponent {

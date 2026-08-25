@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterOutlet } from '@angular/router';
 
@@ -9,6 +9,7 @@ import { RouterOutlet } from '@angular/router';
     MatToolbarModule
    ],
   templateUrl: './layout.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './layout.component.scss'
 })
 export class LayoutComponent {

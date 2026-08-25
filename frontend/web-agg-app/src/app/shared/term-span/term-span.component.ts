@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'wa-term-span',
   imports: [CommonModule],
   templateUrl: './term-span.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './term-span.component.scss'
 })
 export class TermSpanComponent {
