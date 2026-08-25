@@ -42,7 +42,7 @@ public class ReportService
             return [];
         }
         
-        var cityCostsItems = await _databaseService.GetCityCostsAsync(latestTimeStamp.Month, latestTimeStamp.Year, cancellationToken);
+        var cityCostsItems = await _databaseService.GetCityCostsAsync(latestTimeStamp.Year, latestTimeStamp.Month, cancellationToken);
         var citySalaries = await _databaseService.GetCitySalariesAsync(cancellationToken);
         var taxDeductions = await _databaseService.GetRegionTaxDeductionsAsync(cancellationToken);
 

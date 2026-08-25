@@ -3,33 +3,70 @@
   form
   {
     display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: stretch;
+    width: 100%;
 
-    .field-long
-    {
-      width: 450px;
+    @media (max-width: 1339px) {
+      flex-direction: column;
     }
 
-    .field
-    {
-      width: 290px;
+    @media (min-width: 1340px) {
+      flex-direction: row;
     }
 
-    .field-short
+    .form-section
     {
-      width: 150px;
+      display: flex;
+
+      @media (max-width: 779px) {
+        flex-direction: column;
+      }
+
+      @media (min-width: 780px) {
+        flex-direction: row;
+      }
+
+      gap: 10px;
+      align-items: stretch;
     }
 
-    .field-shorter
-    {
-      width: 115px;
+    @media (max-width: 779px) {
+      .field-long,
+      .field,
+      .field-short,
+      .field-shorter {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 780px) {
+      .field-long
+      {
+        width: 450px;
+      }
+
+      .field
+      {
+        width: 290px;
+      }
+
+      .field-short
+      {
+        width: 150px;
+      }
+
+      .field-shorter
+      {
+        width: 115px;
+      }
     }
 
     .splitter
     {
-      margin-bottom: 18px;
+      @media (max-width: 1339px) {
+        display: none;
+      }
+
+      margin: 0 10px 16px 10px;
       border-left: 2px solid #888;
     }
   }

@@ -14,7 +14,15 @@ public class DataElementToValueConverter : IDataElementToValueConverter
 
 	public string? GetDataValue(HtmlNode dataCellNode)
 	{
-		var innerText = _textSelector(dataCellNode);
-		return innerText;
+		try
+		{
+			var innerText = _textSelector(dataCellNode);
+			return innerText;
+		}
+		catch (Exception exception)
+		{
+			var problematicHtml = dataCellNode.InnerHtml; 
+			return null;
+		}
 	}
 }

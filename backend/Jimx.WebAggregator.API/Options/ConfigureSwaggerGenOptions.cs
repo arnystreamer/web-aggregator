@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Jimx.WebAggregator.API.Options;
@@ -24,20 +24,9 @@ public class ConfigureSwaggerGenOptions : IConfigureNamedOptions<SwaggerGenOptio
 			Scheme = "bearer"
 		});
 
-		options.AddSecurityRequirement(new OpenApiSecurityRequirement
+		options.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
 		{
-			{
-				new OpenApiSecurityScheme
-				{
-					Reference = new OpenApiReference
-					{
-						Type=ReferenceType.SecurityScheme,
-						Id="Bearer"
-							
-					},
-				},
-				[]
-			}
+			[new OpenApiSecuritySchemeReference("Bearer", doc)] = []
 		});
 	}
 }
