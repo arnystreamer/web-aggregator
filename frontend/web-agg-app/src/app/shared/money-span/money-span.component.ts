@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'wa-money-span',
   imports: [ CommonModule ],
   templateUrl: './money-span.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './money-span.component.scss'
 })
 export class MoneySpanComponent {

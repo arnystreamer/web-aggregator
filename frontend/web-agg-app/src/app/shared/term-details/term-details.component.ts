@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ReportProfitTargetTerm } from '../../models/report-profit-target-term.model';
 import { TermSpanComponent } from '../term-span/term-span.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -9,6 +9,7 @@ import { formatNumber } from '@angular/common';
   selector: 'wa-term-details',
   imports: [TermSpanComponent, MatIconModule, MatTooltipModule],
   templateUrl: './term-details.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './term-details.component.scss'
 })
 export class TermDetailsComponent {
