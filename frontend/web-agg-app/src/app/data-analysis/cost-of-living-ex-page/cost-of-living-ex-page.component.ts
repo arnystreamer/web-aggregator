@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, computed, OnInit, signal, Signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,7 +25,6 @@ import { PresentationService } from '../../services/presentation.service';
 @Component({
   selector: 'wa-cost-of-living-ex-page',
   imports: [
-    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatSelectModule,

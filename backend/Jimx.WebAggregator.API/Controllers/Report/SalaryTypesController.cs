@@ -20,6 +20,8 @@ public class SalaryTypesController : ControllerBase
     [HttpGet]
     public SalaryTypeApi[] Get([FromQuery] SalaryTypesRequestApi requestApi)
     {
+        _logger.LogInformation("SalaryTypesController.Get invoked");
+        
         return _salaryTypesService.GetAll()
             .Skip(requestApi.Skip ?? 0)
             .Take(requestApi.Take ?? 10)

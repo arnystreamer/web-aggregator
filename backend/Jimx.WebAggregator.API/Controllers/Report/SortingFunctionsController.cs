@@ -21,6 +21,8 @@ public class SortingFunctionsController : ControllerBase
     [HttpGet]
     public SortingFunctionApi[] Get([FromQuery] SortingFunctionsRequestApi requestApi)
     {
+        _logger.LogInformation("SortingFunctionsController.Get invoked");
+        
         return _sortingFunctionsService.GetAll()
             .Skip(requestApi.Skip ?? 0)
             .Take(requestApi.Take ?? 10)

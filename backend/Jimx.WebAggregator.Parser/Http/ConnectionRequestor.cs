@@ -1,4 +1,5 @@
-﻿using Jimx.Common.Helpers.Lists;
+﻿using System.Net;
+using Jimx.Common.Helpers.Lists;
 using Jimx.Common.Helpers.Strings;
 using Jimx.WebAggregator.Parser.Helpers;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ public class ConnectionRequestor : IDisposable
 	private readonly HttpHeaders _defaultHeaders;
 	private readonly int _cooldownInMilliseconds;
 
-	private readonly HttpClient _httpClient = new();
+	private readonly HttpClient _httpClient;
 
 	private readonly Queue<QueueItem> _queueItems = new();
 
@@ -25,6 +26,11 @@ public class ConnectionRequestor : IDisposable
 		BaseUri = baseUri;
 		_defaultHeaders = defaultHeaders;
 		_cooldownInMilliseconds = cooldownInMilliseconds;
+
+		_httpClient = new HttpClient(new HttpClientHandler()
+		{
+			AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+		});
 
 		_workerTask = Task.Run(Process);
 	}
