@@ -1,4 +1,5 @@
-﻿using Jimx.WebAggregator.API.Helpers;
+﻿using System.Diagnostics;
+using Jimx.WebAggregator.API.Helpers;
 using Jimx.WebAggregator.API.Models;
 using Jimx.WebAggregator.API.Models.Report;
 using Jimx.WebAggregator.Calculations;
@@ -29,27 +30,17 @@ public class ReportService
     public async Task<ReportCityExtendedApi[]> Get(int salaryTypeId, decimal? manualSalary, decimal? salaryMultiplicator, 
         SortingFunction sortingFunction, SortingDirection sortingDirection, UserTaxProfile userTaxProfile, CancellationToken cancellationToken)
     {
-        var availableTimeStamps = await _databaseService.GetCityDataTimeStampsAsync(cancellationToken);
-
-        if (availableTimeStamps.Length == 0)
-        {
-            return [];
-        }
-
-        var latestTimeStamp = availableTimeStamps.Max();
-        if (latestTimeStamp == null)
-        {
-            return [];
-        }
+        var requestStart = Stopwatch.GetTimestamp();
         
-        var cityCostsItems = await _databaseService.GetCityCostsAsync(latestTimeStamp.Year, latestTimeStamp.Month, cancellationToken);
+        var cityCostsItems = await _databaseService.GetLatestCityCostsAsync(cancellationToken);
         var citySalaries = await _databaseService.GetCitySalariesAsync(cancellationToken);
         var taxDeductions = await _databaseService.GetRegionTaxDeductionsAsync(cancellationToken);
+
+        _logger.LogInformation("Request to persistent storage ended after {Span} s", Stopwatch.GetElapsedTime(requestStart).TotalSeconds);
 
         var reportCityItemFactory = new ReportCityExtendedApiFactory(_taxationService.GetCalculation(userTaxProfile));
         
         var reportCityExtendedApis = new List<ReportCityExtendedApi>(cityCostsItems.Count);
-
         var differErrors = new List<string>(); 
         foreach (var cityCosts in cityCostsItems)
         {
@@ -99,7 +90,8 @@ public class ReportService
                 apartmentParameters |= ReportApartmentParameters.Free;
             }
 
-            var cityItem = reportCityItemFactory.Create(new ReportCityApi(cityCosts.Name, cityCosts.Region, cityCosts.Country, countryCode),
+            var cityItem = reportCityItemFactory.Create(new ReportCityApi(cityCosts.Name, cityCosts.Region, cityCosts.Country, countryCode, 
+                    cityCosts.Year, cityCosts.Month),
                 dataItems,
                 taxDeductionItems, 
                 new ReportCityDynamicParameters
@@ -131,6 +123,8 @@ public class ReportService
             }
             reportCityExtendedApis.Add(cityItem);
         }
+        
+        _logger.LogInformation("Processing every city ended after {Span} s", Stopwatch.GetElapsedTime(requestStart).TotalSeconds);
 
         if (differErrors.Any())
         {

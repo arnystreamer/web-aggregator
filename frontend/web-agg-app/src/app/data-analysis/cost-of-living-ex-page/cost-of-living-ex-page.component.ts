@@ -21,6 +21,8 @@ import { CostFactComponent } from "../../shared/cost-fact/cost-fact.component";
 import { ProfitDesirableComponent } from "../../shared/profit-desirable/profit-desirable.component";
 import { TermDetailsComponent } from "../../shared/term-details/term-details.component";
 import { PresentationService } from '../../services/presentation.service';
+import { DecimalPipe } from '@angular/common';
+import { Month } from '../../models/report/month.model';
 
 @Component({
   selector: 'wa-cost-of-living-ex-page',
@@ -35,7 +37,8 @@ import { PresentationService } from '../../services/presentation.service';
     ProfitTaxableComponent,
     CostFactComponent,
     ProfitDesirableComponent,
-    TermDetailsComponent
+    TermDetailsComponent,
+    DecimalPipe
 ],
   templateUrl: './cost-of-living-ex-page.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -55,11 +58,21 @@ export class CostOfLivingExPageComponent implements OnInit {
 
   public reportSalaryType: WritableSignal<SalaryTypeApi | undefined> = signal(undefined);
   public reportSortingFunction: WritableSignal<SortingFunctionApi | undefined> = signal(undefined);
-  public reportResultItems: WritableSignal<ReportCityExtendedApi[] | undefined> = signal(undefined)
+  public reportResultItems: WritableSignal<ReportCityExtendedApi[] | undefined> = signal(undefined);
+  public reportResultItemsLatestTime: Signal<Month | undefined> = computed(
+    () => {
+      var reportResultItems = this.reportResultItems()
+      if (!reportResultItems)
+        return undefined;
+
+      const result = Math.max(...reportResultItems.map(i => i.year * 100 + i.month));
+      return { year: Math.floor(result / 100), month: result % 100 };
+
+    });
+
   public reportResultItemsFilterString: WritableSignal<string> = signal('');
   public reportResultFilteredItems: Signal<ReportCityExtendedApi[] | undefined> = computed(
-    () =>
-    {
+    () => {
       var filterString = this.reportResultItemsFilterString();
       if (!filterString || filterString == null)
           return this.reportResultItems();
@@ -68,7 +81,7 @@ export class CostOfLivingExPageComponent implements OnInit {
 
       return this.reportResultItems()?.filter(
         v => (v.name + ' ' + v.region + ' ' + v.country).toLowerCase().indexOf(filterStringFormatted) > -1);
-});
+    });
 
   public reportSortingFunctionName: Signal<string | undefined> = computed(() => this.reportSortingFunction()?.functionName);
 

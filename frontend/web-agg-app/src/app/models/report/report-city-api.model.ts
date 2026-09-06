@@ -3,4 +3,6 @@ export interface ReportCityApi {
   region: string;
   country: string;
   countryCode: string | null | undefined;
+  year: number;
+  month: number;
 }

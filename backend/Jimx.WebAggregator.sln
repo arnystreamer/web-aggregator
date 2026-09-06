@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Domain.J
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Parser.Html.LifeLevel", "Jimx.WebAggregator.Parser.Html.LifeLevel\Jimx.WebAggregator.Parser.Html.LifeLevel.csproj", "{C3F0A641-DC45-4903-95AB-A864E600ACBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jimx.WebAggregator.Parser.Html.LifeLevel.Tests", "Jimx.WebAggregator.Parser.Html.LifeLevel.Tests\Jimx.WebAggregator.Parser.Html.LifeLevel.Tests.csproj", "{5A60737B-D6E2-45E0-959B-04F75D03765C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{C3F0A641-DC45-4903-95AB-A864E600ACBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3F0A641-DC45-4903-95AB-A864E600ACBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3F0A641-DC45-4903-95AB-A864E600ACBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A60737B-D6E2-45E0-959B-04F75D03765C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A60737B-D6E2-45E0-959B-04F75D03765C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A60737B-D6E2-45E0-959B-04F75D03765C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A60737B-D6E2-45E0-959B-04F75D03765C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,6 +19,8 @@ public class LifeLevelParsingJob : IParsingJob
 	private readonly LifeLevelAdditionalData _additionalData;
 	private readonly PersistencyOptionsBundle<LifeLevelPersistencyOptions> _persistencyOptions;
 	
+	private const int RequestsCountPerMinute = 6;
+	
 
 	public LifeLevelParsingJob(ILogger logger,
 		ParsingWebSiteWithAdditionalData<LifeLevelAdditionalData> options,
@@ -52,7 +54,7 @@ public class LifeLevelParsingJob : IParsingJob
 		
 		var headers = HttpHeaders.CreateFromDictionary(_options.CookiesOptions.Headers?.ToDictionary(h => h.Name, h => h.Value));
 		
-		var citiesAsync = GetLifeLevelCitiesAsync(_logger, new Connection(_logger, baseUrl, headers, 10), citiesToConsider);
+		var citiesAsync = GetLifeLevelCitiesAsync(_logger, new Connection(_logger, baseUrl, headers, RequestsCountPerMinute), citiesToConsider);
 		var cities = await HandleCitiesAsync(_logger, citiesAsync, new MongoConnection(mongoCitiesOpts), new MongoConnection(mongoDictionaryOpts));
 	}
 

@@ -24,6 +24,20 @@ public class CitiesDatabaseService
 		return (await collection.FindAsync(c => c.Year == year && c.Month == month, cancellationToken: cancellationToken)).ToList();
 	}
 
+	public async Task<List<CityCostsItem>> GetLatestCityCostsAsync(CancellationToken cancellationToken)
+	{
+		var client = new MongoClient(_databaseSettings.Value.ConnectionString);
+
+		var database = client.GetDatabase(_databaseSettings.Value.DatabaseName);
+		var collection = database.GetCollection<CityCostsItem>(_databaseSettings.Value.CitiesCollectionName);
+
+		var allItems = (await collection.FindAsync(_ => true, cancellationToken: cancellationToken)).ToList();
+
+		return allItems.GroupBy(i => new { i.Name, i.Region, i.Country })
+			.Select(g => g.OrderByDescending(i => i.Year).ThenByDescending(i => i.Month).First())
+			.ToList();
+	}
+
 	public async Task<CityDataTimeStamp[]> GetCityDataTimeStampsAsync(CancellationToken cancellationToken)
 	{
 		var client = new MongoClient(_databaseSettings.Value.ConnectionString);
