@@ -5,7 +5,8 @@ namespace Jimx.WebAggregator.API.Models.Report;
 [PublicAPI]
 public class ReportCityExtendedApi : ReportCityApi
 {
-    public ReportCityExtendedApi(string name, string region, string country, string? countryCode) : base(name, region, country, countryCode)
+    public ReportCityExtendedApi(string name, string region, string country, string? countryCode, int year, int month) 
+        : base(name, region, country, countryCode, year, month)
     {
     }
 

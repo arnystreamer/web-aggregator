@@ -161,7 +161,8 @@ public class ReportCityExtendedApiFactory
                 minimumCostBitsWithRent,
                 new MultiCurrencyValue(0m, 0m)); 
         
-        return new ReportCityExtendedApi(reportCityApi.Name, reportCityApi.Region, reportCityApi.Country, reportCityApi.CountryCode)
+        return new ReportCityExtendedApi(reportCityApi.Name, reportCityApi.Region, reportCityApi.Country, reportCityApi.CountryCode, 
+            reportCityApi.Year, reportCityApi.Month)
         {
             SelectedSalary = new ReportProfitTaxable(taxesCalculator.ApplyTaxes(dynamicParameters.SelectedSalary), dynamicParameters.CrossRateToUsd),
             SalaryData = new SalaryData

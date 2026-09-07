@@ -4,6 +4,7 @@ import { AdminPageComponent } from './admin-page/admin-page.component';
 import { LayoutComponent } from './layout/layout.component';
 import { AdmCostOfLivingPageComponent } from './admin-page/adm-cost-of-living-page/adm-cost-of-living-page.component';
 import { CostOfLivingExPageComponent } from './data-analysis/cost-of-living-ex-page/cost-of-living-ex-page.component';
+import { CostChangesPageComponent } from './data-analysis/cost-changes-page/cost-changes-page.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,10 @@ export const routes: Routes = [
       {
         path: 'cost-of-living-extended',
         component: CostOfLivingExPageComponent,
+      },
+            {
+        path: 'cost-changes-page',
+        component: CostChangesPageComponent,
       }
     ]
   }

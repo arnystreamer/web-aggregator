@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using System.Text.RegularExpressions;
+using HtmlAgilityPack;
 using Jimx.WebAggregator.Parser.Html.Converters.Data.Def;
 using Jimx.WebAggregator.Parser.Html.Converters.Data.Imp;
 
@@ -33,15 +34,21 @@ public class LifeLevelElementToValueConverterProvider : DataElementToValueConver
 
 	private string? GetLifeLevelPriceString(HtmlNode node)
 	{
-		var numberPart = node.InnerText?.Split('&', 2) ?? [];
-		if (numberPart.Length == 0)
+		var dirtyPriceText = node.InnerText?.Trim();
+
+		if (string.IsNullOrEmpty(dirtyPriceText) || dirtyPriceText == "?")
 		{
 			return null;
 		}
-
-		var firstPart = numberPart[0];
-		return firstPart == "?" 
-			? null 
-			: firstPart.Trim();
+		
+		var regex = new Regex(@"([\d,.]+)(&.+;|[^\d]+)*$");
+		var match = regex.Match(dirtyPriceText);
+		
+		if (match.Success)
+		{
+			return match.Groups[1].Value;
+		}
+		
+		return null;
 	}
 }

@@ -81,6 +81,12 @@
 
 @if (this.reportResultFilteredItems()) {
   <div>
+    @if (this.reportResultItemsLatestTime())
+    {
+      <div>Data presented as of <strong>{{ this.reportResultItemsLatestTime()!.month | number:'2.0' }}/{{ this.reportResultItemsLatestTime()!.year }}</strong></div>
+      <div>&nbsp;</div>
+    }    
+
     <table>
       <tr>
         <th>City</th>
@@ -97,9 +103,14 @@
             {{city.name}}, {{city.region}}<br/>
             {{city.country}}
             @if (city.countryCode)
-              {
+            {
               <img src="https://flagsapi.com/{{city.countryCode}}/flat/16.png" />
             }
+            @if (city.year != this.reportResultItemsLatestTime()?.year || city.month != this.reportResultItemsLatestTime()?.month)
+            {
+              <br/><br/><i>Outdated ({{city.month | number:'2.0'}}/{{city.year}})</i>
+            }
+
           </td>
           <td>
             <ul>

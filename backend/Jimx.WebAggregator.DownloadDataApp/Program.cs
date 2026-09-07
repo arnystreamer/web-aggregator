@@ -17,12 +17,20 @@ var config =
 
 var parser = new Parser();
 
+/*await parser.DoJobAsync(new LifeLevelAnalyzeJob(
+    logger,
+    config.GetPersistencyOptions<LifeLevelPersistencyOptions>(LifeLevelParsingJob.ConfigurationName)));*/
+
+/*await parser.DoJobAsync(new LifeLevelReconcileJob(
+    logger,
+    config.GetPersistencyOptions<LifeLevelPersistencyOptions>(LifeLevelParsingJob.ConfigurationName)));*/
+
 await parser.DoJobAsync(new LifeLevelParsingJob(
     logger,
     config.GetParsingWebsiteOptionsWithAdditionalData<LifeLevelParsingJob, LifeLevelAdditionalData>(),
     config.GetPersistencyOptions<LifeLevelPersistencyOptions>(LifeLevelParsingJob.ConfigurationName)));
 
-await parser.DoJobAsync(new JobNetParsingJob(
+/*await parser.DoJobAsync(new JobNetParsingJob(
     logger, 
     config.GetParsingWebsiteOptionsWithAdditionalData<JobNetParsingJob, JobNetAdditionalData>(),
-    config.GetPersistencyOptions<JobNetPersistencyOptions>(JobNetParsingJob.ConfigurationName)));
+    config.GetPersistencyOptions<JobNetPersistencyOptions>(JobNetParsingJob.ConfigurationName)));*/
